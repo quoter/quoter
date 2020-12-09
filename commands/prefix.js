@@ -1,8 +1,6 @@
 const Discord = require("discord.js");
 const db = require("quick.db");
 
-const getApplicablePrefix = require("../getApplicablePrefix.js");
-
 const config = require("../config.json");
 
 module.exports = {
@@ -17,7 +15,6 @@ module.exports = {
 	guildOnly: true,
 	supportGuildOnly: false,
 	execute(message, args) {
-		const currentPrefix = getApplicablePrefix.execute(message);
 		if (args.length) {
 			if (message.member.hasPermission("MANAGE_GUILD")) {
 				if (
@@ -30,7 +27,7 @@ module.exports = {
 						.setTitle("✅ Changed Prefix")
 						.setColor(config.colors.success)
 						.setDescription(
-							`This server's prefix is now \`${args[0]}\` (from \`${currentPrefix}\`). You can also mention me instead!`
+							`This server's prefix is now \`${args[0]}\` (from \`${message.applicablePrefix}\`). You can also mention me instead!`
 						);
 					message.channel.send(successEmbed);
 				} else {
@@ -56,7 +53,7 @@ module.exports = {
 				.setTitle(`\`${currentPrefix}\``)
 				.setColor(config.colors.success)
 				.setDescription(
-					`This server's prefix is \`${currentPrefix}\` - you can also mention me instead!`
+					`This server's prefix is \`${messsage.applicablePrefix}\` - you can also mention me instead!`
 				);
 			message.channel.send(prefixEmbed);
 		}
