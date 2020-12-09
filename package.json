@@ -1,0 +1,20 @@
+{
+	"name": "quoter",
+	"version": "1.0.0",
+	"description": "A Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!",
+	"main": "main.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nickhasoccured/quoter.git"
+	},
+	"author": "Nicholas Christopher",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/nickhasoccured/quoter/issues"
+	},
+	"homepage": "https://github.com/nickhasoccured/quoter#readme",
+	"dependencies": {
+		"discord.js": "^12.5.1",
+		"quick.db": "^7.1.3"
+	}
+}

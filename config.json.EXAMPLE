@@ -1,0 +1,10 @@
+{
+	"token": "TOKEN",
+	"prefix": ".",
+	"supportGuild": "GUILD-ID",
+	"colors": {
+		"general": "#00BFFF",
+		"success": "#32CD32",
+		"error": "#FF0000"
+	}
+}
