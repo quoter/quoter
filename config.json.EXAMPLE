@@ -1,6 +1,6 @@
 {
 	"token": "TOKEN",
-	"prefix": ".",
+	"defaultPrefix": ".",
 	"supportGuild": "GUILD-ID",
 	"colors": {
 		"general": "#00BFFF",
