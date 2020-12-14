@@ -9,7 +9,7 @@ module.exports = {
 	name: "info",
 	description: "Shows information about the bot",
 	usage: "",
-	aliases: ["information", "uptime", "support", "invite"],
+	aliases: ["information", "uptime", "support", "invite", "privacy"],
 	cooldown: 3,
 	args: false,
 	guildOnly: false,
@@ -22,6 +22,7 @@ module.exports = {
 				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes! You can invite the bot to your server [here](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200).
 				
 				[Source Code](https://github.com/nickhasoccured/quoter) | [Support Server](https://discord.gg/QzXTgS2CNk)
+				[Privacy Policy](https://gist.github.com/nickhasoccured/06f258935cf801c1adfed8048e57d65a) | [Donate](https://ko-fi.com/nickhasoccured)
 				Use \`${message.applicablePrefix}help\` to get a list of commands`
 			);
 		message.channel.send(infoEmbed);

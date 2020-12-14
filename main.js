@@ -164,4 +164,10 @@ client.on("message", (message) => {
 	}
 });
 
+client.on("guildDelete", guild => {
+	db.delete(guild.id);
+
+	console.log(`Deleted data for guild ${guild.name} (${guild.id})`)
+});
+
 client.login(config.token);
