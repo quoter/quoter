@@ -9,6 +9,7 @@ module.exports = {
 	name: "name",
 	description: "Description",
 	usage: "",
+	example: "",
 	aliases: [],
 	cooldown: 3,
 	args: false,

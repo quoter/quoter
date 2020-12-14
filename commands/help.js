@@ -40,10 +40,16 @@ module.exports = {
 				description += `\n▫️ **USAGE**: \`${message.applicablePrefix}${command.name} ${command.usage}\``;
 			}
 
+			if (command.example) {
+				description += `\n▫️ **EXAMPLE**: \`${message.applicablePrefix}${command.name} ${command.example}\``;
+			}
+
 			if (command.aliases.length) {
 				let formattedAliases = [];
 				command.aliases.forEach((alias) => {
-					formattedAliases.push(`\`${message.applicablePrefix}${alias}\``);
+					formattedAliases.push(
+						`\`${message.applicablePrefix}${alias}\``
+					);
 				});
 
 				description =
@@ -51,7 +57,7 @@ module.exports = {
 					`\n▫️ **ALIASES**: ${formattedAliases.join(", ")}`;
 			}
 
-			if (command.mainGuildOnly) {
+			if (command.supportGuildOnly) {
 				description =
 					"**❗ This command can only be used in the [support server](https://discord.gg/QzXTgS2CNk)**\n\n" +
 					description;
@@ -62,7 +68,9 @@ module.exports = {
 			}
 
 			const commandEmbed = new Discord.MessageEmbed()
-				.setTitle(`Help for \`${message.applicablePrefix}${command.name}\``)
+				.setTitle(
+					`Help for \`${message.applicablePrefix}${command.name}\``
+				)
 				.setColor(config.colors.success)
 				.setDescription(description);
 
@@ -79,7 +87,9 @@ module.exports = {
 			const commandsEmbed = new Discord.MessageEmbed()
 				.setTitle(`Help`)
 				.setColor(config.colors.success)
-				.setDescription(`Here's a list of all commands you can use. Arguments in \`[]\` are required, while arguments in \`<>\` are optional. You can also use \`${message.applicablePrefix}help <command>\` to get help for a specific command.
+				.setDescription(`Here's a list of all commands you can use. Arguments in \`[]\` are required, while arguments in \`<>\` are optional. You can also use \`${
+				message.applicablePrefix
+			}help <command>\` to get help for a specific command.
 				
 				\`\`\`${
 					commandList ||

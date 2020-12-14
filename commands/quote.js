@@ -7,8 +7,8 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "quote",
-	description: "Retrieves a random server quote",
-	usage: "<quote id>",
+	description: "Retrieves a random quote or a specified one",
+	usage: "<id>",
 	aliases: ["q", "randomquote", "randquote", "rquote"],
 	cooldown: 5,
 	args: false,
@@ -16,7 +16,7 @@ module.exports = {
 	supportGuildOnly: false,
 	execute(message, args) {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
-		if (!serverQuotes) {
+		if (!serverQuotes.length) {
 			const noQuotesEmbed = new Discord.MessageEmbed()
 				.setTitle("❌ No quotes found")
 				.setColor(config.colors.error)
@@ -29,13 +29,13 @@ module.exports = {
 		let quote;
 
 		if (args.length) {
-			quote = serverQuotes[args[0]];
+			quote = serverQuotes[args[0] - 1];
 			if (!quote) {
 				const quoteNotFoundEmbed = new Discord.MessageEmbed()
 					.setTitle("❌ No quote found")
 					.setColor(config.colors.error)
 					.setDescription(
-						`Couldn't find a quote with that number, use \`${message.applicablePrefix}newquote\` to add one`
+						`Couldn't find a quote with that ID, use \`${message.applicablePrefix}newquote\` to add one.`
 					);
 				return message.channel.send(quoteNotFoundEmbed);
 			}
@@ -52,15 +52,11 @@ module.exports = {
 				}"`
 			);
 
-		const author = message.guild.members.resolve(quote.author);
 		if (quote.author) {
-			quoteEmbed.setAuthor(
-				author.displayName,
-				author.user.displayAvatarURL("png", true, 512)
-			);
+			quoteEmbed.setAuthor(quote.author);
 		}
 
-		quoteEmbed.setFooter(`Quote #${serverQuotes.indexOf(quote)}`);
+		quoteEmbed.setFooter(`Quote #${serverQuotes.indexOf(quote) + 1}`);
 
 		message.channel.send(quoteEmbed);
 	},

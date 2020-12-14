@@ -46,7 +46,7 @@ module.exports = {
 					.setDescription(
 						"That action requires the Manage Guild permission."
 					);
-				message.channel.send(invalidPrefixEmbed);
+				message.channel.send(noPermissionEmbed);
 			}
 		} else {
 			const prefixEmbed = new Discord.MessageEmbed()
