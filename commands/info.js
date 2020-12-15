@@ -9,7 +9,7 @@ module.exports = {
 	name: "info",
 	description: "Shows information about the bot",
 	usage: "",
-	aliases: ["information", "uptime", "support", "invite", "privacy"],
+	aliases: ["information", "uptime", "support", "invite"],
 	cooldown: 3,
 	args: false,
 	guildOnly: false,

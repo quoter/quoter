@@ -50,7 +50,7 @@ module.exports = {
 			}
 		} else {
 			const prefixEmbed = new Discord.MessageEmbed()
-				.setTitle(`\`${currentPrefix}\``)
+				.setTitle(`\`${message.applicablePrefix}\``)
 				.setColor(config.colors.success)
 				.setDescription(
 					`This server's prefix is \`${messsage.applicablePrefix}\` - you can also mention me instead!`
