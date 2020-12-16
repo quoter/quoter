@@ -20,7 +20,7 @@ module.exports = {
 			.setTitle("🔒 Privacy Policy")
 			.setColor(config.colors.general)
 			.setDescription(
-				"This document explains what data is collected, how it's used, and how you can delete your data."
+				"This document explains what data is collected, how it's used, and how you can delete your data. __If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email `nick@nickpdx.tk`__"
 			)
 			.addFields(
 				{
@@ -40,7 +40,7 @@ module.exports = {
 				},
 				{
 					name: "How can I delete my data?",
-					value: `If Quoter is removed from a Discord server, all information about that server (quotes & prefix) are deleted. The only information ever tied to a specific user is a quote's creator, this is only your user ID. If you'd like your specific data to be removed, you can email \`nick@nickpdx.tk\` and provide your Discord user ID.`,
+					value: `If Quoter is removed from a Discord server, all information about that server (quotes & prefix) are deleted. The only information ever tied to a specific user is a quote's creator, this is only your user ID. If you'd like your specific data to be removed, refer to the contact methods at the beggining of this document.`,
 					inline: false,
 				}
 			);
