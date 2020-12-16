@@ -43,6 +43,16 @@ module.exports = {
 				.then((messages) => {
 					const quoteMessage = messages.first() || messages;
 
+					if (!quoteMessage.content) {
+						const noContentEmbed = new Discord.MessageEmbed()
+							.setTitle("❌ Cannot quote message")
+							.setColor(config.colors.error)
+							.setDescription(
+								"That message doesn't contain any content, Quoter cannot read content from embeds!"
+							);
+						return message.channel.send(noContentEmbed);
+					}
+
 					if (
 						quoteMessage.content.startsWith(
 							message.applicablePrefix
