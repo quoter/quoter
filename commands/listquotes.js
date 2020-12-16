@@ -9,6 +9,7 @@ module.exports = {
 	name: "listquotes",
 	description: "Lists all of the server's quotes",
 	usage: "",
+	example: "",
 	aliases: ["quotelist", "quotes"],
 	cooldown: 8,
 	args: false,

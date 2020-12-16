@@ -9,6 +9,7 @@ module.exports = {
 	name: "deletequote",
 	description: "Deletes the specified quote",
 	usage: "[quote number]",
+	example: "",
 	aliases: ["delquote", "dquote", "rmquote", "removequote"],
 	cooldown: 8,
 	args: true,

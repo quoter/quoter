@@ -19,8 +19,6 @@ const commandFiles = fs
 	.readdirSync("./commands")
 	.filter((file) => file.endsWith(".js"));
 
-// Require every .js file in ./commands
-// and set it in client.commands
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
@@ -56,8 +54,6 @@ client.on("message", (message) => {
 			(command) =>
 				command.aliases && command.aliases.includes(commandName)
 		);
-
-	if (!command) return console.log("No command found");
 
 	if (!command.enabled) {
 		const disabledEmbed = new Discord.MessageEmbed()
@@ -164,10 +160,10 @@ client.on("message", (message) => {
 	}
 });
 
-client.on("guildDelete", guild => {
+client.on("guildDelete", (guild) => {
 	db.delete(guild.id);
 
-	console.log(`Deleted data for guild ${guild.name} (${guild.id})`)
+	console.log(`Deleted data for guild ${guild.name} (${guild.id})`);
 });
 
 client.login(config.token);

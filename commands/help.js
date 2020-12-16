@@ -9,7 +9,8 @@ module.exports = {
 	name: "help",
 	description: "Shows a list of all commands",
 	usage: "",
-	aliases: [],
+	example: "",
+	aliases: ["commands", "cmds", "cmdlist", "commandlist"],
 	cooldown: 5,
 	args: false,
 	guildOnly: false,
@@ -85,7 +86,7 @@ module.exports = {
 			});
 
 			const commandsEmbed = new Discord.MessageEmbed()
-				.setTitle(`Help`)
+				.setTitle(`📘 Command List`)
 				.setColor(config.colors.success)
 				.setDescription(`Here's a list of all commands you can use. Arguments in \`[]\` are required, while arguments in \`<>\` are optional. You can also use \`${
 				message.applicablePrefix

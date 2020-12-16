@@ -17,7 +17,7 @@ module.exports = {
 	supportGuildOnly: false,
 	execute(message, args) {
 		const privacyPolicyEmbed = new Discord.MessageEmbed()
-			.setTitle("Privacy Policy")
+			.setTitle("🔒 Privacy Policy")
 			.setColor(config.colors.general)
 			.setDescription(
 				"This document explains what data is collected, how it's used, and how you can delete your data."
