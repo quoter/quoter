@@ -9,7 +9,7 @@ module.exports = {
 	name: "help",
 	description: "Shows a list of all commands",
 	usage: "",
-	example: "",
+	example: "privacy",
 	aliases: ["commands", "cmds", "cmdlist", "commandlist"],
 	cooldown: 5,
 	args: false,

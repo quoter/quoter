@@ -3,6 +3,52 @@ const db = require("quick.db");
 
 const config = require("../config.json");
 
+const humanDuration = (milliseconds) => {
+	let result = [];
+
+	const numberEnding = (number) => {
+		return number > 1 ? "s" : "";
+	};
+
+	let seconds = Math.floor(milliseconds / 1000);
+
+	const years = Math.floor(seconds / 31536000);
+	if (years) {
+		result.push(`${years} year${numberEnding(years)}`);
+	}
+
+	const days = Math.floor((seconds %= 31536000) / 86400);
+	if (days) {
+		result.push(`${days} day${numberEnding(days)}`);
+	}
+
+	const hours = Math.floor((seconds %= 86400) / 3600);
+	if (hours) {
+		result.push(`${hours} hour${numberEnding(hours)}`);
+	}
+
+	const minutes = Math.floor((seconds %= 3600) / 60);
+	if (minutes) {
+		result.push(`${minutes} minute${numberEnding(minutes)}`);
+	}
+
+	if (result.length) {
+		if (result.length >= 2) {
+			result[result.length - 1] += "and";
+		}
+
+		return result.join(", ");
+	} else {
+		return "less than a minute";
+	}
+};
+
+const getDateString = (milliseconds) => {
+	const date = new Date(milliseconds);
+
+	return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+};
+
 module.exports = {
 	enabled: true,
 	hidden: false,
@@ -26,6 +72,23 @@ module.exports = {
 				[🔒 Privacy Policy](https://gist.github.com/nickhasoccured/06f258935cf801c1adfed8048e57d65a) | [💰 Donate](https://ko-fi.com/nickhasoccured)
 
 				Use \`${message.applicablePrefix}help\` to get a list of commands.`
+			)
+			.addField(
+				"Server Count",
+				`I'm in **${message.client.guilds.cache.size}** servers!`,
+				true
+			)
+			.addField(
+				"Uptime",
+				`Online since **${getDateString(
+					Date.now() - message.client.uptime
+				)}**, that's **${humanDuration(message.client.uptime)}**!`,
+				true
+			)
+			.addField(
+				"Latency",
+				`Average ping is ${message.client.ws.ping} milliseconds.`,
+				true
 			);
 		message.channel.send(infoEmbed);
 	},
