@@ -34,7 +34,7 @@ const humanDuration = (milliseconds) => {
 
 	if (result.length) {
 		if (result.length >= 2) {
-			result[result.length - 1] = `and ${result}`;
+			result[result.length - 1] = `and ${result[result.length - 1]}`;
 		}
 
 		return result.join(", ");
