@@ -55,6 +55,8 @@ client.on("message", (message) => {
 				command.aliases && command.aliases.includes(commandName)
 		);
 
+	if (!command) return;
+
 	if (!command.enabled) {
 		const disabledEmbed = new Discord.MessageEmbed()
 			.setTitle("❌ That command is disabled")
