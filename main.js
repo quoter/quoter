@@ -30,7 +30,7 @@ client.once("ready", () => {
 	console.log(`Logged in as ${client.user.tag}`);
 });
 
-client.on("message", (message) => {
+client.on("message", async (message) => {
 	message.applicablePrefix = message.guild
 		? db.get(`${message.guild.id}.prefix`) || config.defaultPrefix
 		: config.defaultPrefix;
@@ -62,12 +62,20 @@ client.on("message", (message) => {
 			.setTitle("❌ That command is disabled")
 			.setColor(config.colors.error)
 			.setDescription(
-				`\`${message.applicablePrefix}${command.name}\` is disabled! Contact an administrator if this is an error`
+				`\`${message.applicablePrefix}${command.name}\` is disabled! Contact an administrator if this is an error.`
 			);
-		return message.channel.send(disabledEmbed).catch((error) => {
-			console.error(`Failed to send message in #${channel.name} (${channel.id}) in ${channel.guild.name} (${channel.guild.id})
-			* ${error}`);
-		});
+		try {
+			return message.channel.send(disabledEmbed);
+		} catch (error) {
+			console.error(`Failed to send message in #${
+				message.channel.name
+			} (${message.channel.id})${
+				message.guild
+					? ` of server ${message.guild.name} (${message.guild.id})`
+					: ""
+			}
+			${error}`);
+		}
 	}
 
 	if (
@@ -81,10 +89,18 @@ client.on("message", (message) => {
 			.setDescription(
 				`\`${message.applicablePrefix}${command.name}\` can only be used inside servers`
 			);
-		return message.channel.send(embed).catch((error) => {
-			console.error(`Failed to send message in #${channel.name} (${channel.id}) in ${channel.guild.name} (${channel.guild.id})
-				* ${error}`);
-		});
+		try {
+			return message.channel.send(embed);
+		} catch (error) {
+			console.error(`Failed to send message in #${
+				message.channel.name
+			} (${message.channel.id})${
+				message.guild
+					? ` of server ${message.guild.name} (${message.guild.id})`
+					: ""
+			}
+			${error}`);
+		}
 	}
 
 	if (
@@ -97,10 +113,18 @@ client.on("message", (message) => {
 			.setDescription(
 				`\`${message.applicablePrefix}${command.name}\` can only be used inside the [support server](https://discord.gg/QzXTgS2CNk)`
 			);
-		return message.channel.send(embed).catch((error) => {
-			console.error(`Failed to send message in #${channel.name} (${channel.id}) in ${channel.guild.name} (${channel.guild.id})
-				* ${error}`);
-		});
+		try {
+			return message.channel.send(embed);
+		} catch (error) {
+			console.error(`Failed to send message in #${
+				message.channel.name
+			} (${message.channel.id})${
+				message.guild
+					? ` of server ${message.guild.name} (${message.guild.id})`
+					: ""
+			}
+			${error}`);
+		}
 	}
 
 	if (command.args && !args.length) {
@@ -108,10 +132,18 @@ client.on("message", (message) => {
 			.setColor(config.colors.error)
 			.setTitle("❌ Incorrect Usage")
 			.setDescription("You didn't provide any arguments");
-		return message.channel.send(embed).catch((error) => {
-			console.error(`Failed to send message in #${channel.name} (${channel.id}) in ${channel.guild.name} (${channel.guild.id})
-				* ${error}`);
-		});
+		try {
+			return message.channel.send(embed);
+		} catch (error) {
+			console.error(`Failed to send message in #${
+				message.channel.name
+			} (${message.channel.id})${
+				message.guild
+					? ` of server ${message.guild.name} (${message.guild.id})`
+					: ""
+			}
+			${error}`);
+		}
 	}
 
 	if (!cooldowns.has(command.name)) {
@@ -136,10 +168,18 @@ client.on("message", (message) => {
 						message.applicablePrefix
 					}${command.name}\` again`
 				);
-			return message.channel.send(embed).catch((error) => {
-				console.error(`Failed to send message in #${channel.name} (${channel.id}) in ${channel.guild.name} (${channel.guild.id})
-					* ${error}`);
-			});
+			try {
+				return message.channel.send(embed);
+			} catch (error) {
+				console.error(`Failed to send message in #${
+					message.channel.name
+				} (${message.channel.id})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}
+                ${error}`);
+			}
 		}
 	}
 
@@ -156,8 +196,14 @@ client.on("message", (message) => {
 			.setTitle("❌ An error occured")
 			.setDescription("Contact an administrator about this issue");
 		message.channel.send(errorEmbed).catch((error) => {
-			console.error(`Failed to send message in #${channel.name} (${channel.id}) in ${channel.guild.name} (${channel.guild.id})
-				* ${error}`);
+			console.error(`Failed to send message in #${
+				message.channel.name
+			} (${message.channel.id})${
+				message.guild
+					? ` of server ${message.guild.name} (${message.guild.id})`
+					: ""
+			}
+			${error}`);
 		});
 	}
 });

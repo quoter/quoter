@@ -3,7 +3,7 @@ const db = require("quick.db");
 
 const config = require("../config.json");
 
-const mentionParse = (mention, client) => {
+const mentionParse = async (mention, client) => {
 	if (mention.startsWith("<@") && mention.endsWith(">")) {
 		mention = mention.slice(2, -1);
 	}
@@ -12,10 +12,10 @@ const mentionParse = (mention, client) => {
 		mention = mention.slice(1);
 	}
 
-	const user = client.users.resolve(mention);
-	if (user) {
-		return user.tag;
-	} else {
+	try {
+		const result = await client.users.fetch(mention);
+		return result.tag;
+	} catch {
 		return mention.substr(0, 32);
 	}
 };
@@ -32,7 +32,7 @@ module.exports = {
 	args: true,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		if (message.member.hasPermission("MANAGE_GUILD")) {
 			if (args.length < 3) {
 				const invalidArgsEmbed = new Discord.MessageEmbed()
@@ -57,7 +57,7 @@ module.exports = {
 				return message.channel.send(quoteNotFoundEmbed);
 			}
 
-			const editedAuthor = mentionParse(args.pop(), message.client);
+			const editedAuthor = await mentionParse(args.pop(), message.client);
 			const editedText = args.join(" ");
 
 			if (

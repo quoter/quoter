@@ -3,7 +3,7 @@ const db = require("quick.db");
 
 const config = require("../config.json");
 
-const mentionParse = (mention, client) => {
+const mentionParse = async (mention, client) => {
 	if (mention.startsWith("<@") && mention.endsWith(">")) {
 		mention = mention.slice(2, -1);
 	}
@@ -12,10 +12,10 @@ const mentionParse = (mention, client) => {
 		mention = mention.slice(1);
 	}
 
-	const user = client.users.resolve(mention);
-	if (user) {
-		return user.tag;
-	} else {
+	try {
+		const result = await client.users.fetch(mention);
+		return result.tag;
+	} catch {
 		return mention.substr(0, 32);
 	}
 };
@@ -24,8 +24,7 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "newquote",
-	description:
-		"Creates a new quote",
+	description: "Creates a new quote",
 	usage: "[quote] [author]",
 	example: "You're gonna have a bad time Sans",
 	aliases: ["createquote", "addquote", "nquote"],
@@ -33,7 +32,7 @@ module.exports = {
 	args: true,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		if (
 			db.get(`${message.guild.id}.allquote`) ||
 			message.member.hasPermission("MANAGE_GUILD")
@@ -62,7 +61,7 @@ module.exports = {
 				return message.channel.send(fullQuotesEmbed);
 			}
 
-			const author = mentionParse(args.pop(), message.client);
+			const author = await mentionParse(args.pop(), message.client);
 			const quote = args.join(" ");
 
 			if (
@@ -96,7 +95,7 @@ module.exports = {
 						"${quote}" - ${author}`
 				)
 				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
-			return message.channel.send(successEmbed);
+			message.channel.send(successEmbed);
 		} else {
 			const noPermissionEmbed = new Discord.MessageEmbed()
 				.setTitle("❌ You don't have permission to do that")
