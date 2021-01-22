@@ -20,7 +20,7 @@ module.exports = {
 			.setTitle("🔒 Privacy Policy")
 			.setColor(config.colors.general)
 			.setDescription(
-				"This document explains what data is collected, how it's used, and how you can delete your data. __If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email `nick@nickpdx.tk`__"
+				"This document explains what data is collected, how it's used, and how you can delete your data. __If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email `nchristopher@tuta.io`__"
 			)
 			.addFields(
 				{
