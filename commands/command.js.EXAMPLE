@@ -1,15 +1,13 @@
-// This is an EXAMPLE COMMAND, it's disabled for a reason!
-
 const Discord = require("discord.js");
 const db = require("quick.db");
 
 const config = require("../config.json");
 
 module.exports = {
-	enabled: false,
+	enabled: true,
 	hidden: false,
 	name: "command",
-	description: "Command Description",
+	description: "description",
 	usage: "",
 	example: "",
 	aliases: [],

@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const db = require("quick.db");
 
 const config = require("../config.json");
 
@@ -70,7 +69,7 @@ module.exports = {
 
 			const commandEmbed = new Discord.MessageEmbed()
 				.setTitle(
-					`Help for \`${message.applicablePrefix}${command.name}\``
+					`\`${message.applicablePrefix}${command.name}\``
 				)
 				.setColor(config.colors.success)
 				.setDescription(description);
@@ -88,9 +87,11 @@ module.exports = {
 			const commandsEmbed = new Discord.MessageEmbed()
 				.setTitle(`📘 Command List`)
 				.setColor(config.colors.success)
-				.setDescription(`Here's a list of all commands you can use. Arguments in \`[]\` are required, while arguments in \`<>\` are optional. You can also use \`${
-				message.applicablePrefix
-			}help <command>\` to get help for a specific command.
+				.setDescription(`Here's a list of all the commands you can use.
+				
+				Arguments in \`[]\` are required, while arguments in \`<>\` are optional. You can also use \`${
+					message.applicablePrefix
+				}help <command>\` to get help for a specific command.
 				
 				\`\`\`${
 					commandList ||
