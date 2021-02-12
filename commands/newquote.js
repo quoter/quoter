@@ -25,8 +25,8 @@ module.exports = {
 	hidden: false,
 	name: "newquote",
 	description: "Creates a new quote",
-	usage: "[quote] [author]",
-	example: "You're gonna have a bad time Sans",
+	usage: "[quote] - [author]",
+	example: "You're gonna have a bad time - Sans",
 	aliases: ["createquote", "addquote", "nquote"],
 	cooldown: 10,
 	args: true,
@@ -37,16 +37,6 @@ module.exports = {
 			db.get(`${message.guild.id}.allquote`) ||
 			message.member.hasPermission("MANAGE_GUILD")
 		) {
-			if (args.length < 2) {
-				const invalidArgsEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ Incorrect usage")
-					.setColor(config.colors.error)
-					.setDescription(
-						"You have to specify the quote's text & the author."
-					);
-				return message.channel.send(invalidArgsEmbed);
-			}
-
 			const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 			if (
 				serverQuotes.length >=
@@ -61,8 +51,18 @@ module.exports = {
 				return message.channel.send(fullQuotesEmbed);
 			}
 
-			const author = await mentionParse(args.pop(), message.client);
-			const quote = args.join(" ");
+			const quoteArgs = args.join(" ").split("-");
+			let author;
+
+			if (quoteArgs.length > 1) {
+				author = await mentionParse(quoteArgs.pop(), message.client);
+			}
+
+			if (author && author.trim().toLowerCase() === "anon") {
+				author = undefined;
+			}
+
+			const quote = quoteArgs.join("-").trim();
 
 			if (
 				quote.length >
@@ -92,7 +92,7 @@ module.exports = {
 				.setDescription(
 					`Created a new server quote:
 						
-						"${quote}" - ${author}`
+						"${quote}"${author ? ` - ${author}` : ""}`
 				)
 				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
 			message.channel.send(successEmbed);

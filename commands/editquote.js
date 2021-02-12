@@ -34,12 +34,12 @@ module.exports = {
 	supportGuildOnly: false,
 	async execute(message, args) {
 		if (message.member.hasPermission("MANAGE_GUILD")) {
-			if (args.length < 3) {
+			if (args.length < 2) {
 				const invalidArgsEmbed = new Discord.MessageEmbed()
 					.setTitle("❌ Incorrect usage")
 					.setColor(config.colors.error)
 					.setDescription(
-						"You have to specify an ID, text, and the author."
+						"You have to specify a quote's ID & it's new text."
 					);
 				return message.channel.send(invalidArgsEmbed);
 			}
@@ -57,8 +57,21 @@ module.exports = {
 				return message.channel.send(quoteNotFoundEmbed);
 			}
 
-			const editedAuthor = await mentionParse(args.pop(), message.client);
-			const editedText = args.join(" ");
+			const quoteArgs = args.join(" ").split("-");
+			let editedAuthor;
+
+			if (quoteArgs.length > 1) {
+				editedAuthor = await mentionParse(
+					quoteArgs.pop(),
+					message.client
+				);
+			}
+
+			if (editedAuthor && editedAuthor.trim().toLowerCase() === "anon") {
+				editedAuthor = undefined;
+			}
+
+			const editedText = quoteArgs.join("-").trim();
 
 			if (
 				editedText.length >
@@ -89,7 +102,9 @@ module.exports = {
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Edited quote")
 				.setColor(config.colors.success)
-				.setDescription(`"${editedText}" - ${editedAuthor}`)
+				.setDescription(
+					`"${editedText}"${editedAuthor ? ` - ${editedAuthor}` : ""}`
+				)
 				.setFooter(`Quote #${quoteID}`);
 			return message.channel.send(successEmbed);
 		} else {

@@ -31,15 +31,17 @@ module.exports = {
 		let quoteList = "";
 		let quoteNumber = 1;
 		serverQuotes.forEach((quote) => {
-			if (quote.text.length > 30)
+			if (quote.text && quote.text.length > 30)
 				quote.text = `${quote.text.substr(0, 30)}...`;
-			if (quote.author.length > 10)
+			if (quote.author && quote.author.length > 10)
 				quote.author = `${quote.author.substr(0, 10)}...`;
 
-			quoteList += `**${quoteNumber}**. "${quote.text}"`;
+			quoteList += `**${quoteNumber}**. "${
+				quote.text || "An error occured"
+			}"`;
 			quoteNumber++;
 
-			if (quote.author) {
+			if (quote.author && quote.author.length > 0) {
 				quoteList += ` - ${quote.author}`;
 			}
 

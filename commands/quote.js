@@ -54,10 +54,12 @@ module.exports = {
 			);
 
 		if (quote.createdTimestamp) {
-			quoteEmbed.setTimestamp(quote.createdTimestamp);
+			quoteEmbed.setTimestamp(
+				quote.editedTimestamp || quote.createdTimestamp
+			);
 		}
 
-		if (quote.author) {
+		if (quote.author && quote.author.length > 1) {
 			quoteEmbed.setAuthor(quote.author);
 		}
 
