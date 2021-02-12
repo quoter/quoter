@@ -88,7 +88,8 @@ module.exports = {
 				"Latency",
 				`Average ping is ${message.client.ws.ping} milliseconds.`,
 				true
-			);
+			)
+			.setFooter(`Quoter v${require("../package.json").version}`)
 		message.channel.send(infoEmbed);
 	},
 };

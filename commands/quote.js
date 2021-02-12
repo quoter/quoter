@@ -53,6 +53,10 @@ module.exports = {
 				}"`
 			);
 
+		if (quote.createdTimestamp) {
+			quoteEmbed.setTimestamp(quote.createdTimestamp);
+		}
+
 		if (quote.author) {
 			quoteEmbed.setAuthor(quote.author);
 		}

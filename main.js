@@ -1,3 +1,5 @@
+console.log(`Starting Quoter v${require("./package.json").version}...`)
+
 const Discord = require("discord.js");
 const db = require("quick.db");
 const fs = require("fs");
