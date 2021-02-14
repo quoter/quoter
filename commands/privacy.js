@@ -19,27 +19,33 @@ module.exports = {
 			.setTitle("🔒 Privacy Policy")
 			.setColor(config.colors.general)
 			.setDescription(
-				"This document explains what data is collected, how it's used, and how you can delete your data. __If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email `nchristopher@tuta.io`__"
+				`
+				> Last updated on 2/14/2021
+
+				This document explains what data is collected, how it's used, and how you can delete your data. **If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email \`nchristopher@tuta.io\`**.
+			`
 			)
 			.addFields(
 				{
 					name: "What data do we collect, and why do we need it?",
-					value: `Information about the quote is collected when a new quote is created, this includes:
-					- The quote's text, later retrieved when using the \`quote\` command.
-					- The quote's author, later retrieved when using the \`quote\` command.
-					- The timestamp of when the quote was created. This isn't currently used, but may be in the future.
-					- When using the \`quotethat\` command, the timestamp of the original message is also stored.
-					- Who created the quote, this is stored as your Discord user ID. This isn't currently used, but may be in the future.
+					value: `
+					We store the following information when users interact with quoter:
 					
-					If the server's prefix is set, that prefix is also stored. __This is tied to the server itself, not a person.__
+					•   The quote's text & the quote's author. Users can later view this information when interacting with Quoter.
+					•   The current date. Users can later view this information when interacting with Quoter.
+					•   The creation date of the quoted message, when using the \`.quotethat\` command. This isn't currently used.
+					•   The quote creator's Discord ID. This isn't currently used.
+					•   A prefix set by a server admin. This is used by Quoter to properly respond to & ignore messages.
 					
-					Data storage is necessary for the bot to do it's basic function - displaying quotes. We never use/collect data for marketing and/or analytics. Data is __only__ accessible by Quoter developers, engineers, and support.
+					Data storage is necessary for the bot to do it's basic function - displaying quotes. We never use/collect data for marketing and/or analytics. Data is **only** accessible by Quoter developers, and the user who uses Quoter.
 					`,
 					inline: false,
 				},
 				{
 					name: "How can I delete my data?",
-					value: `If Quoter is removed from a Discord server, all information about that server (quotes & prefix) are deleted. The only information ever tied to a specific user is a quote's creator, this is only your user ID. If you'd like your specific data to be removed, refer to the contact methods at the beggining of this document.`,
+					value: `If Quoter is online when the bot is removed from a Discord server (either by the bot being removed by a server admin, the server being deleted, or Quoter forcibly leaving the server), then Quoter will automatically delete the information tied to a server.
+					
+					However, **Quoter isn't always online**, so contact us (using the methods at the beginning of this document) to make sure your data has been removed. We don't want to store data longer than necessary!`,
 					inline: false,
 				}
 			);
