@@ -43,9 +43,9 @@ module.exports = {
 				},
 				{
 					name: "How can I delete my data?",
-					value: `If Quoter is online when the bot is removed from a Discord server (either by the bot being removed by a server admin, the server being deleted, or Quoter forcibly leaving the server), then Quoter will automatically delete the information tied to a server.
-					
-					However, **Quoter isn't always online**, so contact us (using the methods at the beginning of this document) to make sure your data has been removed. We don't want to store data longer than necessary!`,
+					value: `If Quoter is online when it's removed from a Discord server, all that server's data will be **deleted**. Otherwise, Quoter will scan for removed guilds the next time it's online, and delete data as so.
+
+					You can also contact us (refer to the beggining of this document) to manually remove your data.`,
 					inline: false,
 				}
 			);

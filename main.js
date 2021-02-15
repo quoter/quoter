@@ -1,4 +1,4 @@
-console.log(`Starting Quoter v${require("./package.json").version}...`)
+console.log(`Starting Quoter v${require("./package.json").version}...`);
 
 const Discord = require("discord.js");
 const db = require("quick.db");
@@ -30,6 +30,23 @@ const cooldowns = new Discord.Collection();
 
 client.once("ready", () => {
 	console.log(`Logged in as ${client.user.tag}`);
+
+	const currentGuilds = client.guilds.cache;
+
+	if (currentGuilds.size <= 0) {
+		return console.error(
+			"An error occured while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped to prevent data loss."
+		);
+	}
+
+	db.all().forEach((dbGuild) => {
+		if (
+			!currentGuilds.find((cachedGuild) => cachedGuild.id === dbGuild.ID)
+		) {
+			db.delete(dbGuild.ID);
+			console.log(`Deleted data for removed guild ${dbGuild.ID}.`);
+		}
+	});
 });
 
 client.on("message", async (message) => {
