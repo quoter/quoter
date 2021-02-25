@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "git+https://github.com/nickhasoccured/quoter.git"
 	},
-	"author": "Nicholas Christopher",
+	"author": "Nicholas Christopher <nchristopher@tuta.io> (nchristopher.me)",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/nickhasoccured/quoter/issues"
