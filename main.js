@@ -165,45 +165,47 @@ client.on("message", async (message) => {
 		}
 	}
 
-	if (!cooldowns.has(command.name)) {
-		cooldowns.set(command.name, new Discord.Collection());
-	}
-
-	const now = Date.now();
-	const timestamps = cooldowns.get(command.name);
-	const cooldownAmount = (command.cooldown || 3) * 1000;
-
-	if (timestamps.has(message.author.id)) {
-		const expirationTime =
-			timestamps.get(message.author.id) + cooldownAmount;
-
-		if (now < expirationTime) {
-			const timeLeft = (expirationTime - now) / 1000;
-			const embed = new Discord.MessageEmbed()
-				.setColor(config.colors.error)
-				.setTitle("🛑 Slow down")
-				.setDescription(
-					`Wait ${timeLeft.toFixed(0)} second(s) before using \`${
-						message.applicablePrefix
-					}${command.name}\` again`
-				);
-			try {
-				return message.channel.send(embed);
-			} catch (error) {
-				console.error(`Failed to send message in #${
-					message.channel.name
-				} (${message.channel.id})${
-					message.guild
-						? ` of server ${message.guild.name} (${message.guild.id})`
-						: ""
+	if (!config.admins || !config.admins.includes(message.author.id)) {
+		if (!cooldowns.has(command.name)) {
+			cooldowns.set(command.name, new Discord.Collection());
+		}
+	
+		const now = Date.now();
+		const timestamps = cooldowns.get(command.name);
+		const cooldownAmount = (command.cooldown || 3) * 1000;
+	
+		if (timestamps.has(message.author.id)) {
+			const expirationTime =
+				timestamps.get(message.author.id) + cooldownAmount;
+	
+			if (now < expirationTime) {
+				const timeLeft = (expirationTime - now) / 1000;
+				const embed = new Discord.MessageEmbed()
+					.setColor(config.colors.error)
+					.setTitle("🛑 Slow down")
+					.setDescription(
+						`Wait ${timeLeft.toFixed(0)} second(s) before using \`${
+							message.applicablePrefix
+						}${command.name}\` again`
+					);
+				try {
+					return message.channel.send(embed);
+				} catch (error) {
+					console.error(`Failed to send message in #${
+						message.channel.name
+					} (${message.channel.id})${
+						message.guild
+							? ` of server ${message.guild.name} (${message.guild.id})`
+							: ""
+					}
+					${error}`);
 				}
-                ${error}`);
 			}
 		}
+	
+		timestamps.set(message.author.id, now);
+		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 	}
-
-	timestamps.set(message.author.id, now);
-	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 	try {
 		command.execute(message, args);
