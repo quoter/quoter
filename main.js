@@ -169,15 +169,15 @@ client.on("message", async (message) => {
 		if (!cooldowns.has(command.name)) {
 			cooldowns.set(command.name, new Discord.Collection());
 		}
-	
+
 		const now = Date.now();
 		const timestamps = cooldowns.get(command.name);
 		const cooldownAmount = (command.cooldown || 3) * 1000;
-	
+
 		if (timestamps.has(message.author.id)) {
 			const expirationTime =
 				timestamps.get(message.author.id) + cooldownAmount;
-	
+
 			if (now < expirationTime) {
 				const timeLeft = (expirationTime - now) / 1000;
 				const embed = new Discord.MessageEmbed()
@@ -202,13 +202,30 @@ client.on("message", async (message) => {
 				}
 			}
 		}
-	
+
 		timestamps.set(message.author.id, now);
 		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 	}
 
 	try {
 		command.execute(message, args);
+
+		if (Math.random() >= 0.97) {
+			message.channel
+				.send(
+					"💬 If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
+				)
+				.catch((error) => {
+					console.error(`Failed to send message in #${
+						message.channel.name
+					} (${message.channel.id})${
+						message.guild
+							? ` of server ${message.guild.name} (${message.guild.id})`
+							: ""
+					}
+					${error}`);
+				});
+		}
 	} catch (error) {
 		console.error(`Failed to execute command ${command.name} for user ${message.author.tag} (${message.author.id})
 		* ${error}`);

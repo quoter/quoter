@@ -10,20 +10,20 @@ A Discord bot which stores quotes for servers & retrieves them on demand. It sup
 
 ## Commands
 
-| Command        | Description                                    |
-| -------------- | ---------------------------------------------- |
-| `/help`        | Shows a list of all commands                   |
-| `/quote`       | Displays a specified quote or a random one     |
-| `/newquote`    | Creates a new quote                            |
-| `/quotethat`   | Quotes the last message in the current channel |
-| `/listquotes`  | Lists all of the server's quotes               |
-| `/editquote`   | Edits the specified quote                      |
-| `/deletequote` | Deletes the specified quote                    |
-| `/allquote`    | Toggles whether anyone can make a server quote |
-| `/prefix`      | Displays the server's prefix or sets a new one |
-| `/info`        | Shows information about the bot                |
-| `/privacy`     | Shows the bot's privacy policy                 |
+| Command        | Description                                     |
+| -------------- | ----------------------------------------------- |
+| `/help`        | Shows a list of all commands.                   |
+| `/quote`       | Displays a specified quote or a random one.     |
+| `/newquote`    | Creates a new quote.                            |
+| `/quotethat`   | Quotes the last message in the current channel. |
+| `/listquotes`  | Lists all of the server's quotes.               |
+| `/editquote`   | Edits the specified quote.                      |
+| `/deletequote` | Deletes the specified quote.                    |
+| `/allquote`    | Toggles whether anyone can make a server quote. |
+| `/prefix`      | Displays the server's prefix or sets a new one. |
+| `/info`        | Shows information about the bot.                |
+| `/privacy`     | Shows the bot's privacy policy.                 |
 
 ## License
 
-All code inside of this repository is available under the license in the included `LICENSE` file. If you're using a lot of code from this project, please credit by linking back to this repository - while not required, it's a nice thing to do!
+Quoter is available under the terms of the MIT License. You can find a copy of these terms in the included `LICENSE` file.

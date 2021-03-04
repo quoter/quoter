@@ -10,7 +10,7 @@ module.exports = {
 	description: "Lists all of the server's quotes",
 	usage: "",
 	example: "",
-	aliases: ["quotelist", "quotes"],
+	aliases: ["quotelist", "quotes", "lq"],
 	cooldown: 8,
 	args: false,
 	guildOnly: true,
