@@ -3,6 +3,7 @@
 	"version": "1.7.0",
 	"description": "A Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!",
 	"main": "main.js",
+	"private": true,
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/nickhasoccured/quoter.git"
