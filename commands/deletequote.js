@@ -28,7 +28,7 @@ module.exports = {
 						.setTitle("✅ Removed quote")
 						.setColor(config.colors.success)
 						.setDescription(
-							`Successfully removed quote with ID ${args[0]}.`
+							`Successfully removed quote #${args[0]}.`
 						);
 					message.channel.send(successEmbed);
 				} else {

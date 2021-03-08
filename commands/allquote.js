@@ -7,7 +7,7 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "allquote",
-	description: "Toggles whether anyone can make a server quote",
+	description: "Toggles whether everyone can create quotes.",
 	usage: "",
 	example: "",
 	aliases: ["anyquote", "anyonecanquote", "allcanquote"],
@@ -25,7 +25,7 @@ module.exports = {
 					.setTitle("✅ Toggled setting")
 					.setColor(config.colors.success)
 					.setDescription(
-						"Only members with the Manage Guild permission can add quotes."
+						"Only members with the Manage Guild permission can now create quotes."
 					);
 				message.channel.send(successEmbed);
 			} else if (currentState === false) {
@@ -33,7 +33,7 @@ module.exports = {
 				const successEmbed = new Discord.MessageEmbed()
 					.setTitle("✅ Toggled setting")
 					.setColor(config.colors.success)
-					.setDescription("Everyone can add quotes.");
+					.setDescription("Everyone can now create quotes.");
 				message.channel.send(successEmbed);
 			}
 		} else {

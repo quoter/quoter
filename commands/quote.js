@@ -7,7 +7,7 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "quote",
-	description: "Displays a specified quote or a random one",
+	description: "Displays a specified quote or a random one.",
 	usage: "<id>",
 	example: "",
 	aliases: ["q", "randomquote", "randquote", "rquote"],

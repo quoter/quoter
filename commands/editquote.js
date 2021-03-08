@@ -67,7 +67,11 @@ module.exports = {
 				);
 			}
 
-			if (editedAuthor && editedAuthor.trim().toLowerCase() === "anon") {
+			if (
+				editedAuthor &&
+				(editedAuthor.trim().toLowerCase() === "anon" ||
+					editedAuthor.trim().toLowerCase() === "anonymous")
+			) {
 				editedAuthor = undefined;
 			}
 

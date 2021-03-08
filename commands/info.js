@@ -52,7 +52,7 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "info",
-	description: "Shows information about the bot",
+	description: "Displays information about Quoter.",
 	usage: "",
 	example: "",
 	aliases: ["information", "uptime", "support", "invite"],
@@ -89,7 +89,7 @@ module.exports = {
 				`Average ping is ${message.client.ws.ping} milliseconds.`,
 				true
 			)
-			.setFooter(`Quoter v${require("../package.json").version}`)
+			.setFooter(`Quoter v${require("../package.json").version}`);
 		message.channel.send(infoEmbed);
 	},
 };

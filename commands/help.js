@@ -6,7 +6,7 @@ module.exports = {
 	enabled: true,
 	hidden: true,
 	name: "help",
-	description: "Shows a list of all commands",
+	description: "Shows a list of commands, or details about one.",
 	usage: "",
 	example: "privacy",
 	aliases: ["commands", "cmds", "cmdlist", "commandlist"],

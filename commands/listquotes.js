@@ -51,7 +51,7 @@ module.exports = {
 		const quoteListEmbed = new Discord.MessageEmbed()
 			.setTitle("Server Quotes")
 			.setColor(config.colors.general)
-			.setDescription(`Here's a list of this server's quotes. Some quotes have been shortened due to Discord limitations, use \`${message.applicablePrefix}quote <id>\` to get information for a specific quote.
+			.setDescription(`Here's a list of this server's quotes. Quotes might've shortened due to Discord limitations, use \`${message.applicablePrefix}quote <id>\` to see a specific quote.
 			
 			${quoteList}`);
 		message.channel.send(quoteListEmbed);

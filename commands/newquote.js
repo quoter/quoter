@@ -46,7 +46,7 @@ module.exports = {
 					.setTitle("❌ Storage full")
 					.setColor(config.colors.error)
 					.setDescription(
-						`This server has too many quotes! Remove some with \`${message.applicablePrefix}deletequote\` before adding more.`
+						`This server has too many quotes! Use \`${message.applicablePrefix}deletequote\` before creating more.`
 					);
 				return message.channel.send(fullQuotesEmbed);
 			}
@@ -58,7 +58,11 @@ module.exports = {
 				author = await mentionParse(quoteArgs.pop(), message.client);
 			}
 
-			if (author && author.trim().toLowerCase() === "anon") {
+			if (
+				author &&
+				(author.trim().toLowerCase() === "anon" ||
+					author.trim().toLowerCase() === "anonymous")
+			) {
 				author = undefined;
 			}
 
@@ -103,7 +107,7 @@ module.exports = {
 				.setDescription(
 					`That action requires the Manage Guild permission.
 					
-					**❗ To allow anyone to create quotes**, have an administrator run \`${message.applicablePrefix}allquote\``
+					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\``
 				);
 			message.channel.send(noPermissionEmbed);
 		}

@@ -7,7 +7,7 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "quotethat",
-	description: "Quotes the last message in the current channel",
+	description: "Quotes the previous message.",
 	usage: "",
 	example: "",
 	aliases: ["qthat"],
@@ -29,7 +29,7 @@ module.exports = {
 					.setTitle("❌ Storage full")
 					.setColor(config.colors.error)
 					.setDescription(
-						`This server has too many quotes! Remove some with \`${message.applicablePrefix}deletequote\` before adding more.`
+						`This server has too many quotes! Use \`${message.applicablePrefix}deletequote\` before creating more.`
 					);
 				return message.channel.send(fullQuotesEmbed);
 			}
@@ -45,10 +45,10 @@ module.exports = {
 
 					if (!quoteMessage.content) {
 						const noContentEmbed = new Discord.MessageEmbed()
-							.setTitle("❌ Cannot quote message")
+							.setTitle("❌ Couldn't quote message")
 							.setColor(config.colors.error)
 							.setDescription(
-								"That message doesn't contain any content, Quoter cannot read content from embeds!"
+								"That message doesn't contain text. Quoter doesn't support embeds!"
 							);
 						return message.channel.send(noContentEmbed);
 					}
@@ -60,10 +60,10 @@ module.exports = {
 						quoteMessage.author.id === message.client.user.id
 					) {
 						const cannotQuoteEmbed = new Discord.MessageEmbed()
-							.setTitle("❌ Cannot quote message")
+							.setTitle("❌ Couldn't quote message")
 							.setColor(config.colors.error)
 							.setDescription(
-								"Messages that start with the prefix or are from me cannot be quoted."
+								"Quoter commands cannot be quoted."
 							);
 						return message.channel.send(cannotQuoteEmbed);
 					}
@@ -76,7 +76,7 @@ module.exports = {
 						(db.get(`${message.guild.id}.maxQuoteSize`) || 130)
 					) {
 						const quoteSizeEmbed = new Discord.MessageEmbed()
-							.setTitle("❌ Quote too big")
+							.setTitle("❌ Too long")
 							.setColor(config.colors.error)
 							.setDescription(
 								`Quotes cannot be longer than ${
@@ -115,7 +115,7 @@ module.exports = {
 						.setTitle("❌ An error occured")
 						.setColor(config.colors.error)
 						.setDescription(
-							"Failed to fetch the most recent message."
+							"Failed to fetch the previous message."
 						);
 					return message.channel.send(errorEmbed);
 				});
@@ -126,7 +126,7 @@ module.exports = {
 				.setDescription(
 					`That action requires the Manage Guild permission.
 					
-					**❗ To allow anyone to create quotes**, have an administrator run \`${message.applicablePrefix}allquote\``
+					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\``
 				);
 			message.channel.send(noPermissionEmbed);
 		}

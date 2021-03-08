@@ -6,7 +6,7 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "privacy",
-	description: "Shows the bot's privacy policy",
+	description: "Displays Quoter's Privacy Policy.",
 	usage: "",
 	example: "",
 	aliases: ["pp", "policy", "privacypolicy"],
