@@ -26,4 +26,4 @@ A Discord bot which stores quotes for servers & retrieves them on demand. It sup
 
 ## License
 
-Quoter is available under the terms of the MIT License. You can find a copy of these terms in the included `LICENSE` file.
+Quoter is available under the terms of the GNU Affero General Public License v3.0. You can find a copy of these terms in the included `LICENSE` file.
