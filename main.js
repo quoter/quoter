@@ -29,7 +29,7 @@ for (const file of commandFiles) {
 const cooldowns = new Discord.Collection();
 
 client.once("ready", () => {
-	console.log(`Logged in as ${client.user.tag}`);
+	console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 
 	const currentGuilds = client.guilds.cache;
 
