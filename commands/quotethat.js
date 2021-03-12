@@ -15,7 +15,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		if (
 			db.get(`${message.guild.id}.allquote`) ||
 			message.member.hasPermission("MANAGE_GUILD")
@@ -34,91 +34,83 @@ module.exports = {
 				return message.channel.send(fullQuotesEmbed);
 			}
 
-			message.channel.messages
-				.fetch({
+			let quoteMessage;
+
+			try {
+				const messages = await message.channel.messages.fetch({
 					limit: 1,
 					before: message.id,
 					force: true,
-				})
-				.then((messages) => {
-					const quoteMessage = messages.first() || messages;
+				});
+				quoteMessage = messages.first() || messages;
+			} catch (error) {
+				console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
+				* ${error}`);
 
-					if (!quoteMessage.content) {
-						const noContentEmbed = new Discord.MessageEmbed()
-							.setTitle("❌ Couldn't quote message")
-							.setColor(config.colors.error)
-							.setDescription(
-								"That message doesn't contain text. Quoter doesn't support embeds!"
-							);
-						return message.channel.send(noContentEmbed);
-					}
+				const errorEmbed = new Discord.MessageEmbed()
+					.setTitle("❌ An error occured")
+					.setColor(config.colors.error)
+					.setDescription("Failed to fetch the previous message.");
+				return await message.channel.send(errorEmbed);
+			}
 
-					if (
-						quoteMessage.content.startsWith(
-							message.applicablePrefix
-						) ||
-						quoteMessage.author.id === message.client.user.id
-					) {
-						const cannotQuoteEmbed = new Discord.MessageEmbed()
-							.setTitle("❌ Couldn't quote message")
-							.setColor(config.colors.error)
-							.setDescription(
-								"Quoter commands cannot be quoted."
-							);
-						return message.channel.send(cannotQuoteEmbed);
-					}
+			if (!quoteMessage.content) {
+				const noContentEmbed = new Discord.MessageEmbed()
+					.setTitle("❌ Couldn't quote message")
+					.setColor(config.colors.error)
+					.setDescription(
+						"That message doesn't contain text. Quoter doesn't support embeds!"
+					);
+				return await message.channel.send(noContentEmbed);
+			}
 
-					const quoteAuthor = quoteMessage.author.tag;
-					const quoteText = quoteMessage.content;
+			if (
+				quoteMessage.content.startsWith(message.applicablePrefix) ||
+				quoteMessage.author.id === message.client.user.id
+			) {
+				const cannotQuoteEmbed = new Discord.MessageEmbed()
+					.setTitle("❌ Couldn't quote message")
+					.setColor(config.colors.error)
+					.setDescription("Quoter commands cannot be quoted.");
+				return await message.channel.send(cannotQuoteEmbed);
+			}
 
-					if (
-						quoteText.length >
-						(db.get(`${message.guild.id}.maxQuoteSize`) || 130)
-					) {
-						const quoteSizeEmbed = new Discord.MessageEmbed()
-							.setTitle("❌ Too long")
-							.setColor(config.colors.error)
-							.setDescription(
-								`Quotes cannot be longer than ${
-									db.get(
-										`${message.guild.id}.maxQuoteSize`
-									) || 130
-								} characters.`
-							);
-						return message.channel.send(quoteSizeEmbed);
-					}
+			const quoteAuthor = quoteMessage.author.tag;
+			const quoteText = quoteMessage.content;
 
-					db.push(`${message.guild.id}.quotes`, {
-						text: quoteText,
-						author: quoteAuthor,
-						createdTimestamp: Date.now(),
-						quoteTimestamp: quoteMessage.createdTimestamp,
-						quoter: message.author.id,
-					});
+			if (
+				quoteText.length >
+				(db.get(`${message.guild.id}.maxQuoteSize`) || 130)
+			) {
+				const quoteSizeEmbed = new Discord.MessageEmbed()
+					.setTitle("❌ Too long")
+					.setColor(config.colors.error)
+					.setDescription(
+						`Quotes cannot be longer than ${
+							db.get(`${message.guild.id}.maxQuoteSize`) || 130
+						} characters.`
+					);
+				return await message.channel.send(quoteSizeEmbed);
+			}
 
-					const successEmbed = new Discord.MessageEmbed()
-						.setTitle("✅ Added quote")
-						.setColor(config.colors.success)
-						.setDescription(
-							`Created a new server quote:
+			db.push(`${message.guild.id}.quotes`, {
+				text: quoteText,
+				author: quoteAuthor,
+				createdTimestamp: Date.now(),
+				quoteTimestamp: quoteMessage.createdTimestamp,
+				quoter: message.author.id,
+			});
+
+			const successEmbed = new Discord.MessageEmbed()
+				.setTitle("✅ Added quote")
+				.setColor(config.colors.success)
+				.setDescription(
+					`Created a new server quote:
 							
 							"${quoteText}" - ${quoteAuthor}`
-						)
-						.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
-					return message.channel.send(successEmbed);
-				})
-				.catch((error) => {
-					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
-					* ${error}`);
-
-					const errorEmbed = new Discord.MessageEmbed()
-						.setTitle("❌ An error occured")
-						.setColor(config.colors.error)
-						.setDescription(
-							"Failed to fetch the previous message."
-						);
-					return message.channel.send(errorEmbed);
-				});
+				)
+				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
+			return await message.channel.send(successEmbed);
 		} else {
 			const noPermissionEmbed = new Discord.MessageEmbed()
 				.setTitle("❌ You don't have permission to do that")
@@ -128,7 +120,7 @@ module.exports = {
 					
 					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\``
 				);
-			message.channel.send(noPermissionEmbed);
+			await message.channel.send(noPermissionEmbed);
 		}
 	},
 };

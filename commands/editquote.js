@@ -41,7 +41,7 @@ module.exports = {
 					.setDescription(
 						"You have to specify a quote's ID & it's new text."
 					);
-				return message.channel.send(invalidArgsEmbed);
+				return await message.channel.send(invalidArgsEmbed);
 			}
 
 			const quoteID = args.shift();
@@ -54,7 +54,7 @@ module.exports = {
 					.setTitle("❌ No quote found")
 					.setColor(config.colors.error)
 					.setDescription("Couldn't find a quote with that ID.");
-				return message.channel.send(quoteNotFoundEmbed);
+				return await message.channel.send(quoteNotFoundEmbed);
 			}
 
 			const quoteArgs = args.join(" ").split("-");
@@ -89,7 +89,7 @@ module.exports = {
 							db.get(`${message.guild.id}.maxQuoteSize`) || 130
 						} characters.`
 					);
-				return message.channel.send(quoteSizeEmbed);
+				return await message.channel.send(quoteSizeEmbed);
 			}
 
 			serverQuotes[quoteID - 1] = {
@@ -110,7 +110,7 @@ module.exports = {
 					`"${editedText}"${editedAuthor ? ` - ${editedAuthor}` : ""}`
 				)
 				.setFooter(`Quote #${quoteID}`);
-			return message.channel.send(successEmbed);
+			await message.channel.send(successEmbed);
 		} else {
 			const noPermissionEmbed = new Discord.MessageEmbed()
 				.setTitle("❌ You don't have permission to do that")
@@ -118,7 +118,7 @@ module.exports = {
 				.setDescription(
 					`That action requires the Manage Guild permission.`
 				);
-			message.channel.send(noPermissionEmbed);
+			await message.channel.send(noPermissionEmbed);
 		}
 	},
 };

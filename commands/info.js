@@ -60,7 +60,7 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		const infoEmbed = new Discord.MessageEmbed()
 			.setTitle("💬 Information")
 			.setColor(config.colors.general)
@@ -90,6 +90,6 @@ module.exports = {
 				true
 			)
 			.setFooter(`Quoter v${require("../package.json").version}`);
-		message.channel.send(infoEmbed);
+		await message.channel.send(infoEmbed);
 	},
 };

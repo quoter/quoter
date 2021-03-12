@@ -15,7 +15,7 @@ module.exports = {
 	args: true,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		if (message.member.hasPermission("MANAGE_GUILD")) {
 			if (args[0] >= 1) {
 				let serverQuotes = db.get(`${message.guild.id}.quotes`);
@@ -30,20 +30,20 @@ module.exports = {
 						.setDescription(
 							`Successfully removed quote #${args[0]}.`
 						);
-					message.channel.send(successEmbed);
+					await message.channel.send(successEmbed);
 				} else {
 					const quoteNotFoundEmbed = new Discord.MessageEmbed()
 						.setTitle("❌ No quote found")
 						.setColor(config.colors.error)
 						.setDescription("Couldn't find a quote with that ID.");
-					message.channel.send(quoteNotFoundEmbed);
+					await message.channel.send(quoteNotFoundEmbed);
 				}
 			} else {
 				const quoteNotFoundEmbed = new Discord.MessageEmbed()
 					.setTitle("❌ No quote found")
 					.setColor(config.colors.error)
 					.setDescription("You didn't specify a valid ID.");
-				message.channel.send(quoteNotFoundEmbed);
+				await message.channel.send(quoteNotFoundEmbed);
 			}
 		} else {
 			const noPermissionEmbed = new Discord.MessageEmbed()
@@ -52,7 +52,7 @@ module.exports = {
 				.setDescription(
 					"That action requires the Manage Guild permission."
 				);
-			message.channel.send(noPermissionEmbed);
+			await message.channel.send(noPermissionEmbed);
 		}
 	},
 };

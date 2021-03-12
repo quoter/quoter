@@ -14,7 +14,7 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		const privacyPolicyEmbed = new Discord.MessageEmbed()
 			.setTitle("🔒 Privacy Policy")
 			.setColor(config.colors.general)
@@ -49,6 +49,6 @@ module.exports = {
 					inline: false,
 				}
 			);
-		message.channel.send(privacyPolicyEmbed);
+		await message.channel.send(privacyPolicyEmbed);
 	},
 };

@@ -15,7 +15,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 
 		if (!serverQuotes.length) {
@@ -54,6 +54,6 @@ module.exports = {
 			.setDescription(`Here's a list of this server's quotes. Quotes might've shortened due to Discord limitations, use \`${message.applicablePrefix}quote <id>\` to see a specific quote.
 			
 			${quoteList}`);
-		message.channel.send(quoteListEmbed);
+		await message.channel.send(quoteListEmbed);
 	},
 };

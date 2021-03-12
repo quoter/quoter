@@ -14,7 +14,7 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		if (args.length) {
 			const commandName = args[0].toLowerCase();
 			const command =
@@ -26,12 +26,12 @@ module.exports = {
 
 			if (!command || command.disabled) {
 				const noCommandEmbed = new Discord.MessageEmbed()
-					.setTitle(`❌ That command doesn't exist or it's disabled`)
+					.setTitle("❌ That command doesn't exist or it's disabled")
 					.setColor(config.colors.error)
 					.setDescription(
 						"Contact an administrator if this is an error"
 					);
-				return message.channel.send(noCommandEmbed);
+				return await message.channel.send(noCommandEmbed);
 			}
 
 			let description = `▫️ **DESCRIPTION**: ${command.description}`;
@@ -68,13 +68,11 @@ module.exports = {
 			}
 
 			const commandEmbed = new Discord.MessageEmbed()
-				.setTitle(
-					`\`${message.applicablePrefix}${command.name}\``
-				)
+				.setTitle(`\`${message.applicablePrefix}${command.name}\``)
 				.setColor(config.colors.success)
 				.setDescription(description);
 
-			return message.channel.send(commandEmbed);
+			await message.channel.send(commandEmbed);
 		} else {
 			let commandList;
 
@@ -98,7 +96,7 @@ module.exports = {
 					"No commands were found, contact an administrator about this issue."
 				}\`\`\``);
 
-			return message.channel.send(commandsEmbed);
+			await message.channel.send(commandsEmbed);
 		}
 	},
 };

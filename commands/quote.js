@@ -15,7 +15,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 		if (!serverQuotes.length) {
 			const noQuotesEmbed = new Discord.MessageEmbed()
@@ -24,7 +24,7 @@ module.exports = {
 				.setDescription(
 					`This server doesn't have any quotes saved, use \`${message.applicablePrefix}newquote\` to add some`
 				);
-			return message.channel.send(noQuotesEmbed);
+			return await message.channel.send(noQuotesEmbed);
 		}
 
 		let quote;
@@ -38,7 +38,7 @@ module.exports = {
 					.setDescription(
 						`Couldn't find a quote with that ID, use \`${message.applicablePrefix}newquote\` to add one.`
 					);
-				return message.channel.send(quoteNotFoundEmbed);
+				return await message.channel.send(quoteNotFoundEmbed);
 			}
 		} else {
 			quote =
@@ -65,6 +65,6 @@ module.exports = {
 
 		quoteEmbed.setFooter(`Quote #${serverQuotes.indexOf(quote) + 1}`);
 
-		message.channel.send(quoteEmbed);
+		await message.channel.send(quoteEmbed);
 	},
 };

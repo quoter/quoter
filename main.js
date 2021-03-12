@@ -64,6 +64,8 @@ client.on("message", async (message) => {
 
 	if (!prefix || message.author.bot) return;
 
+	message.channel.startTyping().catch(() => {});
+
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
@@ -208,24 +210,7 @@ client.on("message", async (message) => {
 	}
 
 	try {
-		command.execute(message, args);
-
-		if (Math.random() >= 0.97) {
-			message.channel
-				.send(
-					"💬 If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
-				)
-				.catch((error) => {
-					console.error(`Failed to send message in #${
-						message.channel.name
-					} (${message.channel.id})${
-						message.guild
-							? ` of server ${message.guild.name} (${message.guild.id})`
-							: ""
-					}
-					${error}`);
-				});
-		}
+		await command.execute(message, args);
 	} catch (error) {
 		console.error(`Failed to execute command ${command.name} for user ${message.author.tag} (${message.author.id})
 		* ${error}`);
@@ -244,6 +229,25 @@ client.on("message", async (message) => {
 			${error}`);
 		});
 	}
+
+	if (Math.random() >= 0.97) {
+		message.channel
+			.send(
+				"💬 If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
+			)
+			.catch((error) => {
+				console.error(`Failed to send message in #${
+					message.channel.name
+				} (${message.channel.id})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}
+				${error}`);
+			});
+	}
+
+	message.channel.stopTyping(true);
 });
 
 client.on("guildDelete", (guild) => {

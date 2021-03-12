@@ -48,7 +48,7 @@ module.exports = {
 					.setDescription(
 						`This server has too many quotes! Use \`${message.applicablePrefix}deletequote\` before creating more.`
 					);
-				return message.channel.send(fullQuotesEmbed);
+				return await message.channel.send(fullQuotesEmbed);
 			}
 
 			const quoteArgs = args.join(" ").split("-");
@@ -80,7 +80,7 @@ module.exports = {
 							db.get(`${message.guild.id}.maxQuoteSize`) || 130
 						} characters.`
 					);
-				return message.channel.send(quoteSizeEmbed);
+				return await message.channel.send(quoteSizeEmbed);
 			}
 
 			db.push(`${message.guild.id}.quotes`, {
@@ -99,7 +99,7 @@ module.exports = {
 						"${quote}"${author ? ` - ${author}` : ""}`
 				)
 				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
-			message.channel.send(successEmbed);
+			await message.channel.send(successEmbed);
 		} else {
 			const noPermissionEmbed = new Discord.MessageEmbed()
 				.setTitle("❌ You don't have permission to do that")
@@ -109,7 +109,7 @@ module.exports = {
 					
 					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\``
 				);
-			message.channel.send(noPermissionEmbed);
+			await message.channel.send(noPermissionEmbed);
 		}
 	},
 };

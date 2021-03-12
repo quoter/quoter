@@ -15,7 +15,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	supportGuildOnly: false,
-	execute(message, args) {
+	async execute(message, args) {
 		if (args.length) {
 			if (message.member.hasPermission("MANAGE_GUILD")) {
 				if (
@@ -30,7 +30,7 @@ module.exports = {
 						.setDescription(
 							`This server's prefix is now \`${args[0]}\` (from \`${message.applicablePrefix}\`). You can also mention me instead!`
 						);
-					message.channel.send(successEmbed);
+					await message.channel.send(successEmbed);
 				} else {
 					const invalidPrefixEmbed = new Discord.MessageEmbed()
 						.setTitle("❌ Invalid Prefix")
@@ -38,7 +38,7 @@ module.exports = {
 						.setDescription(
 							`\`${args[0]}\` isn't a valid prefix! Prefixes can be alphanumeric, along with some special characters. They cannot be longer than three characters!`
 						);
-					message.channel.send(invalidPrefixEmbed);
+					await message.channel.send(invalidPrefixEmbed);
 				}
 			} else {
 				const noPermissionEmbed = new Discord.MessageEmbed()
@@ -47,7 +47,7 @@ module.exports = {
 					.setDescription(
 						"That action requires the Manage Guild permission."
 					);
-				message.channel.send(noPermissionEmbed);
+				await message.channel.send(noPermissionEmbed);
 			}
 		} else {
 			const prefixEmbed = new Discord.MessageEmbed()
@@ -56,7 +56,7 @@ module.exports = {
 				.setDescription(
 					`This server's prefix is \`${messsage.applicablePrefix}\` - you can also mention me instead!`
 				);
-			message.channel.send(prefixEmbed);
+			await message.channel.send(prefixEmbed);
 		}
 	},
 };
