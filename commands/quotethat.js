@@ -31,7 +31,7 @@ module.exports = {
 					.setDescription(
 						`This server has too many quotes! Use \`${message.applicablePrefix}deletequote\` before creating more.`
 					);
-				return message.channel.send(fullQuotesEmbed);
+				return await message.channel.send(fullQuotesEmbed);
 			}
 
 			let quoteMessage;

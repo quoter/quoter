@@ -2,7 +2,9 @@
 	"token": "TOKEN",
 	"defaultPrefix": ".",
 	"supportGuild": "GUILD-ID",
-	"admins": ["USER-ID"],
+	"admins": [
+		"USER-ID"
+	],
 	"colors": {
 		"general": "#00BFFF",
 		"success": "#32CD32",

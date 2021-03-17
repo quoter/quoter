@@ -167,7 +167,7 @@ client.on("message", async (message) => {
 		}
 	}
 
-	if (!config.admins || !config.admins.includes(message.author.id)) {
+	if (!config?.admins?.includes(message.author.id)) {
 		if (!cooldowns.has(command.name)) {
 			cooldowns.set(command.name, new Discord.Collection());
 		}

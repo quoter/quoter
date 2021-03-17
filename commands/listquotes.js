@@ -25,7 +25,7 @@ module.exports = {
 				.setDescription(
 					`This server doesn't have any quotes, use \`${message.applicablePrefix}newquote\` to add some!`
 				);
-			return message.channel.send(noQuotesEmbed);
+			return await message.channel.send(noQuotesEmbed);
 		}
 
 		let quoteList = "";
