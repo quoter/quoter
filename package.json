@@ -1,6 +1,6 @@
 {
 	"name": "quoter",
-	"version": "1.9.0",
+	"version": "1.9.1",
 	"description": "A Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!",
 	"main": "main.js",
 	"private": true,

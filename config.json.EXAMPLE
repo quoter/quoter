@@ -5,6 +5,7 @@
 	"admins": [
 		"USER-ID"
 	],
+	"upvoteChance": 3,
 	"colors": {
 		"general": "#00BFFF",
 		"success": "#32CD32",
