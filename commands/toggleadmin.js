@@ -1,42 +1,38 @@
 const Discord = require("discord.js");
-const db = require("quick.db");
 
 const config = require("../config.json");
 
 module.exports = {
 	enabled: true,
-	hidden: false,
-	name: "allquote",
-	description: "Toggles whether everyone can create quotes.",
+	hidden: true,
+	name: "toggleadmin",
+	description: "Toggles admin features.",
 	usage: "",
 	example: "",
-	aliases: ["anyquote", "anyonecanquote", "allcanquote"],
-	cooldown: 10,
+	aliases: ["togglebypass"],
+	cooldown: 3,
 	args: false,
-	guildOnly: true,
+	guildOnly: false,
 	supportGuildOnly: false,
 	async execute(message, args) {
-		if (
-			message.member.hasPermission("MANAGE_GUILD") ||
-			message.client.admins.get(message.author.id)
-		) {
-			const currentState =
-				db.get(`${message.guild.id}.allquote`) || false;
-			if (currentState === true) {
-				db.set(`${message.guild.id}.allquote`, false);
+		if (config.admins?.includes(message.author.id)) {
+			if (message.client.admins.get(message.author.id)) {
+				message.client.admins.set(message.author.id, false);
+
 				const successEmbed = new Discord.MessageEmbed()
 					.setTitle("✅ Toggled setting")
 					.setColor(config.colors.success)
 					.setDescription(
-						"Only members with the Manage Guild permission can now create quotes."
+						"You no longer have access to admin features."
 					);
 				await message.channel.send(successEmbed);
-			} else if (currentState === false) {
-				db.set(`${message.guild.id}.allquote`, true);
+			} else {
+				message.client.admins.set(message.author.id, true);
+
 				const successEmbed = new Discord.MessageEmbed()
 					.setTitle("✅ Toggled setting")
 					.setColor(config.colors.success)
-					.setDescription("Everyone can now create quotes.");
+					.setDescription("You now have access to admin features.");
 				await message.channel.send(successEmbed);
 			}
 		} else {
@@ -44,7 +40,7 @@ module.exports = {
 				.setTitle("❌ You don't have permission to do that")
 				.setColor(config.colors.error)
 				.setDescription(
-					"That action requires the Manage Guild permission."
+					"That action can only be use by administrators."
 				);
 			await message.channel.send(noPermissionEmbed);
 		}

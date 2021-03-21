@@ -16,7 +16,10 @@ module.exports = {
 	guildOnly: true,
 	supportGuildOnly: false,
 	async execute(message, args) {
-		if (message.member.hasPermission("MANAGE_GUILD")) {
+		if (
+			message.member.hasPermission("MANAGE_GUILD") ||
+			message.client.admins.get(message.author.id)
+		) {
 			if (args[0] >= 1) {
 				let serverQuotes = db.get(`${message.guild.id}.quotes`);
 				const quote = serverQuotes[args[0] - 1];

@@ -17,7 +17,10 @@ module.exports = {
 	supportGuildOnly: false,
 	async execute(message, args) {
 		if (args.length) {
-			if (message.member.hasPermission("MANAGE_GUILD")) {
+			if (
+				message.member.hasPermission("MANAGE_GUILD") ||
+				message.client.admins.get(message.author.id)
+			) {
 				if (
 					/^[a-zA-Z0-9!_.+#$@%^&*(){}=:;'"\/\\\-\[\]]{1,3}$/.test(
 						args[0]

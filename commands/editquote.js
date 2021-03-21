@@ -33,7 +33,10 @@ module.exports = {
 	guildOnly: true,
 	supportGuildOnly: false,
 	async execute(message, args) {
-		if (message.member.hasPermission("MANAGE_GUILD")) {
+		if (
+			message.member.hasPermission("MANAGE_GUILD") ||
+			message.client.admins.get(message.author.id)
+		) {
 			if (args.length < 2) {
 				const invalidArgsEmbed = new Discord.MessageEmbed()
 					.setTitle("❌ Incorrect usage")

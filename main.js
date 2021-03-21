@@ -16,6 +16,7 @@ const client = new Discord.Client({
 });
 
 client.commands = new Discord.Collection();
+client.admins = new Discord.Collection();
 
 const commandFiles = fs
 	.readdirSync("./commands")
@@ -165,7 +166,7 @@ client.on("message", async (message) => {
 		}
 	}
 
-	if (!config?.admins?.includes(message.author.id)) {
+	if (!client.admins.get(message.author.id)) {
 		if (!cooldowns.has(command.name)) {
 			cooldowns.set(command.name, new Discord.Collection());
 		}
@@ -207,8 +208,6 @@ client.on("message", async (message) => {
 		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 	}
 
-	message.channel.startTyping().catch(() => {});
-
 	try {
 		await command.execute(message, args);
 	} catch (error) {
@@ -218,7 +217,10 @@ client.on("message", async (message) => {
 			.setColor(config.colors.error)
 			.setTitle("❌ An error occurred")
 			.setDescription("Contact an administrator about this issue");
-		message.channel.send(errorEmbed).catch((error) => {
+
+		try {
+			await message.channel.send(errorEmbed);
+		} catch (error) {
 			console.error(`Failed to send message in #${
 				message.channel.name
 			} (${message.channel.id})${
@@ -227,7 +229,7 @@ client.on("message", async (message) => {
 					: ""
 			}
 			${error}`);
-		});
+		}
 	}
 
 	if (Math.random() >= 1 - (config.upvoteChance || 3) / 100) {
@@ -246,8 +248,6 @@ client.on("message", async (message) => {
 			${error}`);
 		}
 	}
-
-	message.channel.stopTyping(true);
 });
 
 client.on("guildDelete", (guild) => {
