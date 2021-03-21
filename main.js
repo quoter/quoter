@@ -35,7 +35,7 @@ client.once("ready", () => {
 
 	if (currentGuilds.size <= 0) {
 		return console.error(
-			"An error occured while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped to prevent data loss."
+			"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped to prevent data loss."
 		);
 	}
 
@@ -216,7 +216,7 @@ client.on("message", async (message) => {
 		* ${error}`);
 		const errorEmbed = new Discord.MessageEmbed()
 			.setColor(config.colors.error)
-			.setTitle("❌ An error occured")
+			.setTitle("❌ An error occurred")
 			.setDescription("Contact an administrator about this issue");
 		message.channel.send(errorEmbed).catch((error) => {
 			console.error(`Failed to send message in #${

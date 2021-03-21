@@ -37,7 +37,7 @@ module.exports = {
 				quote.author = `${quote.author.substr(0, 10)}...`;
 
 			quoteList += `**${quoteNumber}**. "${
-				quote.text || "An error occured"
+				quote.text || "An error occurred"
 			}"`;
 			quoteNumber++;
 

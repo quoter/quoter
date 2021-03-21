@@ -48,7 +48,7 @@ module.exports = {
 				* ${error}`);
 
 				const errorEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ An error occured")
+					.setTitle("❌ An error occurred")
 					.setColor(config.colors.error)
 					.setDescription("Failed to fetch the previous message.");
 				return await message.channel.send(errorEmbed);
