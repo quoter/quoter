@@ -1,6 +1,6 @@
 # Quoter Privacy Policy
 
-##### Last updated on 2/14/2021.
+##### Last updated on 3/25/2021.
 
 This document explains what data is collected, how it's used, and how you can delete your data. **If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email `nchristopher@tuta.io`**.
 
@@ -20,4 +20,4 @@ Data storage is necessary for the bot to do it's basic function - displaying quo
 
 If Quoter is online when it's removed from a Discord server, all that server's data will be **deleted**. Otherwise, Quoter will scan for removed guilds the next time it's online, and delete data as so.
 
-You can also contact us (refer to the beggining of this document) to manually remove your data.
+You can also contact us (refer to the beginning of this document) to manually remove your data.
