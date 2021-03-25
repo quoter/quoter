@@ -9,7 +9,7 @@
 		"url": "git+https://github.com/nickhasoccured/quoter.git"
 	},
 	"author": "Nicholas Christopher <nchristopher@tuta.io> (nchristopher.me)",
-	"license": "AGPL-3.0-or-later",
+	"license": "AGPL-3.0-only",
 	"bugs": {
 		"url": "https://github.com/nickhasoccured/quoter/issues"
 	},
