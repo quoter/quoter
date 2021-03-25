@@ -1,3 +1,16 @@
-node_modules/
+# Quoter config
 config.json
+
+# Dependencies
+node_modules/
+
+# Database
 *.sqlite
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Optional npm cache directory
+.npm
