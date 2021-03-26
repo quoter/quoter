@@ -97,7 +97,7 @@ module.exports = {
 				.setDescription(
 					`Created a new server quote:
 						
-						"${quote}"${author ? ` - ${author}` : ""}`
+					"${quote}"${author ? ` - ${author}` : ""}`
 				)
 				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
 			await message.channel.send(successEmbed);

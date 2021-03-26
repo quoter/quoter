@@ -44,8 +44,9 @@ module.exports = {
 					);
 					quoteMessage = messages;
 				} catch (error) {
-					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
-					* ${error}`);
+					console.error(
+						`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})\n${error}`
+					);
 
 					const errorEmbed = new Discord.MessageEmbed()
 						.setTitle("❌ An error occurred")
@@ -64,8 +65,7 @@ module.exports = {
 					});
 					quoteMessage = messages?.first();
 				} catch (error) {
-					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
-					* ${error}`);
+					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})\n${error}`);
 
 					const errorEmbed = new Discord.MessageEmbed()
 						.setTitle("❌ An error occurred")
@@ -130,7 +130,7 @@ module.exports = {
 				.setDescription(
 					`Created a new server quote:
 							
-							"${quoteText}" - ${quoteAuthor}`
+					"${quoteText}" - ${quoteAuthor}`
 				)
 				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
 			return await message.channel.send(successEmbed);

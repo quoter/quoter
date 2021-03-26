@@ -87,14 +87,15 @@ client.on("message", async (message) => {
 		try {
 			return message.channel.send(disabledEmbed);
 		} catch (error) {
-			console.error(`Failed to send message in #${
-				message.channel.name
-			} (${message.channel.id})${
-				message.guild
-					? ` of server ${message.guild.name} (${message.guild.id})`
-					: ""
-			}
-			${error}`);
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
 		}
 	}
 
@@ -112,14 +113,15 @@ client.on("message", async (message) => {
 		try {
 			return message.channel.send(embed);
 		} catch (error) {
-			console.error(`Failed to send message in #${
-				message.channel.name
-			} (${message.channel.id})${
-				message.guild
-					? ` of server ${message.guild.name} (${message.guild.id})`
-					: ""
-			}
-			${error}`);
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
 		}
 	}
 
@@ -136,14 +138,15 @@ client.on("message", async (message) => {
 		try {
 			return message.channel.send(embed);
 		} catch (error) {
-			console.error(`Failed to send message in #${
-				message.channel.name
-			} (${message.channel.id})${
-				message.guild
-					? ` of server ${message.guild.name} (${message.guild.id})`
-					: ""
-			}
-			${error}`);
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
 		}
 	}
 
@@ -155,14 +158,15 @@ client.on("message", async (message) => {
 		try {
 			return message.channel.send(embed);
 		} catch (error) {
-			console.error(`Failed to send message in #${
-				message.channel.name
-			} (${message.channel.id})${
-				message.guild
-					? ` of server ${message.guild.name} (${message.guild.id})`
-					: ""
-			}
-			${error}`);
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
 		}
 	}
 
@@ -192,14 +196,15 @@ client.on("message", async (message) => {
 				try {
 					return message.channel.send(embed);
 				} catch (error) {
-					console.error(`Failed to send message in #${
-						message.channel.name
-					} (${message.channel.id})${
-						message.guild
-							? ` of server ${message.guild.name} (${message.guild.id})`
-							: ""
-					}
-					${error}`);
+					console.error(
+						`Failed to send message in #${message.channel.name} (${
+							message.channel.id
+						})${
+							message.guild
+								? ` of server ${message.guild.name} (${message.guild.id})`
+								: ""
+						}\n${error}`
+					);
 				}
 			}
 		}
@@ -221,14 +226,15 @@ client.on("message", async (message) => {
 		try {
 			await message.channel.send(errorEmbed);
 		} catch (error) {
-			console.error(`Failed to send message in #${
-				message.channel.name
-			} (${message.channel.id})${
-				message.guild
-					? ` of server ${message.guild.name} (${message.guild.id})`
-					: ""
-			}
-			${error}`);
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
 		}
 	}
 
@@ -238,14 +244,15 @@ client.on("message", async (message) => {
 				"💬 If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
 			);
 		} catch (error) {
-			console.error(`Failed to send message in #${
-				message.channel.name
-			} (${message.channel.id})${
-				message.guild
-					? ` of server ${message.guild.name} (${message.guild.id})`
-					: ""
-			}
-			${error}`);
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
 		}
 	}
 });
