@@ -7,7 +7,7 @@ module.exports = {
 	enabled: true,
 	hidden: true,
 	name: "eval",
-	description: "Runs code from an admin",
+	description: "Runs code from an admin.",
 	usage: "",
 	example: "",
 	aliases: [],
