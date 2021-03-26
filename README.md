@@ -10,19 +10,20 @@ A Discord bot which stores quotes for servers & retrieves them on demand. It sup
 
 ## Commands
 
-| Command        | Description                                     |
-| -------------- | ----------------------------------------------- |
-| `/help`        | Shows a list of commands, or details about one. |
-| `/quote`       | Displays a specified quote or a random one.     |
-| `/newquote`    | Creates a new quote.                            |
-| `/quotethat`   | Quotes the previous message.                    |
-| `/listquotes`  | Lists all of the server's quotes.               |
-| `/editquote`   | Edits the specified quote.                      |
-| `/deletequote` | Deletes the specified quote.                    |
-| `/allquote`    | Toggles whether everyone can create quotes.     |
-| `/prefix`      | Sends the server prefix, or sets a new one.     |
-| `/info`        | Displays information about Quoter.              |
-| `/privacy`     | Displays Quoter's Privacy Policy.               |
+| Command        | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `.help`        | Shows a list of commands, or details about one.       |
+| `.quote`       | Displays a specified quote or a random one.           |
+| `.newquote`    | Creates a new quote.                                  |
+| `.quotethat`   | Quotes the previous message.                          |
+| `.listquotes`  | Lists all of the server's quotes.                     |
+| `.editquote`   | Edits the specified quote.                            |
+| `.deletequote` | Deletes the specified quote.                          |
+| `.allquote`    | Toggles whether everyone can create quotes.           |
+| `.prefix`      | Sends the server prefix, or sets a new one.           |
+| `.info`        | Displays information about Quoter.                    |
+| `.privacy`     | Displays Quoter's Privacy Policy.                     |
+| `.bug`         | Shows how to report bugs, suggest features, and more. |
 
 ## License
 
