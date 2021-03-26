@@ -5,11 +5,11 @@ const config = require("../config.json");
 module.exports = {
 	enabled: true,
 	hidden: false,
-	name: "bug",
+	name: "bugs",
 	description: "Shows how to report bugs, suggest features, and more.",
 	usage: "",
 	example: "",
-	aliases: ["suggestion", "suggest", "issue"],
+	aliases: ["suggestion", "suggest", "issue", "bug"],
 	cooldown: 3,
 	args: false,
 	guildOnly: false,

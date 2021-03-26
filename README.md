@@ -23,7 +23,7 @@ A Discord bot which stores quotes for servers & retrieves them on demand. It sup
 | `.prefix`      | Sends the server prefix, or sets a new one.           |
 | `.info`        | Displays information about Quoter.                    |
 | `.privacy`     | Displays Quoter's Privacy Policy.                     |
-| `.bug`         | Shows how to report bugs, suggest features, and more. |
+| `.bugs`        | Shows how to report bugs, suggest features, and more. |
 
 ## License
 
