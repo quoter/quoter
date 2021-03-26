@@ -15,7 +15,7 @@ A Discord bot which stores quotes for servers & retrieves them on demand. It sup
 | `.help`        | Shows a list of commands, or details about one.       |
 | `.quote`       | Displays a specified quote or a random one.           |
 | `.newquote`    | Creates a new quote.                                  |
-| `.quotethat`   | Quotes the previous message.                          |
+| `.quotethat`   | Creates a new quote from a message.                   |
 | `.listquotes`  | Lists all of the server's quotes.                     |
 | `.editquote`   | Edits the specified quote.                            |
 | `.deletequote` | Deletes the specified quote.                          |

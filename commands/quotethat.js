@@ -7,10 +7,10 @@ module.exports = {
 	enabled: true,
 	hidden: false,
 	name: "quotethat",
-	description: "Quotes the previous message.",
-	usage: "",
+	description: "Creates a new quote from a message.",
+	usage: "<message id | message link>",
 	example: "",
-	aliases: ["qthat"],
+	aliases: ["qthat", "quotethis", "qthis"],
 	cooldown: 10,
 	args: false,
 	guildOnly: true,
@@ -37,22 +37,44 @@ module.exports = {
 
 			let quoteMessage;
 
-			try {
-				const messages = await message.channel.messages.fetch({
-					limit: 1,
-					before: message.id,
-					force: true,
-				});
-				quoteMessage = messages.first() || messages;
-			} catch (error) {
-				console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
-				* ${error}`);
+			if (args.length) {
+				try {
+					const messages = await message.channel.messages.fetch(
+						args[0].split(/-|\//).pop()
+					);
+					quoteMessage = messages;
+				} catch (error) {
+					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
+					* ${error}`);
 
-				const errorEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ An error occurred")
-					.setColor(config.colors.error)
-					.setDescription("Failed to fetch the previous message.");
-				return await message.channel.send(errorEmbed);
+					const errorEmbed = new Discord.MessageEmbed()
+						.setTitle("❌ An error occurred")
+						.setColor(config.colors.error)
+						.setDescription(
+							"Failed to fetch that message. Are you sure it exists?"
+						);
+					return await message.channel.send(errorEmbed);
+				}
+			} else {
+				try {
+					const messages = await message.channel.messages.fetch({
+						limit: 1,
+						before: message.id,
+						force: true,
+					});
+					quoteMessage = messages?.first();
+				} catch (error) {
+					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})
+					* ${error}`);
+
+					const errorEmbed = new Discord.MessageEmbed()
+						.setTitle("❌ An error occurred")
+						.setColor(config.colors.error)
+						.setDescription(
+							"Failed to fetch the previous message."
+						);
+					return await message.channel.send(errorEmbed);
+				}
 			}
 
 			if (!quoteMessage.content) {
