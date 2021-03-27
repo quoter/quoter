@@ -8,7 +8,7 @@ module.exports = {
 	hidden: false,
 	name: "quotethat",
 	description: "Creates a new quote from a message.",
-	usage: "<message id | message link>",
+	usage: "<message ID | message link>",
 	example: "",
 	aliases: ["qthat", "quotethis", "qthis"],
 	cooldown: 10,
@@ -38,16 +38,33 @@ module.exports = {
 			let quoteMessage;
 
 			if (args.length) {
-				try {
-					const messages = await message.channel.messages.fetch(
-						args[0].split(/-|\//).pop()
-					);
-					quoteMessage = messages;
-				} catch (error) {
-					console.error(
-						`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})\n${error}`
+				let quoteChannel;
+
+				const splitIDs = args[0].split(/-|\//);
+
+				if (splitIDs.length >= 2) {
+					quoteChannel = message.guild.channels.cache.get(
+						splitIDs[splitIDs.length - 2]
 					);
 
+					if (!quoteChannel) {
+						const errorEmbed = new Discord.MessageEmbed()
+							.setTitle("❌ An error occurred")
+							.setColor(config.colors.error)
+							.setDescription(
+								"Failed to fetch that channel. Are you sure it exists?"
+							);
+						return await message.channel.send(errorEmbed);
+					}
+				} else {
+					quoteChannel = message.channel;
+				}
+
+				try {
+					quoteMessage = await quoteChannel.messages.fetch(
+						splitIDs[splitIDs.length - 1]
+					);
+				} catch {
 					const errorEmbed = new Discord.MessageEmbed()
 						.setTitle("❌ An error occurred")
 						.setColor(config.colors.error)
@@ -65,7 +82,9 @@ module.exports = {
 					});
 					quoteMessage = messages?.first();
 				} catch (error) {
-					console.error(`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})\n${error}`);
+					console.error(
+						`Failed to fetch message in channel #${message.channel.name} (${message.channel.id}) in guild ${message.guild.name} (${message.guild.id})\n${error}`
+					);
 
 					const errorEmbed = new Discord.MessageEmbed()
 						.setTitle("❌ An error occurred")
