@@ -19,7 +19,7 @@ module.exports = {
 			.setTitle("Quoter Issues")
 			.setColor(config.colors.general)
 			.setDescription(
-				"You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](https://github.com/nickhasoccured/quoter/issues) page."
+				"You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](https://github.com/nchristopher/quoter/issues) page."
 			);
 		await message.channel.send(issueEmbed);
 	},
