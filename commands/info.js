@@ -66,9 +66,12 @@ module.exports = {
 			.setColor(config.colors.general)
 			.setDescription(
 				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes! You can invite the bot to your server [here](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200).
-				
-				[⌨️ Source Code](https://github.com/nickhasoccured/quoter) | [🙋 Support Server](https://discord.gg/QzXTgS2CNk)
-				[🔒 Privacy Policy](https://github.com/nickhasoccured/quoter/blob/main/privacy.md) | [💰 Donate](https://ko-fi.com/nickhasoccured)
+
+				[🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
+				[🐛 Report Bugs](https://github.com/nchristopher/quoter/issues/new/choose)
+				[⌨️ Source Code](https://github.com/nchristopher/quoter)
+				[🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
+				[💰 Donate](https://ko-fi.com/nchristopher)
 
 				Use \`${message.applicablePrefix}help\` to get a list of commands.`
 			)
