@@ -6,14 +6,14 @@
 	"private": true,
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/nickhasoccured/quoter.git"
+		"url": "git+https://github.com/nchristopher/quoter.git"
 	},
 	"author": "Nicholas Christopher <nchristopher@tuta.io> (nchristopher.me)",
 	"license": "AGPL-3.0-only",
 	"bugs": {
-		"url": "https://github.com/nickhasoccured/quoter/issues"
+		"url": "https://github.com/nchristopher/quoter/issues"
 	},
-	"homepage": "https://github.com/nickhasoccured/quoter#readme",
+	"homepage": "https://github.com/nchristopher/quoter#readme",
 	"dependencies": {
 		"discord.js": "^12.5.1",
 		"quick.db": "^7.1.3"
