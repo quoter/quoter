@@ -1,3 +1,6 @@
+// Quoter is available under the terms of the GNU Affero General Public License v3.0.
+// You can find a copy of these terms in the included LICENSE file.
+
 console.log(`Starting Quoter v${require("./package.json").version}...`);
 
 const Discord = require("discord.js");
