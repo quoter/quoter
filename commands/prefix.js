@@ -57,7 +57,7 @@ module.exports = {
 				.setTitle(`\`${message.applicablePrefix}\``)
 				.setColor(config.colors.success)
 				.setDescription(
-					`This server's prefix is \`${messsage.applicablePrefix}\` - you can also mention me instead!`
+					`This server's prefix is \`${message.applicablePrefix}\` - you can also mention me instead!`
 				);
 			await message.channel.send(prefixEmbed);
 		}
