@@ -108,7 +108,7 @@ module.exports = {
 				.setDescription(
 					`That action requires the Manage Guild permission.
 					
-					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\``
+					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\`.`
 				);
 			await message.channel.send(noPermissionEmbed);
 		}

@@ -22,7 +22,7 @@ module.exports = {
 				.setTitle("❌ No quotes found")
 				.setColor(config.colors.error)
 				.setDescription(
-					`This server doesn't have any quotes saved, use \`${message.applicablePrefix}newquote\` to add some`
+					`This server doesn't have any quotes saved, use \`${message.applicablePrefix}newquote\` to add some!`
 				);
 			return await message.channel.send(noQuotesEmbed);
 		}

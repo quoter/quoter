@@ -111,7 +111,7 @@ client.on("message", async (message) => {
 			.setColor(config.colors.error)
 			.setTitle("❌ Not here")
 			.setDescription(
-				`\`${message.applicablePrefix}${command.name}\` can only be used inside servers`
+				`\`${message.applicablePrefix}${command.name}\` can only be used inside servers.`
 			);
 		try {
 			return message.channel.send(embed);
@@ -136,7 +136,7 @@ client.on("message", async (message) => {
 			.setColor(config.colors.error)
 			.setTitle("❌ Not here")
 			.setDescription(
-				`\`${message.applicablePrefix}${command.name}\` can only be used inside the [support server](https://discord.gg/QzXTgS2CNk)`
+				`\`${message.applicablePrefix}${command.name}\` can only be used in the [support server](https://discord.gg/QzXTgS2CNk).`
 			);
 		try {
 			return message.channel.send(embed);
@@ -157,7 +157,7 @@ client.on("message", async (message) => {
 		const embed = new Discord.MessageEmbed()
 			.setColor(config.colors.error)
 			.setTitle("❌ Incorrect Usage")
-			.setDescription("You didn't provide any arguments");
+			.setDescription("You didn't provide any arguments.");
 		try {
 			return message.channel.send(embed);
 		} catch (error) {
@@ -194,7 +194,7 @@ client.on("message", async (message) => {
 					.setDescription(
 						`Wait ${timeLeft.toFixed(0)} second(s) before using \`${
 							message.applicablePrefix
-						}${command.name}\` again`
+						}${command.name}\` again.`
 					);
 				try {
 					return message.channel.send(embed);
@@ -224,7 +224,9 @@ client.on("message", async (message) => {
 		const errorEmbed = new Discord.MessageEmbed()
 			.setColor(config.colors.error)
 			.setTitle("❌ An error occurred")
-			.setDescription("Contact an administrator about this issue");
+			.setDescription(
+				`Please report this issue to Quoter's developers! Run \`${message.applicablePrefix}bugs\` for more info.`
+			);
 
 		try {
 			await message.channel.send(errorEmbed);
