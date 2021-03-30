@@ -15,7 +15,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	supportGuildOnly: false,
-	async execute(message, args) {
+	async execute(message) {
 		if (
 			message.member.hasPermission("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)

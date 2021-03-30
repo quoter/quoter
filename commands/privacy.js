@@ -14,7 +14,7 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	supportGuildOnly: false,
-	async execute(message, args) {
+	async execute(message) {
 		const privacyPolicyEmbed = new Discord.MessageEmbed()
 			.setTitle("🔒 Privacy Policy")
 			.setColor(config.colors.general)

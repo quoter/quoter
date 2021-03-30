@@ -22,7 +22,7 @@ module.exports = {
 				message.client.admins.get(message.author.id)
 			) {
 				if (
-					/^[a-zA-Z0-9!_.+#$@%^&*(){}=:;'"\/\\\-\[\]]{1,3}$/.test(
+					/^[a-zA-Z0-9!_.+#$@%^&*(){}=:;'"\\/\-[\]]{1,3}$/.test(
 						args[0]
 					)
 				) {

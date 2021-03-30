@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const config = require("../config.json");
 
 const humanDuration = (milliseconds) => {
-	let result = [];
+	const result = [];
 
 	const numberEnding = (number) => {
 		return number > 1 ? "s" : "";
@@ -60,7 +60,7 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	supportGuildOnly: false,
-	async execute(message, args) {
+	async execute(message) {
 		const infoEmbed = new Discord.MessageEmbed()
 			.setTitle("💬 Information")
 			.setColor(config.colors.general)

@@ -15,7 +15,7 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	supportGuildOnly: false,
-	async execute(message, args) {
+	async execute(message) {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 
 		if (!serverQuotes.length) {
@@ -31,10 +31,12 @@ module.exports = {
 		let quoteList = "";
 		let quoteNumber = 1;
 		serverQuotes.forEach((quote) => {
-			if (quote.text && quote.text.length > 30)
+			if (quote.text && quote.text.length > 30) {
 				quote.text = `${quote.text.substr(0, 30)}...`;
-			if (quote.author && quote.author.length > 10)
+			}
+			if (quote.author && quote.author.length > 10) {
 				quote.author = `${quote.author.substr(0, 10)}...`;
+			}
 
 			quoteList += `**${quoteNumber}**. "${
 				quote.text || "An error occurred"

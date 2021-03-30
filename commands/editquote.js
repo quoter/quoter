@@ -119,7 +119,7 @@ module.exports = {
 				.setTitle("❌ You don't have permission to do that")
 				.setColor(config.colors.error)
 				.setDescription(
-					`That action requires the Manage Guild permission.`
+					"That action requires the Manage Guild permission."
 				);
 			await message.channel.send(noPermissionEmbed);
 		}

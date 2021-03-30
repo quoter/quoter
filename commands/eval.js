@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+// eslint-disable-next-line no-unused-vars
 const db = require("quick.db");
 
 const config = require("../config.json");

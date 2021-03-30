@@ -62,8 +62,8 @@ client.on("message", async (message) => {
 		`<@${client.user.id}>`,
 		`<@!${client.user.id}>`,
 		message.applicablePrefix,
-	].find((prefix) =>
-		message.content.trim().toLowerCase().startsWith(prefix.toLowerCase())
+	].find((p) =>
+		message.content.trim().toLowerCase().startsWith(p.toLowerCase())
 	);
 
 	if (!prefix || message.author.bot) return;
@@ -74,8 +74,7 @@ client.on("message", async (message) => {
 	const command =
 		client.commands.get(commandName) ||
 		client.commands.find(
-			(command) =>
-				command.aliases && command.aliases.includes(commandName)
+			(cmd) => cmd.aliases && cmd.aliases.includes(commandName)
 		);
 
 	if (!command) return;
@@ -230,7 +229,7 @@ client.on("message", async (message) => {
 
 		try {
 			await message.channel.send(errorEmbed);
-		} catch (error) {
+		} catch (error2) {
 			console.error(
 				`Failed to send message in #${message.channel.name} (${
 					message.channel.id
@@ -238,7 +237,7 @@ client.on("message", async (message) => {
 					message.guild
 						? ` of server ${message.guild.name} (${message.guild.id})`
 						: ""
-				}\n${error}`
+				}\n${error2}`
 			);
 		}
 	}

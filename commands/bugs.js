@@ -14,7 +14,7 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	supportGuildOnly: false,
-	async execute(message, args) {
+	async execute(message) {
 		const issueEmbed = new Discord.MessageEmbed()
 			.setTitle("Quoter Issues")
 			.setColor(config.colors.general)

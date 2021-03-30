@@ -20,8 +20,7 @@ module.exports = {
 			const command =
 				message.client.commands.get(commandName) ||
 				message.client.commands.find(
-					(command) =>
-						command.aliases && command.aliases.includes(commandName)
+					(cmd) => cmd.aliases && cmd.aliases.includes(commandName)
 				);
 
 			if (!command || command.disabled) {
@@ -45,7 +44,7 @@ module.exports = {
 			}
 
 			if (command.aliases.length) {
-				let formattedAliases = [];
+				const formattedAliases = [];
 				command.aliases.forEach((alias) => {
 					formattedAliases.push(
 						`\`${message.applicablePrefix}${alias}\``
@@ -83,7 +82,7 @@ module.exports = {
 			});
 
 			const commandsEmbed = new Discord.MessageEmbed()
-				.setTitle(`📘 Command List`)
+				.setTitle("📘 Command List")
 				.setColor(config.colors.success)
 				.setDescription(`Here's a list of all the commands you can use.
 				

@@ -21,7 +21,7 @@ module.exports = {
 			message.client.admins.get(message.author.id)
 		) {
 			if (args[0] >= 1) {
-				let serverQuotes = db.get(`${message.guild.id}.quotes`);
+				const serverQuotes = db.get(`${message.guild.id}.quotes`);
 				const quote = serverQuotes[args[0] - 1];
 				if (quote) {
 					serverQuotes.splice(args[0] - 1, 1);
