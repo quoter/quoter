@@ -49,7 +49,8 @@ module.exports = {
 			.setColor(config.colors.general)
 			.setDescription(
 				`"${
-					quote.text || "An error occurred while retrieving that quote"
+					quote.text ||
+					"An error occurred while retrieving that quote"
 				}"`
 			);
 
