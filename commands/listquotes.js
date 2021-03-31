@@ -52,7 +52,7 @@ module.exports = {
 				quote.author = `${quote.author.substr(0, 10)}...`;
 			}
 
-			quoteList += `**${quoteNumber}**. "${
+			quoteList += `**${quoteNumber + (page - 1) * 10}**. "${
 				quote.text || "An error occurred"
 			}"`;
 			quoteNumber++;
