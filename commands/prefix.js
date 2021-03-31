@@ -8,7 +8,7 @@ module.exports = {
 	hidden: false,
 	name: "prefix",
 	description: "Sends the server prefix, or sets a new one.",
-	usage: "<prefix>",
+	usage: "[New Prefix]",
 	example: "!",
 	aliases: ["setprefix", "newprefix"],
 	cooldown: 10,

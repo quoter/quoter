@@ -25,7 +25,7 @@ module.exports = {
 	hidden: false,
 	name: "editquote",
 	description: "Edits the specified quote",
-	usage: "[id] [quote] [author]",
+	usage: "<Quote ID> <Text> [- <Author>]",
 	example: "",
 	aliases: ["equote", "quoteedit"],
 	cooldown: 10,

@@ -9,7 +9,7 @@ module.exports = {
 	hidden: true,
 	name: "eval",
 	description: "Runs code from an admin.",
-	usage: "",
+	usage: "<Code>",
 	example: "",
 	aliases: [],
 	cooldown: 3,

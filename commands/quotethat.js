@@ -8,7 +8,7 @@ module.exports = {
 	hidden: false,
 	name: "quotethat",
 	description: "Creates a new quote from a message.",
-	usage: "<message ID | message link>",
+	usage: "[Message ID | Message link]",
 	example: "",
 	aliases: ["qthat", "quotethis", "qthis"],
 	cooldown: 10,

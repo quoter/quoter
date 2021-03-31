@@ -7,7 +7,7 @@ module.exports = {
 	hidden: true,
 	name: "help",
 	description: "Shows a list of commands, or details about one.",
-	usage: "",
+	usage: "[Command]",
 	example: "privacy",
 	aliases: ["commands", "cmds", "cmdlist", "commandlist"],
 	cooldown: 5,
@@ -86,7 +86,7 @@ module.exports = {
 				.setColor(config.colors.success)
 				.setDescription(`Here's a list of all the commands you can use.
 				
-				Arguments in \`[]\` are required, while arguments in \`<>\` are optional. You can also use \`${
+				Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You can also use \`${
 					message.applicablePrefix
 				}help <command>\` to get help for a specific command.
 				

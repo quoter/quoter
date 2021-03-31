@@ -25,7 +25,7 @@ module.exports = {
 	hidden: false,
 	name: "newquote",
 	description: "Creates a new quote",
-	usage: "[quote] - [author]",
+	usage: "<Text> [- <Author>]",
 	example: "You're gonna have a bad time - Sans",
 	aliases: ["createquote", "addquote", "nquote"],
 	cooldown: 10,
