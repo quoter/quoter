@@ -74,7 +74,7 @@ module.exports = {
 			.setTitle("💬 Information")
 			.setColor(config.colors.general)
 			.setDescription(
-				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes! You can invite the bot to your server [here](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200).
+				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!
 
 **[🤖 Add Quoter to your server](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200)**
 [🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
