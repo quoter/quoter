@@ -4,6 +4,8 @@ const db = require("quick.db");
 const config = require("../config.json");
 
 const mentionParse = async (mention, client) => {
+	mention = mention.trim();
+
 	if (mention.startsWith("<@") && mention.endsWith(">")) {
 		mention = mention.slice(2, -1);
 	}
