@@ -148,8 +148,8 @@ module.exports = {
 				.setColor(config.colors.success)
 				.setDescription(
 					`Created a new server quote:
-							
-					"${quoteText}" - ${quoteAuthor}`
+
+"${quoteText}" - ${quoteAuthor}`
 				)
 				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
 			return await message.channel.send(successEmbed);
@@ -159,8 +159,8 @@ module.exports = {
 				.setColor(config.colors.error)
 				.setDescription(
 					`That action requires the Manage Guild permission.
-					
-					**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\`.`
+
+**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\`.`
 				);
 			await message.channel.send(noPermissionEmbed);
 		}

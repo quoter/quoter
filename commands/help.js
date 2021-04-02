@@ -85,15 +85,15 @@ module.exports = {
 				.setTitle("📘 Command List")
 				.setColor(config.colors.success)
 				.setDescription(`Here's a list of all the commands you can use.
-				
-				Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You can also use \`${
-					message.applicablePrefix
-				}help <command>\` to get help for a specific command.
-				
-				\`\`\`${
-					commandList ||
-					"No commands were found, contact an administrator about this issue."
-				}\`\`\``);
+
+Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You can also use \`${
+				message.applicablePrefix
+			}help <command>\` to get help for a specific command.
+
+\`\`\`${
+				commandList ||
+				"No commands were found, contact an administrator about this issue."
+			}\`\`\``);
 
 			await message.channel.send(commandsEmbed);
 		}

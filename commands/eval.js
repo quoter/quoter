@@ -32,7 +32,7 @@ module.exports = {
 					.setTitle("❌ An error occurred")
 					.setDescription(
 						`Here's some more information:
-						\`\`\`${error}\`\`\``
+\`\`\`${error}\`\`\``
 					);
 				return await message.author.send(detailedErrorEmbed);
 			}
