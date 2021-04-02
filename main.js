@@ -16,6 +16,7 @@ const client = new Discord.Client({
 			type: "LISTENING",
 		},
 	},
+	ws: { intents: ["GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES"] },
 });
 
 client.commands = new Discord.Collection();
