@@ -67,13 +67,14 @@ module.exports = {
 			.setDescription(
 				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes! You can invite the bot to your server [here](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200).
 
-				[🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
-				[🐛 Report Bugs](https://github.com/nchristopher/quoter/issues/new/choose)
-				[⌨️ Source Code](https://github.com/nchristopher/quoter)
-				[🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
-				[💰 Donate](https://ko-fi.com/nchristopher)
+**[🤖 Add Quoter to your server](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200)**
+[🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
+[🐛 Report Bugs](https://github.com/nchristopher/quoter/issues/new/choose)
+[⌨️ Source Code](https://github.com/nchristopher/quoter)
+[🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
+[💰 Donate](https://ko-fi.com/nchristopher)
 
-				Use \`${message.applicablePrefix}help\` to get a list of commands.`
+Use \`${message.applicablePrefix}help\` to get a list of commands.`
 			)
 			.addField(
 				"Server Count",
