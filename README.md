@@ -25,6 +25,10 @@ _Quoter_ is a Discord bot which stores quotes for servers & retrieves them on de
 | `.privacy`     | Displays Quoter's Privacy Policy.                     |
 | `.bugs`        | Shows how to report bugs, suggest features, and more. |
 
+## Contributing
+
+Refer to this project's [Contributing Guidelines](https://github.com/nchristopher/quoter/blob/main/CONTRIBUTING.md).
+
 ## License
 
 Quoter is available under the terms of the GNU Affero General Public License v3.0. You can find a copy of these terms in the included `LICENSE` file.
