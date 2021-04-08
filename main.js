@@ -86,6 +86,27 @@ client.on("message", async (message) => {
 
 	if (!command) return;
 
+	if (
+		message.channel.type !== "dm" &&
+		!message.channel?.permissionsFor(client.user.id)?.has("EMBED_LINKS")
+	) {
+		try {
+			return message.channel.send(
+				"❌ Quoter doesn't have permissions to **Embed Links** in this channel."
+			);
+		} catch (error) {
+			console.error(
+				`Failed to send message in #${message.channel.name} (${
+					message.channel.id
+				})${
+					message.guild
+						? ` of server ${message.guild.name} (${message.guild.id})`
+						: ""
+				}\n${error}`
+			);
+		}
+	}
+
 	if (!command.enabled) {
 		const disabledEmbed = new Discord.MessageEmbed()
 			.setTitle("❌ That command is disabled")
