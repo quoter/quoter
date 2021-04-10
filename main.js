@@ -22,6 +22,7 @@ const client = new Discord.Client({
 			type: "LISTENING",
 		},
 	},
+	disableMentions: "everyone",
 	ws: { intents: ["GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES"] },
 });
 
