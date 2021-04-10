@@ -26,13 +26,13 @@ module.exports = {
 				message.client.admins.set(message.author.id, false);
 
 				await message.channel.send(
-					"✅ **|** Admin features have been __enabled__ for you."
+					"✅ **|** Admin features have been __disabled__ for you."
 				);
 			} else {
 				message.client.admins.set(message.author.id, true);
 
 				await message.channel.send(
-					"✅ **|** Admin features have been __disabled__ for you."
+					"✅ **|** Admin features have been __enabled__ for you."
 				);
 			}
 		} else {
