@@ -7,8 +7,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const Discord = require("discord.js");
-
 const config = require("../config.json");
 
 module.exports = {
@@ -27,30 +25,20 @@ module.exports = {
 			if (message.client.admins.get(message.author.id)) {
 				message.client.admins.set(message.author.id, false);
 
-				const successEmbed = new Discord.MessageEmbed()
-					.setTitle("✅ Toggled setting")
-					.setColor(config.colors.success)
-					.setDescription(
-						"You no longer have access to admin features."
-					);
-				await message.channel.send(successEmbed);
+				await message.channel.send(
+					"✅ **|** Admin features have been __enabled__ for you."
+				);
 			} else {
 				message.client.admins.set(message.author.id, true);
 
-				const successEmbed = new Discord.MessageEmbed()
-					.setTitle("✅ Toggled setting")
-					.setColor(config.colors.success)
-					.setDescription("You now have access to admin features.");
-				await message.channel.send(successEmbed);
+				await message.channel.send(
+					"✅ **|** Admin features have been __disabled__ for you."
+				);
 			}
 		} else {
-			const noPermissionEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ You don't have permission to do that")
-				.setColor(config.colors.error)
-				.setDescription(
-					"That action can only be use by administrators."
-				);
-			await message.channel.send(noPermissionEmbed);
+			await message.channel.send(
+				"✋ **|** That action can only be used by bot administrators."
+			);
 		}
 	},
 };
