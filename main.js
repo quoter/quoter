@@ -9,13 +9,13 @@ You should have received a copy of the GNU Affero General Public License along w
 
 console.log(`Starting Quoter v${require("./package.json").version}...`);
 
-const Discord = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const db = require("quick.db");
 const fs = require("fs");
 
 const config = require("./config.json");
 
-const client = new Discord.Client({
+const client = new Client({
 	presence: {
 		activity: {
 			name: `${config.defaultPrefix}help`,
@@ -26,8 +26,8 @@ const client = new Discord.Client({
 	ws: { intents: ["GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES"] },
 });
 
-client.commands = new Discord.Collection();
-client.admins = new Discord.Collection();
+client.commands = new Collection();
+client.admins = new Collection();
 
 const commandFiles = fs
 	.readdirSync("./commands")
@@ -38,7 +38,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-const cooldowns = new Discord.Collection();
+const cooldowns = new Collection();
 
 client.once("ready", () => {
 	console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
@@ -168,7 +168,7 @@ client.on("message", async (message) => {
 
 	if (!client.admins.get(message.author.id)) {
 		if (!cooldowns.has(command.name)) {
-			cooldowns.set(command.name, new Discord.Collection());
+			cooldowns.set(command.name, new Collection());
 		}
 
 		const now = Date.now();
