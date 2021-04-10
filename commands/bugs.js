@@ -7,10 +7,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const Discord = require("discord.js");
-
-const config = require("../config.json");
-
 module.exports = {
 	enabled: true,
 	hidden: false,
@@ -23,12 +19,8 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	async execute(message) {
-		const issueEmbed = new Discord.MessageEmbed()
-			.setTitle("Quoter Issues")
-			.setColor(config.colors.general)
-			.setDescription(
-				"You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](https://github.com/nchristopher/quoter/issues) page."
-			);
-		await message.channel.send(issueEmbed);
+		await message.channel.send(
+			"🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's GitHub Issues page: <http://git.io/QuoterIssues>."
+		);
 	},
 };
