@@ -211,15 +211,11 @@ client.on("message", async (message) => {
 	} catch (error) {
 		console.error(`Failed to execute command ${command.name} for user ${message.author.tag} (${message.author.id})
 		* ${error}`);
-		const errorEmbed = new Discord.MessageEmbed()
-			.setColor(config.colors.error)
-			.setTitle("❌ An error occurred")
-			.setDescription(
-				`Please report this issue to Quoter's developers! Run \`${message.applicablePrefix}bugs\` for more info.`
-			);
 
 		try {
-			await message.channel.send(errorEmbed);
+			await message.channel.send(
+				`❌ **|** An error occurred. Please report this to Quoter's developers with \`${message.applicablePrefix}bugs\`.`
+			);
 		} catch (error2) {
 			console.error(
 				`Failed to send message in #${message.channel.name} (${
