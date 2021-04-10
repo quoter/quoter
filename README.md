@@ -2,9 +2,11 @@
 
 # Quoter
 
-[![issues](https://img.shields.io/github/issues/nchristopher/quoter)](https://github.com/nchristopher/quoter/issues)
-[![stars](https://img.shields.io/github/stars/nchristopher/quoter)](https://github.com/nchristopher/quoter/stargazers)
+[![version](https://img.shields.io/github/package-json/v/nchristopher/quoter)](https://github.com/nchristopher/quoter/releases/latest)
 [![license](https://img.shields.io/github/license/nchristopher/quoter)](https://github.com/nchristopher/quoter/blob/main/LICENSE)
+[![stars](https://img.shields.io/github/stars/nchristopher/quoter)](https://github.com/nchristopher/quoter/stargazers)
+[![issues](https://img.shields.io/github/issues/nchristopher/quoter)](https://github.com/nchristopher/quoter/issues)
+
 
 _Quoter_ is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes! You can invite the bot to your server [here](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200), or join the support server [here](https://discord.gg/QzXTgS2CNk).
 
