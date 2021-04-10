@@ -7,11 +7,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const Discord = require("discord.js");
 // eslint-disable-next-line no-unused-vars
 const db = require("quick.db");
-
-const config = require("../config.json");
 
 module.exports = {
 	enabled: true,
@@ -29,35 +26,21 @@ module.exports = {
 			try {
 				eval(args.join(" "));
 			} catch (error) {
-				const errorEmbed = new Discord.MessageEmbed()
-					.setColor(config.colors.error)
-					.setTitle("❌ An error occurred")
-					.setDescription("I've messaged you more information.");
-				await message.channel.send(errorEmbed);
+				await message.channel.send(
+					"❌ **|** An error occurred, I've messaged you more information."
+				);
 
-				const detailedErrorEmbed = new Discord.MessageEmbed()
-					.setColor(config.colors.error)
-					.setTitle("❌ An error occurred")
-					.setDescription(
-						`Here's some more information:
+				return await message.author.send(
+					`❌ **|** An error occurred, here's some more information:
 \`\`\`${error}\`\`\``
-					);
-				return await message.author.send(detailedErrorEmbed);
+				);
 			}
 
-			const successEmbed = new Discord.MessageEmbed()
-				.setTitle("✅ Success")
-				.setColor(config.colors.success)
-				.setDescription("The code ran with no errors.");
-			await message.channel.send(successEmbed);
+			await message.channel.send("✅ **|** The code ran with no errors.");
 		} else {
-			const noPermissionEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ You don't have permission to do that")
-				.setColor(config.colors.error)
-				.setDescription(
-					"That action can only be use by administrators."
-				);
-			await message.channel.send(noPermissionEmbed);
+			await message.channel.send(
+				"✋ **|** That action can only be used by bot administrators."
+			);
 		}
 	},
 };
