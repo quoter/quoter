@@ -7,10 +7,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const Discord = require("discord.js");
 const db = require("quick.db");
-
-const config = require("../config.json");
 
 module.exports = {
 	enabled: true,
@@ -32,29 +29,19 @@ module.exports = {
 				db.get(`${message.guild.id}.allquote`) || false;
 			if (currentState === true) {
 				db.set(`${message.guild.id}.allquote`, false);
-				const successEmbed = new Discord.MessageEmbed()
-					.setTitle("✅ Toggled setting")
-					.setColor(config.colors.success)
-					.setDescription(
-						"Only members with the Manage Guild permission can now create quotes."
-					);
-				await message.channel.send(successEmbed);
+				await message.channel.send(
+					"✅ **|** Only server managers can now create quotes."
+				);
 			} else if (currentState === false) {
 				db.set(`${message.guild.id}.allquote`, true);
-				const successEmbed = new Discord.MessageEmbed()
-					.setTitle("✅ Toggled setting")
-					.setColor(config.colors.success)
-					.setDescription("Everyone can now create quotes.");
-				await message.channel.send(successEmbed);
+				await message.channel.send(
+					"✅ **|** Everyone can now create quotes."
+				);
 			}
 		} else {
-			const noPermissionEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ You don't have permission to do that")
-				.setColor(config.colors.error)
-				.setDescription(
-					"That action requires the Manage Guild permission."
-				);
-			await message.channel.send(noPermissionEmbed);
+			await message.channel.send(
+				"✋ **|** That action requires the **Manage Guild** permission."
+			);
 		}
 	},
 };
