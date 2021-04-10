@@ -92,7 +92,7 @@ client.on("message", async (message) => {
 	) {
 		try {
 			return message.channel.send(
-				"❌ Quoter doesn't have permissions to **Embed Links** in this channel."
+				"❌ **|** Quoter doesn't have permissions to **Embed Links** in this channel."
 			);
 		} catch (error) {
 			console.error(
@@ -108,14 +108,10 @@ client.on("message", async (message) => {
 	}
 
 	if (!command.enabled) {
-		const disabledEmbed = new Discord.MessageEmbed()
-			.setTitle("❌ That command is disabled")
-			.setColor(config.colors.error)
-			.setDescription(
-				`\`${message.applicablePrefix}${command.name}\` is disabled! Contact an administrator if this is an error.`
-			);
 		try {
-			return message.channel.send(disabledEmbed);
+			return message.channel.send(
+				`❌ **|** \`${message.applicablePrefix}${command.name}\` is a disabled command.`
+			);
 		} catch (error) {
 			console.error(
 				`Failed to send message in #${message.channel.name} (${
@@ -134,14 +130,10 @@ client.on("message", async (message) => {
 		message.channel.type !== "text" &&
 		message.channel.type !== "news"
 	) {
-		const embed = new Discord.MessageEmbed()
-			.setColor(config.colors.error)
-			.setTitle("❌ Not here")
-			.setDescription(
-				`\`${message.applicablePrefix}${command.name}\` can only be used inside servers.`
-			);
 		try {
-			return message.channel.send(embed);
+			return message.channel.send(
+				`❌ **|** \`${message.applicablePrefix}${command.name}\` can only be used inside servers.`
+			);
 		} catch (error) {
 			console.error(
 				`Failed to send message in #${message.channel.name} (${
@@ -181,12 +173,10 @@ client.on("message", async (message) => {
 	}
 
 	if (command.args && !args.length) {
-		const embed = new Discord.MessageEmbed()
-			.setColor(config.colors.error)
-			.setTitle("❌ Incorrect Usage")
-			.setDescription("You didn't provide any arguments.");
 		try {
-			return message.channel.send(embed);
+			return message.channel.send(
+				"❌ **|** You didn't provide any arguments."
+			);
 		} catch (error) {
 			console.error(
 				`Failed to send message in #${message.channel.name} (${
@@ -215,16 +205,14 @@ client.on("message", async (message) => {
 
 			if (now < expirationTime) {
 				const timeLeft = (expirationTime - now) / 1000;
-				const embed = new Discord.MessageEmbed()
-					.setColor(config.colors.error)
-					.setTitle("🛑 Slow down")
-					.setDescription(
-						`Wait ${timeLeft.toFixed(0)} second(s) before using \`${
+				try {
+					return message.channel.send(
+						`🛑 **|** Wait ${timeLeft.toFixed(
+							0
+						)} second(s) before using \`${
 							message.applicablePrefix
 						}${command.name}\` again.`
 					);
-				try {
-					return message.channel.send(embed);
 				} catch (error) {
 					console.error(
 						`Failed to send message in #${message.channel.name} (${
@@ -273,7 +261,7 @@ client.on("message", async (message) => {
 	if (Math.random() >= 1 - (config.upvoteChance || 3) / 100) {
 		try {
 			await message.channel.send(
-				"💬 If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
+				"💬 **|** If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
 			);
 		} catch (error) {
 			console.error(
