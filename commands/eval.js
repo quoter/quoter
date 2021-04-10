@@ -24,7 +24,6 @@ module.exports = {
 	cooldown: 3,
 	args: true,
 	guildOnly: false,
-	supportGuildOnly: false,
 	async execute(message, args) {
 		if (message.client.admins.get(message.author.id)) {
 			try {

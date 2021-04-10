@@ -147,31 +147,6 @@ client.on("message", async (message) => {
 		}
 	}
 
-	if (
-		command.supportGuildOnly &&
-		message.guild.id !== config.supportGuildOnly
-	) {
-		const embed = new Discord.MessageEmbed()
-			.setColor(config.colors.error)
-			.setTitle("❌ Not here")
-			.setDescription(
-				`\`${message.applicablePrefix}${command.name}\` can only be used in the [support server](https://discord.gg/QzXTgS2CNk).`
-			);
-		try {
-			return message.channel.send(embed);
-		} catch (error) {
-			console.error(
-				`Failed to send message in #${message.channel.name} (${
-					message.channel.id
-				})${
-					message.guild
-						? ` of server ${message.guild.name} (${message.guild.id})`
-						: ""
-				}\n${error}`
-			);
-		}
-	}
-
 	if (command.args && !args.length) {
 		try {
 			return message.channel.send(

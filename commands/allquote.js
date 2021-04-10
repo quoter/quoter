@@ -23,7 +23,6 @@ module.exports = {
 	cooldown: 10,
 	args: false,
 	guildOnly: true,
-	supportGuildOnly: false,
 	async execute(message) {
 		if (
 			message.member.hasPermission("MANAGE_GUILD") ||

@@ -22,7 +22,6 @@ module.exports = {
 	cooldown: 3,
 	args: false,
 	guildOnly: false,
-	supportGuildOnly: false,
 	async execute(message) {
 		const privacyPolicyEmbed = new Discord.MessageEmbed()
 			.setTitle("🔒 Privacy Policy")

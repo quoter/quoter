@@ -22,7 +22,6 @@ module.exports = {
 	cooldown: 5,
 	args: false,
 	guildOnly: false,
-	supportGuildOnly: false,
 	async execute(message, args) {
 		if (args.length) {
 			const commandName = args[0].toLowerCase();

@@ -23,7 +23,6 @@ module.exports = {
 	cooldown: 10,
 	args: false,
 	guildOnly: true,
-	supportGuildOnly: false,
 	async execute(message, args) {
 		if (
 			db.get(`${message.guild.id}.allquote`) ||

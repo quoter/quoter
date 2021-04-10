@@ -23,7 +23,6 @@ module.exports = {
 	cooldown: 8,
 	args: false,
 	guildOnly: true,
-	supportGuildOnly: false,
 	async execute(message, args) {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 

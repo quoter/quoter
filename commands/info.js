@@ -68,7 +68,6 @@ module.exports = {
 	cooldown: 3,
 	args: false,
 	guildOnly: false,
-	supportGuildOnly: false,
 	async execute(message) {
 		const infoEmbed = new Discord.MessageEmbed()
 			.setTitle("💬 Information")
