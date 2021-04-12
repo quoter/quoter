@@ -7,10 +7,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const Discord = require("discord.js");
 const db = require("quick.db");
-
-const config = require("../config.json");
 
 module.exports = {
 	enabled: true,
@@ -35,35 +32,21 @@ module.exports = {
 					serverQuotes.splice(args[0] - 1, 1);
 					db.set(`${message.guild.id}.quotes`, serverQuotes);
 
-					const successEmbed = new Discord.MessageEmbed()
-						.setTitle("✅ Removed quote")
-						.setColor(config.colors.success)
-						.setDescription(
-							`Successfully removed quote #${args[0]}.`
-						);
-					await message.channel.send(successEmbed);
+					await message.channel.send(
+						`✅ **|** Deleted quote #${args[0]}.`
+					);
 				} else {
-					const quoteNotFoundEmbed = new Discord.MessageEmbed()
-						.setTitle("❌ No quote found")
-						.setColor(config.colors.error)
-						.setDescription("Couldn't find a quote with that ID.");
-					await message.channel.send(quoteNotFoundEmbed);
+					await message.channel.send(
+						"❌ **|** I couldn't find a quote with that ID."
+					);
 				}
 			} else {
-				const quoteNotFoundEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ No quote found")
-					.setColor(config.colors.error)
-					.setDescription("You didn't specify a valid ID.");
-				await message.channel.send(quoteNotFoundEmbed);
+				await message.channel.send("❌ **|** That's not a valid ID.");
 			}
 		} else {
-			const noPermissionEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ You don't have permission to do that")
-				.setColor(config.colors.error)
-				.setDescription(
-					"That action requires the Manage Guild permission."
-				);
-			await message.channel.send(noPermissionEmbed);
+			await message.channel.send(
+				"✋ **|** That action requires the **Manage Guild** permission."
+			);
 		}
 	},
 };

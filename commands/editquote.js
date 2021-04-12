@@ -48,13 +48,9 @@ module.exports = {
 			message.client.admins.get(message.author.id)
 		) {
 			if (args.length < 2) {
-				const invalidArgsEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ Incorrect usage")
-					.setColor(config.colors.error)
-					.setDescription(
-						"You have to specify a quote's ID & it's new text."
-					);
-				return await message.channel.send(invalidArgsEmbed);
+				return await message.channel.send(
+					"❌ **|** Incorrect usage. Specify an existing quote ID & it's new content."
+				);
 			}
 
 			const quoteID = args.shift();
@@ -63,11 +59,9 @@ module.exports = {
 			const quote = serverQuotes[quoteID - 1];
 
 			if (!quote) {
-				const quoteNotFoundEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ No quote found")
-					.setColor(config.colors.error)
-					.setDescription("Couldn't find a quote with that ID.");
-				return await message.channel.send(quoteNotFoundEmbed);
+				return await message.channel.send(
+					"❌ **|** I couldn't find a quote with that ID."
+				);
 			}
 
 			const quoteArgs = args.join(" ").split("-");
@@ -94,15 +88,11 @@ module.exports = {
 				editedText.length >
 				(db.get(`${message.guild.id}.maxQuoteSize`) || 130)
 			) {
-				const quoteSizeEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ Quote too big")
-					.setColor(config.colors.error)
-					.setDescription(
-						`Quotes cannot be longer than ${
-							db.get(`${message.guild.id}.maxQuoteSize`) || 130
-						} characters.`
-					);
-				return await message.channel.send(quoteSizeEmbed);
+				return await message.channel.send(
+					`❌ **|** Quotes cannot be longer than ${
+						db.get(`${message.guild.id}.maxQuoteSize`) || 130
+					} characters.`
+				);
 			}
 
 			serverQuotes[quoteID - 1] = {
@@ -125,13 +115,9 @@ module.exports = {
 				.setFooter(`Quote #${quoteID}`);
 			await message.channel.send(successEmbed);
 		} else {
-			const noPermissionEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ You don't have permission to do that")
-				.setColor(config.colors.error)
-				.setDescription(
-					"That action requires the Manage Guild permission."
-				);
-			await message.channel.send(noPermissionEmbed);
+			await message.channel.send(
+				"✋ **|** That action requires the **Manage Guild** permission."
+			);
 		}
 	},
 };
