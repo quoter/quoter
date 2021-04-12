@@ -27,25 +27,17 @@ module.exports = {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 
 		if (!serverQuotes.length) {
-			const noQuotesEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ No quotes found")
-				.setColor(config.colors.error)
-				.setDescription(
-					`This server doesn't have any quotes, use \`${message.applicablePrefix}newquote\` to add some!`
-				);
-			return await message.channel.send(noQuotesEmbed);
+			return await message.channel.send(
+				`❌ **|** This server doesn't have any quotes, use \`${message.applicablePrefix}newquote\` to add some!`
+			);
 		}
 
 		const page = Math.floor(Number(args[0])) || 1;
 		const maxPageNum = Math.ceil(serverQuotes.length / 10);
 		if (isNaN(page) || page <= 0 || page > maxPageNum) {
-			const invalidPageEmbed = new Discord.MessageEmbed()
-				.setTitle("❌ Invalid page number")
-				.setColor(config.colors.error)
-				.setDescription(
-					`Use a valid integer between **1** and **${maxPageNum}**.`
-				);
-			return await message.channel.send(invalidPageEmbed);
+			return await message.channel.send(
+				`❌ **|** That's an invalid page, use a number between **1** and **${maxPageNum}**.`
+			);
 		}
 
 		const splicedQuotes = serverQuotes.splice((page - 1) * 10, 10);
