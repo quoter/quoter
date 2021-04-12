@@ -32,13 +32,9 @@ module.exports = {
 				);
 
 			if (!command || command.disabled) {
-				const noCommandEmbed = new Discord.MessageEmbed()
-					.setTitle("❌ That command doesn't exist or it's disabled")
-					.setColor(config.colors.error)
-					.setDescription(
-						"Contact an administrator if this is an error"
-					);
-				return await message.channel.send(noCommandEmbed);
+				return await message.channel.send(
+					"❌ **|** That command doesn't exist, or it's disabled."
+				);
 			}
 
 			let description = `▫️ **DESCRIPTION**: ${command.description}`;
@@ -64,11 +60,7 @@ module.exports = {
 					`\n▫️ **ALIASES**: ${formattedAliases.join(", ")}`;
 			}
 
-			if (command.supportGuildOnly) {
-				description =
-					"**❗ This command can only be used in the [support server](https://discord.gg/QzXTgS2CNk)**\n\n" +
-					description;
-			} else if (command.guildOnly) {
+			if (command.guildOnly) {
 				description =
 					"**❗ This command can only be used inside servers**\n\n" +
 					description;
