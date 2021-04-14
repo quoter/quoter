@@ -35,9 +35,7 @@ module.exports = {
 				(db.get(`${message.guild.id}.maxQuotes`) || 75)
 			) {
 				return await message.channel.send(
-					`❌ **|** Quotes cannot be longer than ${
-						db.get(`${message.guild.id}.maxQuoteSize`) || 130
-					} characters.`
+					`❌ **|** This server has too many quotes! Use \`${message.applicablePrefix}deletequote\` before creating more.`
 				);
 			}
 
