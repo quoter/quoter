@@ -34,7 +34,7 @@ module.exports = {
 
 		const page = Math.floor(Number(args[0])) || 1;
 		const maxPageNum = Math.ceil(serverQuotes.length / 10);
-		if (isNaN(page) || page <= 0 || page > maxPageNum) {
+		if (page <= 0 || page > maxPageNum) {
 			return await message.channel.send(
 				`❌ **|** That's an invalid page, use a number between **1** and **${maxPageNum}**.`
 			);
