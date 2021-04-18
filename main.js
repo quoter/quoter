@@ -86,8 +86,9 @@ client.on("message", async (message) => {
 	if (!command) return;
 
 	if (
-		message.channel.type !== "dm" &&
-		!message.channel?.permissionsFor(client.user.id)?.has("EMBED_LINKS")
+		message.channel
+			?.permissionsFor?.(client.user.id)
+			?.has?.("EMBED_LINKS") === false
 	) {
 		try {
 			return message.channel.send(
