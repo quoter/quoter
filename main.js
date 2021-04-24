@@ -125,11 +125,7 @@ client.on("message", async (message) => {
 		}
 	}
 
-	if (
-		command.guildOnly &&
-		message.channel.type !== "text" &&
-		message.channel.type !== "news"
-	) {
+	if (command.guildOnly && !message.guild) {
 		try {
 			return message.channel.send(
 				`❌ **|** \`${message.applicablePrefix}${command.name}\` can only be used inside servers.`
