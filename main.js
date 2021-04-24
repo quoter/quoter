@@ -146,7 +146,11 @@ client.on("message", async (message) => {
 	if (command.args && !args.length) {
 		try {
 			return message.channel.send(
-				"❌ **|** You didn't provide any arguments."
+				`❌ **|** You didn't provide any arguments.\n${
+					command.usage
+						? `Usage: \`${message.applicablePrefix}${command.name} ${command.usage}\``
+						: ""
+				}`
 			);
 		} catch (error) {
 			console.error(
