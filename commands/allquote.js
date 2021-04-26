@@ -26,17 +26,20 @@ module.exports = {
 			message.client.admins.get(message.author.id)
 		) {
 			const currentState =
-				db.get(`${message.guild.id}.allquote`) || false;
-			if (currentState === true) {
-				db.set(`${message.guild.id}.allquote`, false);
-				await message.channel.send(
-					"✅ **|** Only server managers can now create quotes."
-				);
-			} else if (currentState === false) {
-				db.set(`${message.guild.id}.allquote`, true);
-				await message.channel.send(
-					"✅ **|** Everyone can now create quotes."
-				);
+				db.get(`${message.guild.id}.allquote`) ?? false;
+
+			db.set(`${message.guild.id}.allquote`, !currentState);
+
+			switch (currentState) {
+				case true:
+					await message.channel.send(
+						"✅ **|** Only server managers can now create quotes."
+					);
+					break;
+				case false:
+					await message.channel.send(
+						"✅ **|** Everyone can now create quotes."
+					);
 			}
 		} else {
 			await message.channel.send(
