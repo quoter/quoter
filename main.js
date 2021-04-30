@@ -62,14 +62,14 @@ client.once("ready", () => {
 });
 
 client.on("message", async (message) => {
-	message.applicablePrefix = message.guild
+	message.prefix = message.guild
 		? db.get(`${message.guild.id}.prefix`) || config.defaultPrefix
 		: config.defaultPrefix;
 
 	const prefix = [
 		`<@${client.user.id}>`,
 		`<@!${client.user.id}>`,
-		message.applicablePrefix,
+		message.prefix,
 	].find((p) =>
 		message.content.trim().toLowerCase().startsWith(p.toLowerCase())
 	);
@@ -110,7 +110,7 @@ client.on("message", async (message) => {
 	if (!command.enabled) {
 		try {
 			return message.channel.send(
-				`❌ **|** \`${message.applicablePrefix}${command.name}\` is a disabled command.`
+				`❌ **|** \`${message.prefix}${command.name}\` is a disabled command.`
 			);
 		} catch (error) {
 			console.error(
@@ -128,7 +128,7 @@ client.on("message", async (message) => {
 	if (command.guildOnly && !message.guild) {
 		try {
 			return message.channel.send(
-				`❌ **|** \`${message.applicablePrefix}${command.name}\` can only be used inside servers.`
+				`❌ **|** \`${message.prefix}${command.name}\` can only be used inside servers.`
 			);
 		} catch (error) {
 			console.error(
@@ -148,7 +148,7 @@ client.on("message", async (message) => {
 			return message.channel.send(
 				`❌ **|** You didn't provide any arguments.\n${
 					command.usage
-						? `Usage: \`${message.applicablePrefix}${command.name} ${command.usage}\``
+						? `Usage: \`${message.prefix}${command.name} ${command.usage}\``
 						: ""
 				}`
 			);
@@ -184,9 +184,9 @@ client.on("message", async (message) => {
 					return message.channel.send(
 						`🛑 **|** Wait ${timeLeft.toFixed(
 							0
-						)} second(s) before using \`${
-							message.applicablePrefix
-						}${command.name}\` again.`
+						)} second(s) before using \`${message.prefix}${
+							command.name
+						}\` again.`
 					);
 				} catch (error) {
 					console.error(
@@ -214,7 +214,7 @@ client.on("message", async (message) => {
 
 		try {
 			await message.channel.send(
-				`❌ **|** An error occurred. Please report this to Quoter's developers with \`${message.applicablePrefix}bugs\`.`
+				`❌ **|** An error occurred. Please report this to Quoter's developers with \`${message.prefix}bugs\`.`
 			);
 		} catch (error2) {
 			console.error(

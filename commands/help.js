@@ -40,19 +40,17 @@ module.exports = {
 			let description = `▫️ **DESCRIPTION**: ${command.description}`;
 
 			if (command.usage) {
-				description += `\n▫️ **USAGE**: \`${message.applicablePrefix}${command.name} ${command.usage}\``;
+				description += `\n▫️ **USAGE**: \`${message.prefix}${command.name} ${command.usage}\``;
 			}
 
 			if (command.example) {
-				description += `\n▫️ **EXAMPLE**: \`${message.applicablePrefix}${command.name} ${command.example}\``;
+				description += `\n▫️ **EXAMPLE**: \`${message.prefix}${command.name} ${command.example}\``;
 			}
 
 			if (command.aliases.length) {
 				const formattedAliases = [];
 				command.aliases.forEach((alias) => {
-					formattedAliases.push(
-						`\`${message.applicablePrefix}${alias}\``
-					);
+					formattedAliases.push(`\`${message.prefix}${alias}\``);
 				});
 
 				description =
@@ -67,7 +65,7 @@ module.exports = {
 			}
 
 			const commandEmbed = new Discord.MessageEmbed()
-				.setTitle(`\`${message.applicablePrefix}${command.name}\``)
+				.setTitle(`\`${message.prefix}${command.name}\``)
 				.setColor(config.colors.success)
 				.setDescription(description);
 
@@ -77,7 +75,7 @@ module.exports = {
 
 			message.client.commands.each((command) => {
 				if (command.enabled && !command.hidden) {
-					commandList += `\n${message.applicablePrefix}${command.name} ${command.usage}`;
+					commandList += `\n${message.prefix}${command.name} ${command.usage}`;
 				}
 			});
 
@@ -87,7 +85,7 @@ module.exports = {
 				.setDescription(`Here's a list of all the commands you can use.
 
 Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You can also use \`${
-				message.applicablePrefix
+				message.prefix
 			}help <command>\` to get help for a specific command.
 
 \`\`\`${

@@ -35,7 +35,7 @@ module.exports = {
 				(db.get(`${message.guild.id}.maxQuotes`) || 75)
 			) {
 				return await message.channel.send(
-					`❌ **|** This server has too many quotes! Use \`${message.applicablePrefix}deletequote\` before creating more.`
+					`❌ **|** This server has too many quotes! Use \`${message.prefix}deletequote\` before creating more.`
 				);
 			}
 
@@ -130,7 +130,7 @@ module.exports = {
 			await message.channel.send(
 				`✋ **|** That action requires the **Manage Guild** permission.
 
-**❗ To allow anyone to create quotes**, use \`${message.applicablePrefix}allquote\`.`
+**❗ To allow anyone to create quotes**, use \`${message.prefix}allquote\`.`
 			);
 		}
 	},

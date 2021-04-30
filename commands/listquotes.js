@@ -28,7 +28,7 @@ module.exports = {
 
 		if (!serverQuotes.length) {
 			return await message.channel.send(
-				`❌ **|** This server doesn't have any quotes, use \`${message.applicablePrefix}newquote\` to add some!`
+				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
 			);
 		}
 
@@ -67,7 +67,7 @@ module.exports = {
 		const quoteListEmbed = new Discord.MessageEmbed()
 			.setTitle(`Server Quotes • Page #${page}`)
 			.setColor(config.colors.general)
-			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${message.applicablePrefix}quote <ID>\` to get a specific quote, or use \`${message.applicablePrefix}listquotes [#]\` to see other pages.
+			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${message.prefix}quote <ID>\` to get a specific quote, or use \`${message.prefix}listquotes [#]\` to see other pages.
 
 ${quoteList}`);
 		await message.channel.send(quoteListEmbed);

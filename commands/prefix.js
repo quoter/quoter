@@ -33,7 +33,7 @@ module.exports = {
 				) {
 					db.set(`${message.guild.id}.prefix`, args[0]);
 					await message.channel.send(
-						`✅ **|** This server's prefix is now \`${args[0]}\` (from \`${message.applicablePrefix}\`) - you can always mention me instead!`
+						`✅ **|** This server's prefix is now \`${args[0]}\` (from \`${message.prefix}\`) - you can always mention me instead!`
 					);
 				} else {
 					await message.channel.send(
@@ -47,7 +47,7 @@ module.exports = {
 			}
 		} else {
 			await message.channel.send(
-				`⚙️ **|** This server's prefix is **\`${message.applicablePrefix}\`** - you can always mention me instead!`
+				`⚙️ **|** This server's prefix is **\`${message.prefix}\`** - you can always mention me instead!`
 			);
 		}
 	},

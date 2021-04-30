@@ -27,7 +27,7 @@ module.exports = {
 		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 		if (!serverQuotes.length) {
 			return await message.channel.send(
-				`❌ **|** This server doesn't have any quotes, use \`${message.applicablePrefix}newquote\` to add some!`
+				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
 			);
 		}
 

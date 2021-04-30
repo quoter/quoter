@@ -82,7 +82,7 @@ module.exports = {
 [🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
 [💰 Donate](https://ko-fi.com/nchristopher)
 
-Use \`${message.applicablePrefix}help\` to get a list of commands.`
+Use \`${message.prefix}help\` to get a list of commands.`
 			)
 			.addField(
 				"Server Count",
