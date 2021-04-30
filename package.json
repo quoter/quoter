@@ -8,7 +8,7 @@
 		"type": "git",
 		"url": "git+https://github.com/nchristopher/quoter.git"
 	},
-	"author": "Nicholas Christopher <nchristopher@tuta.io> (nchristopher.me)",
+	"author": "Nicholas Christopher <nchristopher@tuta.io> (https://nchristopher.me)",
 	"license": "AGPL-3.0-only",
 	"bugs": {
 		"url": "https://github.com/nchristopher/quoter/issues"
