@@ -22,15 +22,14 @@ module.exports = {
 	guildOnly: false,
 	async execute(message) {
 		if (config.admins?.includes(message.author.id)) {
-			if (message.client.admins.get(message.author.id)) {
-				message.client.admins.set(message.author.id, false);
+			const currentState = message.client.admins.get(message.author.id);
+			message.client.admins.set(message.author.id, !currentState);
 
+			if (currentState) {
 				await message.channel.send(
 					"✅ **|** Admin features have been __disabled__ for you."
 				);
 			} else {
-				message.client.admins.set(message.author.id, true);
-
 				await message.channel.send(
 					"✅ **|** Admin features have been __enabled__ for you."
 				);
