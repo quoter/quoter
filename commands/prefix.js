@@ -23,7 +23,7 @@ module.exports = {
 	async execute(message, args) {
 		if (args.length) {
 			if (
-				message.member.hasPermission("MANAGE_GUILD") ||
+				message.member.permissions.has("MANAGE_GUILD") ||
 				message.client.admins.get(message.author.id)
 			) {
 				if (

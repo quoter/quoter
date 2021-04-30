@@ -26,7 +26,7 @@ module.exports = {
 	async execute(message, args) {
 		if (
 			db.get(`${message.guild.id}.allquote`) ||
-			message.member.hasPermission("MANAGE_GUILD") ||
+			message.member.permissions.has("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)
 		) {
 			const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
