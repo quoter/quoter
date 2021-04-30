@@ -95,7 +95,7 @@ client.on("message", async (message) => {
 				"❌ **|** Quoter doesn't have permissions to **Embed Links** in this channel."
 			);
 		} catch (error) {
-			console.error(
+			return console.error(
 				`Failed to send message in #${message.channel.name} (${
 					message.channel.id
 				})${
@@ -113,7 +113,7 @@ client.on("message", async (message) => {
 				`❌ **|** \`${message.prefix}${command.name}\` is a disabled command.`
 			);
 		} catch (error) {
-			console.error(
+			return console.error(
 				`Failed to send message in #${message.channel.name} (${
 					message.channel.id
 				})${
@@ -131,7 +131,7 @@ client.on("message", async (message) => {
 				`❌ **|** \`${message.prefix}${command.name}\` can only be used inside servers.`
 			);
 		} catch (error) {
-			console.error(
+			return console.error(
 				`Failed to send message in #${message.channel.name} (${
 					message.channel.id
 				})${
@@ -153,7 +153,7 @@ client.on("message", async (message) => {
 				}`
 			);
 		} catch (error) {
-			console.error(
+			return console.error(
 				`Failed to send message in #${message.channel.name} (${
 					message.channel.id
 				})${
