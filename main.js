@@ -232,7 +232,7 @@ client.on("message", async (message) => {
 	if (Math.random() >= 1 - (config.upvoteChance ?? 3) / 100) {
 		try {
 			await message.channel.send(
-				"💬 **|** If you're enjoying Quoter, consider upvoting it! <https://top.gg/bot/784853298271748136/vote>"
+				"💬 **|** If you're enjoying Quoter, consider upvoting it! <https://discordextremelist.xyz/bots/quoter/>"
 			);
 		} catch (error) {
 			console.error(
