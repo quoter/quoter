@@ -62,6 +62,8 @@ client.once("ready", () => {
 });
 
 client.on("message", async (message) => {
+	if (message.author.bot) return;
+
 	message.prefix = message.guild
 		? db.get(`${message.guild.id}.prefix`) || config.defaultPrefix
 		: config.defaultPrefix;
@@ -74,7 +76,7 @@ client.on("message", async (message) => {
 		message.content.trim().toLowerCase().startsWith(p.toLowerCase())
 	);
 
-	if (!prefix || message.author.bot) return;
+	if (!prefix) return;
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
