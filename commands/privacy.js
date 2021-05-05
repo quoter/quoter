@@ -43,7 +43,6 @@ You can also contact us (refer to the beginning of this document) to manually re
 	);
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "privacy",
 	description: "Displays Quoter's Privacy Policy.",

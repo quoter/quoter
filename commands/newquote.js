@@ -32,7 +32,6 @@ const mentionParse = async (mention, client) => {
 };
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "newquote",
 	description: "Creates a new quote",

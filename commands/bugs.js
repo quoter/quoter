@@ -8,7 +8,6 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "bugs",
 	description: "Shows how to report bugs, suggest features, and more.",

@@ -58,7 +58,6 @@ const getDateString = (milliseconds) => {
 };
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "info",
 	description: "Displays information about Quoter.",

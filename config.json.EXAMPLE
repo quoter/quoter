@@ -5,6 +5,7 @@
 		"USER-ID"
 	],
 	"upvoteChance": 1,
+	"disabledCommands": [],
 	"colors": {
 		"general": "#00BFFF",
 		"success": "#32CD32",

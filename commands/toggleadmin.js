@@ -10,7 +10,6 @@ You should have received a copy of the GNU Affero General Public License along w
 const config = require("../config.json");
 
 module.exports = {
-	enabled: true,
 	hidden: true,
 	name: "toggleadmin",
 	description: "Toggles admin features.",

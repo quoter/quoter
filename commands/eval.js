@@ -11,7 +11,6 @@ You should have received a copy of the GNU Affero General Public License along w
 const db = require("quick.db");
 
 module.exports = {
-	enabled: true,
 	hidden: true,
 	name: "eval",
 	description: "Runs code from an admin.",

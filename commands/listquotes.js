@@ -13,7 +13,6 @@ const db = require("quick.db");
 const config = require("../config.json");
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "listquotes",
 	description: "Lists all of the server's quotes",

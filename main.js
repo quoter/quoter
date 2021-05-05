@@ -109,7 +109,7 @@ client.on("message", async (message) => {
 		}
 	}
 
-	if (!command.enabled) {
+	if (config.disabledCommands?.includes?.(command.name)) {
 		try {
 			return message.channel.send(
 				`❌ **|** \`${message.prefix}${command.name}\` is a disabled command.`

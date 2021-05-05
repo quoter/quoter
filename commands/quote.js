@@ -13,7 +13,6 @@ const db = require("quick.db");
 const config = require("../config.json");
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "quote",
 	description: "Displays a specified quote or a random one.",

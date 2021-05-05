@@ -10,7 +10,6 @@ You should have received a copy of the GNU Affero General Public License along w
 const db = require("quick.db");
 
 module.exports = {
-	enabled: true,
 	hidden: false,
 	name: "allquote",
 	description: "Toggles whether everyone can create quotes.",

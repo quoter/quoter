@@ -12,7 +12,6 @@ const Discord = require("discord.js");
 const config = require("../config.json");
 
 module.exports = {
-	enabled: true,
 	hidden: true,
 	name: "help",
 	description: "Shows a list of commands, or details about one.",
