@@ -1,20 +1,18 @@
 # Quoter Privacy Policy
 
-##### Last updated on 3/25/2021.
+##### Last updated on 5/7/2021.
 
 This document explains what data is collected, how it's used, and how you can delete your data. **If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email `nchristopher@tuta.io`**.
 
 ## What data do we collect, and why do we need it?
 
-We store the following information when users interact with Quoter:
+We store the information that you provide to Quoter. Additionally, we automatically collect some other data:
 
--   The quote's text & the quote's author. Users can later view this information when interacting with Quoter.
--   The current date. Users can later view this information when interacting with Quoter.
--   The creation date of the quoted message, when using the `.quotethat` command. This isn't currently used.
--   The quote creator's Discord ID. This isn't currently used.
--   A prefix set by a server admin. This is used by Quoter to properly respond to & ignore messages.
+-   The current time & date when creating a quote. This is displayed when viewing a singular quote.
+-   The Discord user ID of whoever created the quote. This isn't currently used.
+-   The message ID & channel ID of the original message when using the `quotethat` command.
 
-Data storage is necessary for the bot to do it's basic function - displaying quotes. We never use/collect data for marketing and/or analytics. Data is **only** accessible by Quoter developers, and the user who uses Quoter.
+Data storage is necessary for the bot to do it's basic function - displaying quotes. We never use/collect data for marketing and/or analytics, and we don't sell it either. Data is **only** accessible by Quoter developers & the end user.
 
 ## How can I delete my data?
 
