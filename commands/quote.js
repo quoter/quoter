@@ -50,7 +50,11 @@ module.exports = {
 				`"${
 					quote.text ||
 					"An error occurred while retrieving that quote"
-				}"`
+				}"${
+					quote.messageID && quote.channelID
+						? `\n> [Original Message](https://canary.discord.com/channels/${message.guild.id}/${quote.channelID}/${quote.messageID})`
+						: undefined
+				}`
 			);
 
 		if (quote.createdTimestamp) {
