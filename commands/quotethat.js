@@ -113,7 +113,6 @@ module.exports = {
 				messageID: quoteMessage.id,
 				channelID: quoteMessage.channel.id,
 				createdTimestamp: Date.now(),
-				quoteTimestamp: quoteMessage.createdTimestamp,
 				quoter: message.author.id,
 			});
 
