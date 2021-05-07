@@ -110,6 +110,8 @@ module.exports = {
 			db.push(`${message.guild.id}.quotes`, {
 				text: quoteText,
 				author: quoteAuthor,
+				messageID: quoteMessage.id,
+				channelID: quoteMessage.channel.id,
 				createdTimestamp: Date.now(),
 				quoteTimestamp: quoteMessage.createdTimestamp,
 				quoter: message.author.id,
