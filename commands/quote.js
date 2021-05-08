@@ -63,7 +63,7 @@ module.exports = {
 			);
 		}
 
-		if (quote.author && quote.author.length > 1) {
+		if (quote.author?.length > 1) {
 			quoteEmbed.setAuthor(quote.author);
 		}
 
