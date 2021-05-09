@@ -74,9 +74,9 @@ module.exports = {
 			}
 
 			if (
-				editedAuthor &&
-				(editedAuthor.trim().toLowerCase() === "anon" ||
-					editedAuthor.trim().toLowerCase() === "anonymous")
+				["anonymous", "anon"].includes(
+					editedAuthor?.trim?.()?.toLowerCase?.()
+				)
 			) {
 				editedAuthor = undefined;
 			}
