@@ -93,7 +93,7 @@ module.exports = {
 				);
 			}
 
-			const quoteAuthor = quoteMessage.author.tag;
+			const quoteAuthor = quoteMessage.author?.tag;
 			const quoteText = quoteMessage.content;
 
 			if (
