@@ -77,7 +77,7 @@ module.exports = {
 **[🤖 Add Quoter to your server](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200)**
 [🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
 [🐛 Report Bugs](https://github.com/nchristopher/quoter/issues/new/choose)
-[⌨️ Source Code](https://github.com/nchristopher/quoter)
+[🛠️ Source Code](https://github.com/nchristopher/quoter)
 [🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
 [💰 Donate](https://ko-fi.com/nchristopher)
 
