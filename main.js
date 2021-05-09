@@ -46,7 +46,7 @@ client.once("ready", () => {
 	const currentGuilds = client.guilds.cache;
 
 	if (currentGuilds.size <= 0) {
-		return console.error(
+		return console.warn(
 			"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped to prevent data loss."
 		);
 	}
