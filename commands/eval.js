@@ -28,7 +28,9 @@ module.exports = {
 
 				return await message.author.send(
 					`❌ **|** An error occurred, here's some more information:
-\`\`\`${error}\`\`\``
+\`\`\`JS
+${error}
+\`\`\``
 				);
 			}
 
