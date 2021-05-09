@@ -9,7 +9,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 const Discord = require("discord.js");
 
-const config = require("../config.json");
+const { colors, disabledCommands } = require("../config.json");
 
 module.exports = {
 	hidden: true,
@@ -30,7 +30,7 @@ module.exports = {
 					(cmd) => cmd.aliases && cmd.aliases.includes(commandName)
 				);
 
-			if (!command || command.disabled) {
+			if (!command || disabledCommands.includes(command.name)) {
 				return await message.channel.send(
 					"❌ **|** That command doesn't exist, or it's disabled."
 				);
@@ -65,7 +65,7 @@ module.exports = {
 
 			const commandEmbed = new Discord.MessageEmbed()
 				.setTitle(`\`${message.prefix}${command.name}\``)
-				.setColor(config.colors.success)
+				.setColor(colors.success)
 				.setDescription(description);
 
 			await message.channel.send(commandEmbed);
@@ -73,14 +73,16 @@ module.exports = {
 			let commandList;
 
 			message.client.commands.each((command) => {
-				if (command.enabled && !command.hidden) {
-					commandList += `\n${message.prefix}${command.name} ${command.usage}`;
+				if (command.hidden || disabledCommands.includes(command.name)) {
+					return;
 				}
+
+				commandList += `\n${message.prefix}${command.name} ${command.usage}`;
 			});
 
 			const commandsEmbed = new Discord.MessageEmbed()
 				.setTitle("📘 Command List")
-				.setColor(config.colors.success)
+				.setColor(colors.success)
 				.setDescription(`Here's a list of all the commands you can use.
 
 Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You can also use \`${
