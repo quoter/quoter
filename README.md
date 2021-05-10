@@ -32,4 +32,16 @@ Refer to this project's [Contributing Guidelines](https://github.com/nchristophe
 
 ## License
 
-Quoter is available under the terms of the GNU Affero General Public License v3.0. You can find a copy of these terms in the included `LICENSE` file.
+Copyright (C) 2020-2021 Nicholas Christopher
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
