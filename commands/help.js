@@ -30,7 +30,7 @@ module.exports = {
 					(cmd) => cmd.aliases && cmd.aliases.includes(commandName)
 				);
 
-			if (!command || disabledCommands.includes(command.name)) {
+			if (!command || disabledCommands?.includes(command.name)) {
 				return await message.channel.send(
 					"❌ **|** That command doesn't exist, or it's disabled."
 				);
@@ -73,7 +73,10 @@ module.exports = {
 			let commandList;
 
 			message.client.commands.each((command) => {
-				if (command.hidden || disabledCommands.includes(command.name)) {
+				if (
+					command.hidden ||
+					disabledCommands?.includes(command.name)
+				) {
 					return;
 				}
 
