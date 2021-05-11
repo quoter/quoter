@@ -53,7 +53,7 @@ module.exports = {
 				}"${
 					quote.messageID && quote.channelID
 						? `\n> [Original Message](https://canary.discord.com/channels/${message.guild.id}/${quote.channelID}/${quote.messageID})`
-						: undefined
+						: ""
 				}`
 			);
 
