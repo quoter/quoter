@@ -29,16 +29,14 @@ module.exports = {
 
 			db.set(`${message.guild.id}.allquote`, !currentState);
 
-			switch (currentState) {
-				case true:
-					await message.channel.send(
-						"✅ **|** Only server managers can now create quotes."
-					);
-					break;
-				case false:
-					await message.channel.send(
-						"✅ **|** Everyone can now create quotes."
-					);
+			if (currentState) {
+				await message.channel.send(
+					"✅ **|** Only server managers can now create quotes."
+				);
+			} else {
+				await message.channel.send(
+					"✅ **|** Everyone can now create quotes."
+				);
 			}
 		} else {
 			await message.channel.send(
