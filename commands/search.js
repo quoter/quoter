@@ -57,7 +57,7 @@ module.exports = {
 		const list = matches.map((match) => {
 			let result = "";
 
-			const quoteID = match.refIndex;
+			const quoteID = match.refIndex + 1;
 			const quote = match.item;
 
 			if (quote.text && quote.text.length > 30) {
