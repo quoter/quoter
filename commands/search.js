@@ -79,7 +79,7 @@ module.exports = {
 		const quoteListEmbed = new MessageEmbed()
 			.setTitle("🔎 Search Results")
 			.setColor(colors.general)
-			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${
+			.setDescription(`Quotes might've been shortened due to Discord limitations. Use \`${
 			message.prefix
 		}quote <ID>\` to get a specific quote.
 
