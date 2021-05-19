@@ -16,7 +16,7 @@ const { colors } = require("../config.json");
 module.exports = {
 	hidden: false,
 	name: "search",
-	description: "description",
+	description: "Searches through the server's quotes.",
 	usage: "<Search Term>",
 	example: "",
 	aliases: ["searchquotes", "s"],
