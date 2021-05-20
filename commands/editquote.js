@@ -10,7 +10,7 @@ You should have received a copy of the GNU Affero General Public License along w
 const Discord = require("discord.js");
 const db = require("quick.db");
 
-const config = require("../config.json");
+const { colors, maxQuoteLength } = require("../config.json");
 
 const mentionParse = async (mention, client) => {
 	mention = mention.trim();
@@ -85,11 +85,15 @@ module.exports = {
 
 			if (
 				editedText.length >
-				(db.get(`${message.guild.id}.maxQuoteSize`) || 130)
+				(db.get(`${message.guild.id}.maxQuoteSize`) ||
+					maxQuoteLength ||
+					130)
 			) {
 				return await message.channel.send(
 					`❌ **|** Quotes cannot be longer than ${
-						db.get(`${message.guild.id}.maxQuoteSize`) || 130
+						db.get(`${message.guild.id}.maxQuoteSize`) ||
+						maxQuoteLength ||
+						130
 					} characters.`
 				);
 			}
@@ -107,7 +111,7 @@ module.exports = {
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Edited quote")
-				.setColor(config.colors.success)
+				.setColor(colors.success)
 				.setDescription(
 					`"${editedText}"${editedAuthor ? ` - ${editedAuthor}` : ""}`
 				)

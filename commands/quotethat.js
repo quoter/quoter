@@ -10,7 +10,7 @@ You should have received a copy of the GNU Affero General Public License along w
 const Discord = require("discord.js");
 const db = require("quick.db");
 
-const config = require("../config.json");
+const { maxGuildQuotes, colors } = require("../config.json");
 
 module.exports = {
 	hidden: false,
@@ -31,7 +31,9 @@ module.exports = {
 			const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
 			if (
 				serverQuotes.length >=
-				(db.get(`${message.guild.id}.maxQuotes`) || 75)
+				(db.get(`${message.guild.id}.maxQuotes`) ||
+					maxGuildQuotes ||
+					75)
 			) {
 				return await message.channel.send(
 					`❌ **|** This server has too many quotes! Use \`${message.prefix}deletequote\` before creating more.`
@@ -118,7 +120,7 @@ module.exports = {
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Added quote")
-				.setColor(config.colors.success)
+				.setColor(colors.success)
 				.setDescription(
 					`Created a new server quote:
 

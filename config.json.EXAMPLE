@@ -5,6 +5,8 @@
 		"USER-ID"
 	],
 	"upvoteChance": 1,
+	"maxGuildQuotes": 75,
+	"maxQuoteLength": 130,
 	"disabledCommands": [],
 	"colors": {
 		"general": "#00BFFF",
