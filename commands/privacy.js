@@ -9,11 +9,9 @@ You should have received a copy of the GNU Affero General Public License along w
 
 const Discord = require("discord.js");
 
-const config = require("../config.json");
-
 const privacyPolicyEmbed = new Discord.MessageEmbed()
 	.setTitle("🔒 Privacy Policy")
-	.setColor(config.colors.general)
+	.setColor("BLUE")
 	.setDescription(
 		`> Last updated on 5/7/2021
 

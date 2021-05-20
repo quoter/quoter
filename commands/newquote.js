@@ -10,7 +10,7 @@ You should have received a copy of the GNU Affero General Public License along w
 const Discord = require("discord.js");
 const db = require("quick.db");
 
-const { maxGuildQuotes, maxQuoteLength, colors } = require("../config.json");
+const { maxGuildQuotes, maxQuoteLength } = require("../config.json");
 
 const mentionParse = async (mention, client) => {
 	mention = mention.trim();
@@ -100,7 +100,7 @@ module.exports = {
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Added quote")
-				.setColor(colors.success)
+				.setColor("GREEN")
 				.setDescription(
 					`Created a new server quote:
 

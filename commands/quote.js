@@ -10,8 +10,6 @@ You should have received a copy of the GNU Affero General Public License along w
 const Discord = require("discord.js");
 const db = require("quick.db");
 
-const config = require("../config.json");
-
 module.exports = {
 	hidden: false,
 	name: "quote",
@@ -45,7 +43,7 @@ module.exports = {
 		}
 
 		const quoteEmbed = new Discord.MessageEmbed()
-			.setColor(config.colors.general)
+			.setColor("BLUE")
 			.setDescription(
 				`"${
 					quote.text ||

@@ -9,8 +9,6 @@ You should have received a copy of the GNU Affero General Public License along w
 
 const Discord = require("discord.js");
 
-const config = require("../config.json");
-
 const humanDuration = (milliseconds) => {
 	const result = [];
 
@@ -70,7 +68,7 @@ module.exports = {
 	async execute(message) {
 		const infoEmbed = new Discord.MessageEmbed()
 			.setTitle("💬 Information")
-			.setColor(config.colors.general)
+			.setColor("BLUE")
 			.setDescription(
 				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!
 

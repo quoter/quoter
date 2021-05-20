@@ -10,7 +10,7 @@ You should have received a copy of the GNU Affero General Public License along w
 const Discord = require("discord.js");
 const db = require("quick.db");
 
-const { colors, maxQuoteLength } = require("../config.json");
+const { maxQuoteLength } = require("../config.json");
 
 const mentionParse = async (mention, client) => {
 	mention = mention.trim();
@@ -111,7 +111,7 @@ module.exports = {
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Edited quote")
-				.setColor(colors.success)
+				.setColor("GREEN")
 				.setDescription(
 					`"${editedText}"${editedAuthor ? ` - ${editedAuthor}` : ""}`
 				)

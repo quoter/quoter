@@ -9,7 +9,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 const Discord = require("discord.js");
 
-const { colors, disabledCommands } = require("../config.json");
+const { disabledCommands } = require("../config.json");
 
 module.exports = {
 	hidden: true,
@@ -65,7 +65,7 @@ module.exports = {
 
 			const commandEmbed = new Discord.MessageEmbed()
 				.setTitle(`\`${message.prefix}${command.name}\``)
-				.setColor(colors.success)
+				.setColor("GREEN")
 				.setDescription(description);
 
 			await message.channel.send(commandEmbed);
@@ -85,7 +85,7 @@ module.exports = {
 
 			const commandsEmbed = new Discord.MessageEmbed()
 				.setTitle("📘 Command List")
-				.setColor(colors.success)
+				.setColor("GREEN")
 				.setDescription(`Here's a list of all the commands you can use.
 
 Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You can also use \`${

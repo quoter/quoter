@@ -11,8 +11,6 @@ const { MessageEmbed } = require("discord.js");
 const Fuse = require("fuse.js");
 const db = require("quick.db");
 
-const { colors } = require("../config.json");
-
 module.exports = {
 	hidden: false,
 	name: "search",
@@ -78,7 +76,7 @@ module.exports = {
 
 		const quoteListEmbed = new MessageEmbed()
 			.setTitle("🔎 Search Results")
-			.setColor(colors.general)
+			.setColor("BLUE")
 			.setDescription(`Quotes might've been shortened due to Discord limitations. Use \`${
 			message.prefix
 		}quote <ID>\` to get a specific quote.
