@@ -7,10 +7,5 @@
 	"upvoteChance": 1,
 	"maxGuildQuotes": 75,
 	"maxQuoteLength": 130,
-	"disabledCommands": [],
-	"colors": {
-		"general": "#00BFFF",
-		"success": "#32CD32",
-		"error": "#FF0000"
-	}
+	"disabledCommands": []
 }
