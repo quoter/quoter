@@ -1,7 +1,7 @@
 {
 	"token": "TOKEN",
 	"defaultPrefix": ".",
-	"mongoPath": "mongodb://127.0.0.1:27017",
+	"mongoPath": "mongodb://127.0.0.1:27017/quoter",
 	"admins": [
 		"USER-ID"
 	],
