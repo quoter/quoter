@@ -10,6 +10,7 @@ You should have received a copy of the GNU Affero General Public License along w
 console.log(`Starting Quoter v${require("./package.json").version}...`);
 
 const { Client, Collection } = require("discord.js");
+const mongoose = require("mongoose");
 const db = require("quick.db");
 const fs = require("fs");
 
@@ -40,8 +41,17 @@ for (const file of commandFiles) {
 
 const cooldowns = new Collection();
 
-client.once("ready", () => {
+client.once("ready", async () => {
 	console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
+
+	await mongoose.connect(config.mongoPath, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+		useCreateIndex: true,
+	});
+
+	console.log("Connected to MongoDB");
 
 	const currentGuilds = client.guilds.cache;
 
