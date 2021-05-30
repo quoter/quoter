@@ -8,7 +8,7 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 
 const Discord = require("discord.js");
-const db = require("quick.db");
+const Guild = require("../schemas/guild.js");
 
 const { maxGuildQuotes, maxQuoteLength } = require("../config.json");
 
@@ -42,17 +42,22 @@ module.exports = {
 	args: true,
 	guildOnly: true,
 	async execute(message, args) {
+		const guild = await Guild.findOneAndUpdate(
+			{ _id: message.guild.id },
+			{},
+			{ upsert: true, new: true }
+		);
+
 		if (
-			db.get(`${message.guild.id}.allquote`) ||
+			guild.allQuote ||
 			message.member.permissions.has("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)
 		) {
-			const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
+			const serverQuotes = guild.quotes;
+
 			if (
 				serverQuotes.length >=
-				(db.get(`${message.guild.id}.maxQuotes`) ||
-					maxGuildQuotes ||
-					75)
+				(guild.maxGuildQuotes || maxGuildQuotes || 75)
 			) {
 				return await message.channel.send(
 					`❌ **|** This server has too many quotes! Use \`${message.prefix}deletequote\` before creating more.`
@@ -77,26 +82,22 @@ module.exports = {
 			const quote = quoteArgs.join("-").trim();
 
 			if (
-				quote.length >
-				(db.get(`${message.guild.id}.maxQuoteSize`) ||
-					maxQuoteLength ||
-					130)
+				quote.length > (guild.maxQuoteLength || maxQuoteLength || 130)
 			) {
 				return await message.channel.send(
 					`❌ **|** Quotes cannot be longer than ${
-						db.get(`${message.guild.id}.maxQuoteSize`) ||
-						maxQuoteLength ||
-						130
+						guild.maxQuoteLength || maxQuoteLength || 130
 					} characters.`
 				);
 			}
 
-			db.push(`${message.guild.id}.quotes`, {
+			await serverQuotes.push({
 				text: quote,
 				author: author,
-				createdTimestamp: Date.now(),
-				quoter: message.author.id,
+				quoterID: message.author.id,
 			});
+
+			await guild.save();
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Added quote")
@@ -106,7 +107,7 @@ module.exports = {
 
 "${quote}"${author ? ` - ${author}` : ""}`
 				)
-				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
+				.setFooter(`Quote #${serverQuotes.length}`);
 			await message.channel.send(successEmbed);
 		} else {
 			await message.channel.send(
