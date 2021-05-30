@@ -8,7 +8,7 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 
 const Discord = require("discord.js");
-const db = require("quick.db");
+const Guild = require("../schemas/guild.js");
 
 module.exports = {
 	hidden: false,
@@ -21,7 +21,8 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	async execute(message, args) {
-		const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
+		const serverQuotes =
+			(await Guild.findById(message.guild.id))?.quotes || [];
 		if (!serverQuotes.length) {
 			return await message.channel.send(
 				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
