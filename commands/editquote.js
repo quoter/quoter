@@ -8,7 +8,7 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 
 const Discord = require("discord.js");
-const db = require("quick.db");
+const Guild = require("../schemas/guild.js");
 
 const { maxQuoteLength } = require("../config.json");
 
@@ -42,6 +42,12 @@ module.exports = {
 	args: true,
 	guildOnly: true,
 	async execute(message, args) {
+		const guild = await Guild.findOneAndUpdate(
+			{ _id: message.guild.id },
+			{},
+			{ upsert: true, new: true }
+		);
+
 		if (
 			message.member.permissions.has("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)
@@ -54,7 +60,7 @@ module.exports = {
 
 			const quoteID = args.shift();
 
-			const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
+			const serverQuotes = guild.quotes;
 			const quote = serverQuotes[quoteID - 1];
 
 			if (!quote) {
@@ -85,29 +91,25 @@ module.exports = {
 
 			if (
 				editedText.length >
-				(db.get(`${message.guild.id}.maxQuoteSize`) ||
-					maxQuoteLength ||
-					130)
+				(guild.maxQuoteLength || maxQuoteLength || 130)
 			) {
 				return await message.channel.send(
 					`❌ **|** Quotes cannot be longer than ${
-						db.get(`${message.guild.id}.maxQuoteSize`) ||
-						maxQuoteLength ||
-						130
+						guild.maxQuoteLength || maxQuoteLength || 130
 					} characters.`
 				);
 			}
 
-			serverQuotes[quoteID - 1] = {
+			await serverQuotes.set(quoteID - 1, {
 				text: editedText,
 				author: editedAuthor,
 				createdTimestamp: quote.createdTimestamp,
 				editedTimestamp: Date.now(),
-				quoter: quote.quoter,
-				editor: message.author.id,
-			};
+				quoterID: quote.quoterID,
+				editorID: message.author.id,
+			});
 
-			db.set(`${message.guild.id}.quotes`, serverQuotes);
+			await guild.save();
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Edited quote")
