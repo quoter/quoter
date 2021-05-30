@@ -42,12 +42,6 @@ module.exports = {
 	args: true,
 	guildOnly: true,
 	async execute(message, args) {
-		const guild = await Guild.findOneAndUpdate(
-			{ _id: message.guild.id },
-			{},
-			{ upsert: true, new: true }
-		);
-
 		if (
 			message.member.permissions.has("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)
@@ -59,6 +53,12 @@ module.exports = {
 			}
 
 			const quoteID = args.shift();
+
+			const guild = await Guild.findOneAndUpdate(
+				{ _id: message.guild.id },
+				{},
+				{ upsert: true, new: true }
+			);
 
 			const serverQuotes = guild.quotes;
 			const quote = serverQuotes[quoteID - 1];
