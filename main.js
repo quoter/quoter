@@ -14,6 +14,8 @@ const mongoose = require("mongoose");
 const db = require("quick.db");
 const fs = require("fs");
 
+const Guild = require("./schemas/guild.js");
+
 const config = require("./config.json");
 
 const client = new Client({
@@ -75,7 +77,8 @@ client.on("message", async (message) => {
 	if (message.author.bot) return;
 
 	message.prefix = message.guild
-		? db.get(`${message.guild.id}.prefix`) || config.defaultPrefix
+		? (await Guild.findById(message.guild.id)).prefix ||
+		  config.defaultPrefix
 		: config.defaultPrefix;
 
 	const prefix = [
