@@ -7,6 +7,8 @@ const guildSchema = new Schema({
 	},
 	prefix: String,
 	allQuote: Boolean,
+	maxGuildQuotes: Number,
+	maxQuoteLength: Number,
 	quotes: [
 		{
 			text: {
