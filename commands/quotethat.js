@@ -8,9 +8,9 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 
 const Discord = require("discord.js");
-const db = require("quick.db");
+const Guild = require("../schemas/guild.js");
 
-const { maxGuildQuotes } = require("../config.json");
+const { maxGuildQuotes, maxQuoteLength } = require("../config.json");
 
 module.exports = {
 	hidden: false,
@@ -23,17 +23,20 @@ module.exports = {
 	args: false,
 	guildOnly: true,
 	async execute(message, args) {
+		const guild = await Guild.findOneAndUpdate(
+			{ _id: message.guild.id },
+			{},
+			{ upsert: true, new: true }
+		);
+
 		if (
-			db.get(`${message.guild.id}.allquote`) ||
+			guild.allQuote ||
 			message.member.permissions.has("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)
 		) {
-			const serverQuotes = db.get(`${message.guild.id}.quotes`) || [];
+			const serverQuotes = guild.quotes;
 			if (
-				serverQuotes.length >=
-				(db.get(`${message.guild.id}.maxQuotes`) ||
-					maxGuildQuotes ||
-					75)
+				serverQuotes.length >= (guild.maxQuotes || maxGuildQuotes || 75)
 			) {
 				return await message.channel.send(
 					`❌ **|** This server has too many quotes! Use \`${message.prefix}deletequote\` before creating more.`
@@ -100,23 +103,24 @@ module.exports = {
 
 			if (
 				quoteText.length >
-				(db.get(`${message.guild.id}.maxQuoteSize`) || 130)
+				(guild.maxQuoteLength || maxQuoteLength || 130)
 			) {
 				return await message.channel.send(
 					`❌ **|** Quotes cannot be longer than ${
-						db.get(`${message.guild.id}.maxQuoteSize`) || 130
+						guild.maxQuoteLength || maxQuoteLength || 130
 					} characters.`
 				);
 			}
 
-			db.push(`${message.guild.id}.quotes`, {
+			await serverQuotes.push({
 				text: quoteText,
 				author: quoteAuthor,
-				messageID: quoteMessage.id,
-				channelID: quoteMessage.channel.id,
-				createdTimestamp: Date.now(),
-				quoter: message.author.id,
+				ogMessageID: quoteMessage.id,
+				ogChannelID: quoteMessage.channel.id,
+				quoterID: message.author.id,
 			});
+
+			await guild.save();
 
 			const successEmbed = new Discord.MessageEmbed()
 				.setTitle("✅ Added quote")
@@ -126,7 +130,7 @@ module.exports = {
 
 "${quoteText}" - ${quoteAuthor}`
 				)
-				.setFooter(`Quote #${(serverQuotes.length || 0) + 1}`);
+				.setFooter(`Quote #${serverQuotes.length}`);
 			return await message.channel.send(successEmbed);
 		} else {
 			await message.channel.send(

@@ -50,8 +50,8 @@ module.exports = {
 					quote.text ||
 					"An error occurred while retrieving that quote"
 				}"${
-					quote.messageID && quote.channelID
-						? `\n> [Original Message](https://canary.discord.com/channels/${message.guild.id}/${quote.channelID}/${quote.messageID})`
+					quote.ogMessageID && quote.ogChannelID
+						? `\n> [Original Message](https://discord.com/channels/${message.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 						: ""
 				}`
 			);
