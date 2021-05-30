@@ -7,7 +7,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const db = require("quick.db");
+const Guild = require("../schemas/guild.js");
 
 module.exports = {
 	hidden: false,
@@ -24,10 +24,16 @@ module.exports = {
 			message.member.permissions.has("MANAGE_GUILD") ||
 			message.client.admins.get(message.author.id)
 		) {
-			const currentState =
-				db.get(`${message.guild.id}.allquote`) ?? false;
+			const currentState = (await Guild.findById(message.guild.id))
+				?.allQuote;
 
-			db.set(`${message.guild.id}.allquote`, !currentState);
+			await Guild.findOneAndUpdate(
+				{ _id: message.guild.id },
+				{ allQuote: !currentState },
+				{
+					upsert: true,
+				}
+			);
 
 			if (currentState) {
 				await message.channel.send(
