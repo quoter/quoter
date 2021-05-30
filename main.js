@@ -11,7 +11,6 @@ console.log(`Starting Quoter v${require("./package.json").version}...`);
 
 const { Client, Collection } = require("discord.js");
 const mongoose = require("mongoose");
-const db = require("quick.db");
 const fs = require("fs");
 
 const Guild = require("./schemas/guild.js");
@@ -55,22 +54,16 @@ client.once("ready", async () => {
 
 	console.log("Connected to MongoDB");
 
-	const currentGuilds = client.guilds.cache;
+	const currentGuilds = client.guilds.cache.map((g) => g.id);
 
 	if (currentGuilds.size <= 0) {
 		return console.warn(
-			"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped to prevent data loss."
+			"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped."
 		);
 	}
 
-	db.all().forEach((dbGuild) => {
-		if (
-			!currentGuilds.find((cachedGuild) => cachedGuild.id === dbGuild.ID)
-		) {
-			db.delete(dbGuild.ID);
-			console.log(`Deleted data for removed guild ${dbGuild.ID}.`);
-		}
-	});
+	const response = await Guild.deleteMany({ _id: { $nin: currentGuilds } });
+	console.log(`Deleted ${response.deletedCount} guilds from mongoDB`);
 });
 
 client.on("message", async (message) => {
@@ -263,8 +256,8 @@ client.on("message", async (message) => {
 	}
 });
 
-client.on("guildDelete", (guild) => {
-	db.delete(guild.id);
+client.on("guildDelete", async (guild) => {
+	await Guild.deleteOne({ _id: guild.id });
 
 	console.log(`Deleted data for guild ${guild.name} (${guild.id})`);
 });
