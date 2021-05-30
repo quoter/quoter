@@ -77,7 +77,7 @@ client.on("message", async (message) => {
 	if (message.author.bot) return;
 
 	message.prefix = message.guild
-		? (await Guild.findById(message.guild.id)).prefix ||
+		? (await Guild.findById(message.guild.id))?.prefix ||
 		  config.defaultPrefix
 		: config.defaultPrefix;
 
