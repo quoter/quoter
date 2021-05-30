@@ -7,7 +7,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
-const db = require("quick.db");
+const Guild = require("../schemas/guild.js");
 
 module.exports = {
 	hidden: false,
@@ -30,7 +30,14 @@ module.exports = {
 						args[0]
 					)
 				) {
-					db.set(`${message.guild.id}.prefix`, args[0]);
+					await Guild.findOneAndUpdate(
+						{ _id: message.guild.id },
+						{ prefix: args[0] },
+						{
+							upsert: true,
+						}
+					);
+
 					await message.channel.send(
 						`✅ **|** This server's prefix is now \`${args[0]}\` (from \`${message.prefix}\`) - you can always mention me instead!`
 					);
