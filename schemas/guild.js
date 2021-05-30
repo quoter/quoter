@@ -17,12 +17,17 @@ const guildSchema = new Schema({
 			},
 			author: String,
 			quoterID: String,
+			editorID: String,
 			ogMessageID: String,
 			ogChannelID: String,
 			createdTimestamp: {
 				type: Number,
 				min: 0,
 				default: Date.now(),
+			},
+			editedTimestamp: {
+				type: Number,
+				min: 0,
 			},
 		},
 	],
