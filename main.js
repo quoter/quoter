@@ -52,7 +52,7 @@ client.once("ready", async () => {
 		useCreateIndex: true,
 	});
 
-	console.log("Connected to MongoDB");
+	console.log("Connected to mongoDB");
 
 	const currentGuilds = client.guilds.cache.map((g) => g.id);
 
