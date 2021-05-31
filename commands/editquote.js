@@ -10,26 +10,9 @@ You should have received a copy of the GNU Affero General Public License along w
 const Discord = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
+const mentionParse = require("../util/mentionParse.js");
+
 const { maxQuoteLength } = require("../config.json");
-
-const mentionParse = async (mention, client) => {
-	mention = mention.trim();
-
-	if (mention.startsWith("<@") && mention.endsWith(">")) {
-		mention = mention.slice(2, -1);
-	}
-
-	if (mention.startsWith("!")) {
-		mention = mention.slice(1);
-	}
-
-	try {
-		const result = await client.users.fetch(mention);
-		return result.tag;
-	} catch {
-		return mention.substr(0, 32);
-	}
-};
 
 module.exports = {
 	hidden: false,
