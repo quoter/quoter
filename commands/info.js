@@ -61,11 +61,12 @@ module.exports = {
 	description: "Displays information about Quoter.",
 	usage: "",
 	example: "",
-	aliases: ["information", "uptime", "support", "invite"],
+	aliases: ["information", "uptime", "support", "invite", "ping"],
 	cooldown: 3,
 	args: false,
 	guildOnly: false,
 	async execute(message) {
+		const now = Date.now();
 		const infoEmbed = new Discord.MessageEmbed()
 			.setTitle("💬 Information")
 			.setColor("BLUE")
@@ -95,7 +96,9 @@ Use \`${message.prefix}help\` to get a list of commands.`
 			)
 			.addField(
 				"Latency",
-				`Average ping is ${message.client.ws.ping} milliseconds.`,
+				`I received your message in \`${
+					now - message.createdTimestamp
+				}\`ms. WebSocket ping is \`${message.client.ws.ping}\`ms`,
 				true
 			)
 			.setFooter(`Quoter v${require("../package.json").version}`);
