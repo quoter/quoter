@@ -262,4 +262,11 @@ client.on("guildDelete", async (guild) => {
 	console.log(`Deleted data for guild ${guild.name} (${guild.id})`);
 });
 
+process.on("SIGINT", async () => {
+	mongoose.connection.close(() => {
+		console.log("Closed mongoDB connection");
+		process.exit(0);
+	});
+});
+
 client.login(config.token);
