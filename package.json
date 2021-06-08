@@ -24,7 +24,7 @@
 		"mongoose": "^5.12.13"
 	},
 	"devDependencies": {
-		"eslint": "^7.27.0",
+		"eslint": "^7.28.0",
 		"eslint-config-prettier": "^8.3.0",
 		"prettier": "2.3.1"
 	}
