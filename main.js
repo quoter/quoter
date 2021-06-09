@@ -54,6 +54,8 @@ process.on("SIGINT", async () => {
 		console.log("Closed mongoDB connection");
 		process.exit(0);
 	});
+	client.destroy();
+	console.log("Destroyed client");
 });
 
 client.login(config.token);
