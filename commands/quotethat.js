@@ -36,7 +36,8 @@ module.exports = {
 		) {
 			const serverQuotes = guild.quotes;
 			if (
-				serverQuotes.length >= (guild.maxQuotes || maxGuildQuotes || 75)
+				serverQuotes.length >=
+				(guild.maxGuildQuotes || maxGuildQuotes || 75)
 			) {
 				return await message.channel.send(
 					`❌ **|** This server has too many quotes! Use \`${message.prefix}deletequote\` before creating more.`
