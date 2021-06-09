@@ -52,10 +52,10 @@ for (const file of eventFiles) {
 process.on("SIGINT", async () => {
 	mongoose.connection.close(() => {
 		console.log("Closed mongoDB connection");
+		client.destroy();
+		console.log("Destroyed client");
 		process.exit(0);
 	});
-	client.destroy();
-	console.log("Destroyed client");
 });
 
 client.login(config.token);
