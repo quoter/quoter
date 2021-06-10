@@ -8,6 +8,7 @@ You should have received a copy of the GNU Affero General Public License along w
 */
 
 const Discord = require("discord.js");
+const { version } = require("../package.json");
 
 const humanDuration = (milliseconds) => {
 	const result = [];
@@ -101,7 +102,7 @@ Use \`${message.prefix}help\` to get a list of commands.`
 				}\`ms. WebSocket ping is \`${message.client.ws.ping}\`ms`,
 				true
 			)
-			.setFooter(`Quoter v${require("../package.json").version}`);
+			.setFooter(`Quoter v${version}`);
 		await message.channel.send(infoEmbed);
 	},
 };
