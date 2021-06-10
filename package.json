@@ -7,6 +7,11 @@
 	"license": "AGPL-3.0-only",
 	"main": "main.js",
 	"private": true,
+	"scripts": {
+		"start": "node .",
+		"lint": "eslint . && prettier --check .",
+		"lint:fix": "eslint --fix . && prettier --write ."
+	},
 	"engines": {
 		"node": "^14.17.0",
 		"npm": "^7.16.0"
