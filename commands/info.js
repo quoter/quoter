@@ -68,6 +68,10 @@ module.exports = {
 	guildOnly: false,
 	async execute(message) {
 		const now = Date.now();
+		const memberCount = message.client.guilds.cache.reduce(
+			(acc, g) => acc + g.memberCount,
+			0
+		);
 		const infoEmbed = new Discord.MessageEmbed()
 			.setTitle("💬 Information")
 			.setColor("BLUE")
@@ -85,7 +89,9 @@ Use \`${message.prefix}help\` to get a list of commands.`
 			)
 			.addField(
 				"Server Count",
-				`I'm in **${message.client.guilds.cache.size}** servers!`,
+				`I'm in **${
+					message.client.guilds.cache.size
+				}** servers with a total of **${memberCount.toLocaleString()}** members!`,
 				true
 			)
 			.addField(
