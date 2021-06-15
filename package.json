@@ -13,7 +13,7 @@
 		"lint:fix": "eslint --fix . && prettier --write ."
 	},
 	"engines": {
-		"node": "^14.17.0",
+		"node": "^14.17.1",
 		"npm": "^7.16.0"
 	},
 	"bugs": {
