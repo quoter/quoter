@@ -18,6 +18,13 @@ module.exports = {
 	once: false,
 	async execute(message, client) {
 		if (message.author.bot) return;
+		if (
+			message.guild &&
+			config.blockedGuilds?.includes?.(message.guild.id)
+		) {
+			return message.guild.leave();
+		}
+		if (config.blockedUsers?.includes?.(message.author.id)) return;
 
 		message.prefix = message.guild
 			? (await Guild.findById(message.guild.id))?.prefix ||
