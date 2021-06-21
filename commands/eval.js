@@ -7,6 +7,16 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>
 */
 
+const clean = (text) => {
+	if (typeof text === "string") {
+		return text
+			.replace(/`/g, "`" + String.fromCharCode(8203))
+			.replace(/@/g, "@" + String.fromCharCode(8203));
+	} else {
+		return text;
+	}
+};
+
 module.exports = {
 	hidden: true,
 	name: "eval",
@@ -20,21 +30,22 @@ module.exports = {
 	async execute(message, args) {
 		if (message.client.admins.get(message.author.id)) {
 			try {
-				eval(args.join(" "));
-			} catch (error) {
-				await message.channel.send(
-					"❌ **|** An error occurred, I've messaged you more information."
-				);
+				const code = args.join(" ");
+				let evaled = eval(code);
 
-				return await message.author.send(
-					`❌ **|** An error occurred, here's some more information:
-\`\`\`JS
-${error}
+				if (typeof evaled !== "string") {
+					evaled = require("util").inspect(evaled);
+				}
+
+				message.channel.send(clean(evaled), { code: "xl" });
+			} catch (err) {
+				message.channel.send(
+					`❌ **|** An error occurred: 
+\`\`\`xl
+${clean(err)}
 \`\`\``
 				);
 			}
-
-			await message.channel.send("✅ **|** The code ran with no errors.");
 		} else {
 			await message.channel.send(
 				"✋ **|** That action can only be used by bot administrators."
