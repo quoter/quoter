@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-console.log(`Starting Quoter v${require("./package.json").version}...`);
+console.log("Starting Quoter...");
 
 const { Client, Collection } = require("discord.js");
 const mongoose = require("mongoose");
