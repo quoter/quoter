@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 const { disabledCommands } = require("../config.json");
 
@@ -72,7 +72,7 @@ module.exports = {
 					description;
 			}
 
-			const commandEmbed = new Discord.MessageEmbed()
+			const commandEmbed = new MessageEmbed()
 				.setTitle(`\`${message.prefix}${command.name}\``)
 				.setColor("GREEN")
 				.setDescription(description);
@@ -92,7 +92,7 @@ module.exports = {
 				commandList += `\n${message.prefix}${command.name} ${command.usage}`;
 			});
 
-			const commandsEmbed = new Discord.MessageEmbed()
+			const commandsEmbed = new MessageEmbed()
 				.setTitle("📘 Command List")
 				.setColor("GREEN")
 				.setDescription(`Here's a list of all the commands you can use.
