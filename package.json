@@ -26,7 +26,8 @@
 	"dependencies": {
 		"discord.js": "^12.5.3",
 		"fuse.js": "^6.4.6",
-		"mongoose": "^5.12.15"
+		"mongoose": "^5.12.15",
+		"ms": "^2.1.2"
 	},
 	"devDependencies": {
 		"eslint": "^7.29.0",
