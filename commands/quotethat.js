@@ -65,7 +65,11 @@ module.exports = {
 						splitIDs[splitIDs.length - 2]
 					);
 
-					if (!quoteChannel) {
+					if (
+						!quoteChannel ||
+						!quoteChannel.isText() ||
+						!quoteChannel.viewable
+					) {
 						return await message.channel.send(
 							"❌ **|** I couldn't find that channel, are you sure it exists?"
 						);
