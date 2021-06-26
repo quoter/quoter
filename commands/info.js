@@ -16,54 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const { version } = require("../package.json");
-
-const humanDuration = (milliseconds) => {
-	const result = [];
-
-	const numberEnding = (number) => {
-		return number > 1 ? "s" : "";
-	};
-
-	let seconds = Math.floor(milliseconds / 1000);
-
-	const years = Math.floor(seconds / 31536000);
-	if (years) {
-		result.push(`${years} year${numberEnding(years)}`);
-	}
-
-	const days = Math.floor((seconds %= 31536000) / 86400);
-	if (days) {
-		result.push(`${days} day${numberEnding(days)}`);
-	}
-
-	const hours = Math.floor((seconds %= 86400) / 3600);
-	if (hours) {
-		result.push(`${hours} hour${numberEnding(hours)}`);
-	}
-
-	const minutes = Math.floor((seconds %= 3600) / 60);
-	if (minutes) {
-		result.push(`${minutes} minute${numberEnding(minutes)}`);
-	}
-
-	if (result.length) {
-		if (result.length >= 2) {
-			result[result.length - 1] = `and ${result[result.length - 1]}`;
-		}
-
-		return result.join(", ");
-	} else {
-		return "less than a minute";
-	}
-};
-
-const getDateString = (milliseconds) => {
-	const date = new Date(milliseconds);
-
-	return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-};
+const ms = require("ms");
 
 module.exports = {
 	hidden: false,
@@ -76,12 +31,17 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	async execute(message) {
+		const { guilds, uptime, ws } = message.client;
 		const now = Date.now();
-		const memberCount = message.client.guilds.cache.reduce(
-			(acc, g) => acc + g.memberCount,
-			0
-		);
-		const infoEmbed = new Discord.MessageEmbed()
+
+		const msgPing = now - message.createdTimestamp;
+		const startedAt = new Date(now - uptime).toLocaleDateString();
+		const duration = ms(uptime, { long: true });
+		const memberCount = guilds.cache
+			.reduce((acc, g) => acc + g.memberCount, 0)
+			.toLocaleString();
+
+		const infoEmbed = new MessageEmbed()
 			.setTitle("💬 Information")
 			.setColor("BLUE")
 			.setDescription(
@@ -98,23 +58,17 @@ Use \`${message.prefix}help\` to get a list of commands.`
 			)
 			.addField(
 				"Server Count",
-				`I'm in **${
-					message.client.guilds.cache.size
-				}** servers with a total of **${memberCount.toLocaleString()}** members!`,
+				`I'm in **${guilds.cache.size}** servers with a total of **${memberCount}** members!`,
 				true
 			)
 			.addField(
 				"Uptime",
-				`Online since **${getDateString(
-					Date.now() - message.client.uptime
-				)}**, that's **${humanDuration(message.client.uptime)}**!`,
+				`Online since **${startedAt}**, that's **${duration}**!`,
 				true
 			)
 			.addField(
 				"Latency",
-				`I received your message in \`${
-					now - message.createdTimestamp
-				}\`ms. WebSocket ping is \`${message.client.ws.ping}\`ms`,
+				`I received your message in \`${msgPing}\`ms. WebSocket ping is \`${ws.ping}\`ms`,
 				true
 			)
 			.setFooter(`Quoter v${version}`);
