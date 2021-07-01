@@ -13,8 +13,8 @@
 		"lint:fix": "eslint --fix . && prettier --write ."
 	},
 	"engines": {
-		"node": "^14.17.1",
-		"npm": "^7.16.0"
+		"node": "^14.17.2",
+		"npm": "^7.19.1"
 	},
 	"bugs": {
 		"url": "https://github.com/nchristopher/quoter/issues"
