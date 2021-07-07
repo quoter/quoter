@@ -33,15 +33,10 @@ module.exports = {
 			const currentState = message.client.admins.get(message.author.id);
 			message.client.admins.set(message.author.id, !currentState);
 
-			if (currentState) {
-				await message.channel.send(
-					"✅ **|** Admin features have been __disabled__ for you."
-				);
-			} else {
-				await message.channel.send(
-					"✅ **|** Admin features have been __enabled__ for you."
-				);
-			}
+			const newState = currentState ? "disabled" : "enabled";
+			await message.channel.send(
+				`✅ **|** Admin features have been __${newState}__ for you.`
+			);
 		} else {
 			await message.channel.send(
 				"✋ **|** That action can only be used by bot administrators."
