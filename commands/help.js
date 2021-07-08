@@ -79,18 +79,17 @@ module.exports = {
 
 			await message.channel.send(commandEmbed);
 		} else {
-			let commandList;
-
-			message.client.commands.each((command) => {
-				if (
-					command.hidden ||
-					disabledCommands?.includes(command.name)
-				) {
-					return;
-				}
-
-				commandList += `\n${message.prefix}${command.name} ${command.usage}`;
-			});
+			const commandList = message.client.commands
+				.filter(
+					(command) =>
+						!command.hidden &&
+						!disabledCommands?.includes(command.name)
+				)
+				.map(
+					(command) =>
+						`${message.prefix}${command.name} ${command.usage}`
+				)
+				.join("\n");
 
 			const commandsEmbed = new MessageEmbed()
 				.setTitle("📘 Command List")
