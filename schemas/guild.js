@@ -29,6 +29,15 @@ const guildSchema = new Schema({
 	maxQuoteLength: Number,
 	quotes: [
 		{
+			_id: {
+				type: Number,
+				required: true,
+				default() {
+					const { quotes } = this.parent();
+					const last = quotes?.[quotes.length - 1];
+					return last?._id + 1 || 1;
+				},
+			},
 			text: {
 				type: String,
 				required: true,
