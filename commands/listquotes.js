@@ -77,6 +77,6 @@ module.exports = {
 			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${message.prefix}quote <ID>\` to get a specific quote, or use \`${message.prefix}listquotes [#]\` to see other pages.
 
 ${quoteList}`);
-		await message.channel.send(quoteListEmbed);
+		await message.channel.send({ embeds: [quoteListEmbed] });
 	},
 };

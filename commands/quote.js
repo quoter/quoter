@@ -77,6 +77,6 @@ module.exports = {
 
 		quoteEmbed.setFooter(`Quote #${serverQuotes.indexOf(quote) + 1}`);
 
-		await message.channel.send(quoteEmbed);
+		await message.channel.send({ embeds: [quoteEmbed] });
 	},
 };

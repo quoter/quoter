@@ -77,7 +77,7 @@ module.exports = {
 				.setColor("GREEN")
 				.setDescription(description);
 
-			await message.channel.send(commandEmbed);
+			await message.channel.send({ embeds: [commandEmbed] });
 		} else {
 			const commandList = message.client.commands
 				.filter(
@@ -105,7 +105,7 @@ Arguments in \`<>\` are required, while arguments in \`[]\` are optional. You ca
 				"No commands were found, contact an administrator about this issue."
 			}\`\`\``);
 
-			await message.channel.send(commandsEmbed);
+			await message.channel.send({ embeds: [commandsEmbed] });
 		}
 	},
 };

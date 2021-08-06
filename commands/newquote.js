@@ -100,7 +100,7 @@ module.exports = {
 "${quote}"${author ? ` - ${author}` : ""}`
 				)
 				.setFooter(`Quote #${serverQuotes.length}`);
-			await message.channel.send(successEmbed);
+			await message.channel.send({ embeds: [successEmbed] });
 		} else {
 			await message.channel.send(
 				`✋ **|** That action requires the **Manage Guild** permission.

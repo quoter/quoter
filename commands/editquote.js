@@ -110,7 +110,7 @@ module.exports = {
 					`"${editedText}"${editedAuthor ? ` - ${editedAuthor}` : ""}`
 				)
 				.setFooter(`Quote #${quoteID}`);
-			await message.channel.send(successEmbed);
+			await message.channel.send({ embeds: [successEmbed] });
 		} else {
 			await message.channel.send(
 				"✋ **|** That action requires the **Manage Guild** permission."

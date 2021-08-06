@@ -72,6 +72,6 @@ Use \`${message.prefix}help\` to get a list of commands.`
 				true
 			)
 			.setFooter(`Quoter v${version}`);
-		await message.channel.send(infoEmbed);
+		await message.channel.send({ embeds: [infoEmbed] });
 	},
 };

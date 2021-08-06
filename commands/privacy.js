@@ -58,6 +58,6 @@ module.exports = {
 	args: false,
 	guildOnly: false,
 	async execute(message) {
-		await message.channel.send(privacyPolicyEmbed);
+		await message.channel.send({ embeds: [privacyPolicyEmbed] });
 	},
 };

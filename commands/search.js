@@ -93,6 +93,6 @@ module.exports = {
 
 ${list.join("\n")}`);
 
-		await message.channel.send(quoteListEmbed);
+		await message.channel.send({ embeds: [quoteListEmbed] });
 	},
 };
