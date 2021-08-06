@@ -37,7 +37,7 @@ const client = new Client({
 			type: "LISTENING",
 		},
 	},
-	disableMentions: "everyone",
+	allowedMentions: { parse: [] },
 	intents: [GUILDS, GUILD_MESSAGES, DIRECT_MESSAGES],
 });
 
