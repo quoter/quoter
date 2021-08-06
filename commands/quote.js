@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
@@ -52,7 +52,7 @@ module.exports = {
 				serverQuotes[Math.floor(Math.random() * serverQuotes.length)];
 		}
 
-		const quoteEmbed = new Discord.MessageEmbed()
+		const quoteEmbed = new MessageEmbed()
 			.setColor("BLUE")
 			.setDescription(
 				`"${

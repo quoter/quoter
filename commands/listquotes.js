@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
@@ -71,7 +71,7 @@ module.exports = {
 			quoteList += "\n";
 		});
 
-		const quoteListEmbed = new Discord.MessageEmbed()
+		const quoteListEmbed = new MessageEmbed()
 			.setTitle(`Server Quotes • Page #${page} of ${maxPageNum}`)
 			.setColor("BLUE")
 			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${message.prefix}quote <ID>\` to get a specific quote, or use \`${message.prefix}listquotes [#]\` to see other pages.

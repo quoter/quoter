@@ -16,9 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
-const privacyPolicyEmbed = new Discord.MessageEmbed()
+const privacyPolicyEmbed = new MessageEmbed()
 	.setTitle("🔒 Privacy Policy")
 	.setColor("BLUE")
 	.setDescription(

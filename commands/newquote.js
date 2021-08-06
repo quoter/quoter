@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
 const mentionParse = require("../util/mentionParse.js");
@@ -91,7 +91,7 @@ module.exports = {
 
 			await guild.save();
 
-			const successEmbed = new Discord.MessageEmbed()
+			const successEmbed = new MessageEmbed()
 				.setTitle("✅ Added quote")
 				.setColor("GREEN")
 				.setDescription(
