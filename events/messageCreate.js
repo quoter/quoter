@@ -23,7 +23,7 @@ const config = require("../config.json");
 const cooldowns = new Collection();
 
 module.exports = {
-	name: "message",
+	name: "messageCreate",
 	once: false,
 	async execute(message, client) {
 		if (message.author.bot) return;
