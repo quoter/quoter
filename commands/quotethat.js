@@ -87,6 +87,16 @@ module.exports = {
 						"❌ **|** I couldn't find that message, are you sure it exists?"
 					);
 				}
+			} else if (message.reference?.messageId) {
+				try {
+					quoteMessage = await message.channel.messages.fetch(
+						message.reference.messageId
+					);
+				} catch {
+					return await message.channel.send(
+						"❌ **|** I couldn't find that message, are you sure it exists?"
+					);
+				}
 			} else {
 				try {
 					const messages = await message.channel.messages.fetch({
