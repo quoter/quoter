@@ -16,35 +16,38 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
-	hidden: false,
-	name: "listquotes",
-	description: "Lists all of the server's quotes",
-	usage: "[Page #]",
-	example: "",
-	aliases: ["quotelist", "quotes", "lq"],
-	cooldown: 8,
-	args: false,
+	data: new SlashCommandBuilder()
+		.setName("listquotes")
+		.setDescription("Lists all of the server's quotes")
+		.addIntegerOption((o) =>
+			o.setName("page").setDescription("The page of quotes to view.")
+		),
+	cooldown: 3,
 	guildOnly: true,
-	async execute(message, args) {
+	async execute(interaction) {
 		const serverQuotes =
-			(await Guild.findById(message.guild.id))?.quotes || [];
+			(await Guild.findById(interaction.guild.id))?.quotes || [];
 
 		if (!serverQuotes.length) {
-			return await message.channel.send(
-				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
-			);
+			return await interaction.reply({
+				content:
+					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+				ephemeral: true,
+			});
 		}
 
-		const page = Math.floor(Number(args[0])) || 1;
+		const page = interaction.options.getInteger("page") || 1;
 		const maxPageNum = Math.ceil(serverQuotes.length / 10);
-		if (page <= 0 || page > maxPageNum) {
-			return await message.channel.send(
-				`❌ **|** That's an invalid page, use a number between **1** and **${maxPageNum}**.`
-			);
+		if (page > maxPageNum) {
+			return await interaction.reply({
+				content: `❌ **|** That page is too high! The maximum page is **${maxPageNum}**.`,
+				ephemeral: true,
+			});
 		}
 
 		const splicedQuotes = serverQuotes.splice((page - 1) * 10, 10);
@@ -74,9 +77,9 @@ module.exports = {
 		const quoteListEmbed = new MessageEmbed()
 			.setTitle(`Server Quotes • Page #${page} of ${maxPageNum}`)
 			.setColor("BLUE")
-			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${message.prefix}quote <ID>\` to get a specific quote, or use \`${message.prefix}listquotes [#]\` to see other pages.
+			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`/quote <ID>\` to get a specific quote, or use \`/listquotes [#]\` to see other pages.
 
 ${quoteList}`);
-		await message.channel.send({ embeds: [quoteListEmbed] });
+		await interaction.reply({ embeds: [quoteListEmbed] });
 	},
 };

@@ -16,25 +16,28 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { version } = require("../package.json");
 const ms = require("ms");
 
 module.exports = {
+	data: new SlashCommandBuilder()
+		.setName("info")
+		.setDescription("Displays information about Quoter."),
 	hidden: false,
-	name: "info",
-	description: "Displays information about Quoter.",
-	usage: "",
-	example: "",
-	aliases: ["information", "uptime", "support", "invite", "ping"],
-	cooldown: 3,
-	args: false,
+	cooldown: 1,
 	guildOnly: false,
-	async execute(message) {
-		const { guilds, uptime, ws } = message.client;
+	async execute(interaction) {
+		const {
+			client: { uptime, guilds, ws },
+			createdTimestamp,
+		} = interaction;
+
 		const now = Date.now();
 
-		const msgPing = now - message.createdTimestamp;
+		const serverCount = guilds.cache.size;
+		const msgPing = now - createdTimestamp;
 		const startedAt = new Date(now - uptime).toLocaleDateString();
 		const duration = ms(uptime, { long: true });
 		const memberCount = guilds.cache
@@ -52,13 +55,11 @@ module.exports = {
 [🐛 Report Bugs](https://github.com/nchristopher/quoter/issues/new/choose)
 [🛠️ Source Code](https://github.com/nchristopher/quoter)
 [🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
-[💰 Donate](https://ko-fi.com/nchristopher)
-
-Use \`${message.prefix}help\` to get a list of commands.`
+[💰 Donate](https://ko-fi.com/nchristopher)`
 			)
 			.addField(
 				"Server Count",
-				`I'm in **${guilds.cache.size}** servers with a total of **${memberCount}** members!`,
+				`I'm in **${serverCount}** servers with a total of **${memberCount}** members!`,
 				true
 			)
 			.addField(
@@ -72,6 +73,6 @@ Use \`${message.prefix}help\` to get a list of commands.`
 				true
 			)
 			.setFooter(`Quoter v${version}`);
-		await message.channel.send({ embeds: [infoEmbed] });
+		await interaction.reply({ embeds: [infoEmbed] });
 	},
 };

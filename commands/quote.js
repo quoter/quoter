@@ -16,36 +16,40 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
-	hidden: false,
-	name: "quote",
-	description: "Displays a specified quote or a random one.",
-	usage: "[Quote ID]",
-	example: "",
-	aliases: ["q", "randomquote", "randquote", "rquote"],
-	cooldown: 5,
-	args: false,
+	data: new SlashCommandBuilder()
+		.setName("quote")
+		.setDescription("Views a specific quote, otherwise shows a random one.")
+		.addIntegerOption((o) =>
+			o.setName("id").setDescription("The ID of the quote to view.")
+		),
+	cooldown: 2,
 	guildOnly: true,
-	async execute(message, args) {
+	async execute(interaction) {
 		const serverQuotes =
-			(await Guild.findById(message.guild.id))?.quotes || [];
+			(await Guild.findById(interaction.guild.id))?.quotes || [];
 		if (!serverQuotes.length) {
-			return await message.channel.send(
-				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
-			);
+			return await interaction.reply({
+				content:
+					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+				ephemeral: true,
+			});
 		}
 
 		let quote;
+		const id = interaction.options.getInteger("id");
 
-		if (args.length) {
-			quote = serverQuotes[args[0] - 1];
+		if (id) {
+			quote = serverQuotes[id - 1];
 			if (!quote) {
-				return await message.channel.send(
-					"❌ **|** I couldn't find a quote with that ID."
-				);
+				return await interaction.reply({
+					content: "❌ **|** I couldn't find a quote with that ID.",
+					ephemeral: true,
+				});
 			}
 		} else {
 			quote =
@@ -60,7 +64,7 @@ module.exports = {
 					"An error occurred while retrieving that quote"
 				}"${
 					quote.ogMessageID && quote.ogChannelID
-						? `\n> [Original Message](https://discord.com/channels/${message.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
+						? `\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 						: ""
 				}`
 			);
@@ -77,6 +81,6 @@ module.exports = {
 
 		quoteEmbed.setFooter(`Quote #${serverQuotes.indexOf(quote) + 1}`);
 
-		await message.channel.send({ embeds: [quoteEmbed] });
+		await interaction.reply({ embeds: [quoteEmbed] });
 	},
 };

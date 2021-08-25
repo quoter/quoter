@@ -16,36 +16,43 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Fuse = require("fuse.js");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
-	hidden: false,
-	name: "search",
-	description: "Searches through the server's quotes.",
-	usage: "<Search Term>",
-	example: "",
-	aliases: ["searchquotes", "s"],
+	data: new SlashCommandBuilder()
+		.setName("search")
+		.setDescription("Search through the server's quotes.")
+		.addStringOption((o) =>
+			o
+				.setName("term")
+				.setDescription("The text to search for.")
+				.setRequired(true)
+		),
 	cooldown: 5,
-	args: true,
 	guildOnly: true,
-	async execute(message, args) {
+	async execute(interaction) {
 		const serverQuotes =
-			(await Guild.findById(message.guild.id))?.quotes || [];
+			(await Guild.findById(interaction.guild.id))?.quotes || [];
 
 		if (!serverQuotes.length) {
-			return await message.channel.send(
-				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
-			);
+			return await interaction.reply({
+				content:
+					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+				ephemeral: true,
+			});
 		}
 
-		const searchTerm = args.join(" ").toLowerCase();
+		const searchTerm = interaction.options.getString("term").toLowerCase();
 
 		if (searchTerm.length < 3) {
-			return await message.channel.send(
-				"❌ **|** That search term is too short! It should be at least 3 characters long."
-			);
+			return await interaction.reply({
+				content:
+					"❌ **|** That search term is too short! It should be at least 3 characters long.",
+				ephemeral: true,
+			});
 		}
 
 		const fuse = new Fuse(serverQuotes, {
@@ -55,9 +62,11 @@ module.exports = {
 		const matches = fuse.search(searchTerm);
 
 		if (!matches.length) {
-			return await message.channel.send(
-				"❌ **|** There weren't any quotes that matched that search term."
-			);
+			return await interaction.reply({
+				content:
+					"❌ **|** There weren't any quotes that matched that search term.",
+				ephemeral: true,
+			});
 		}
 
 		matches.length = 5;
@@ -87,12 +96,10 @@ module.exports = {
 		const quoteListEmbed = new MessageEmbed()
 			.setTitle("🔎 Search Results")
 			.setColor("BLUE")
-			.setDescription(`Quotes might've been shortened due to Discord limitations. Use \`${
-			message.prefix
-		}quote <ID>\` to get a specific quote.
+			.setDescription(`Quotes might've been shortened due to Discord limitations. Use \`/quote <ID>\` to get a specific quote.
 
 ${list.join("\n")}`);
 
-		await message.channel.send({ embeds: [quoteListEmbed] });
+		await interaction.reply({ embeds: [quoteListEmbed] });
 	},
 };
