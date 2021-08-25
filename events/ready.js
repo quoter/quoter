@@ -47,5 +47,18 @@ module.exports = {
 			_id: { $nin: currentGuilds },
 		});
 		console.log(`Deleted ${response.deletedCount} guilds from mongoDB`);
+
+		const update = () => {
+			client.user.setPresence({
+				activities: [
+					{
+						name: `${client.guilds.cache.size} servers!`,
+						type: "WATCHING",
+					},
+				],
+			});
+		};
+		update();
+		setInterval(update, 600000);
 	},
 };
