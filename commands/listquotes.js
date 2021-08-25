@@ -116,19 +116,23 @@ module.exports = {
 			}
 		};
 		const awaitPress = async () => {
-			const press = await reply.awaitMessageComponent({
-				filter,
-				componentType: "BUTTON",
-				time: 35000,
-			});
+			try {
+				const press = await reply.awaitMessageComponent({
+					filter,
+					componentType: "BUTTON",
+					time: 35000,
+				});
 
-			const id = press.component.customId;
-			if (id === "prev") {
-				await press.update(render(--page, maxPage, serverQuotes));
-				await awaitPress();
-			} else {
-				await press.update(render(++page, maxPage, serverQuotes));
-				await awaitPress();
+				const id = press.component.customId;
+				if (id === "prev") {
+					await press.update(render(--page, maxPage, serverQuotes));
+					await awaitPress();
+				} else {
+					await press.update(render(++page, maxPage, serverQuotes));
+					await awaitPress();
+				}
+			} catch {
+				await reply.edit({ components: [] });
 			}
 		};
 		await awaitPress();
