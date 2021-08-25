@@ -31,18 +31,12 @@ const fs = require("fs");
 const config = require("./config.json");
 
 const client = new Client({
-	presence: {
-		activity: {
-			name: `${config.defaultPrefix}help`,
-			type: "LISTENING",
-		},
-	},
 	allowedMentions: { parse: [] },
 	intents: [GUILDS, GUILD_MESSAGES, DIRECT_MESSAGES],
 });
 
+client.admins = config.admins;
 client.commands = new Collection();
-client.admins = new Collection();
 
 const commandFiles = fs
 	.readdirSync("./commands")
@@ -53,7 +47,7 @@ const eventFiles = fs
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
+	client.commands.set(command.data.name, command);
 }
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
