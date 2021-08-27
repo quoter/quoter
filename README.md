@@ -13,18 +13,15 @@ _Quoter_ is a Discord bot which stores quotes for servers & retrieves them on de
 
 | Command        | Description                                           |
 | -------------- | ----------------------------------------------------- |
-| `.help`        | Shows a list of commands, or details about one.       |
-| `.quote`       | Displays a specified quote or a random one.           |
-| `.newquote`    | Creates a new quote.                                  |
-| `.quotethat`   | Creates a new quote from a message.                   |
-| `.listquotes`  | Lists all of the server's quotes.                     |
-| `.editquote`   | Edits the specified quote.                            |
-| `.deletequote` | Deletes the specified quote.                          |
-| `.allquote`    | Toggles whether everyone can create quotes.           |
-| `.prefix`      | Sends the server prefix, or sets a new one.           |
-| `.info`        | Displays information about Quoter.                    |
-| `.privacy`     | Displays Quoter's Privacy Policy.                     |
-| `.bugs`        | Shows how to report bugs, suggest features, and more. |
+| `/quote`       | Views a specific quote, otherwise shows a random one. |
+| `/newquote`    | Creates a new quote.                                  |
+| `/listquotes`  | Lists all of the server's quotes.                     |
+| `/editquote`   | Edits the specified quote.                            |
+| `/deletequote` | Deletes the specified quote.                          |
+| `/allquote`    | Toggles whether everyone can create quotes.           |
+| `/info`        | Displays information about Quoter.                    |
+| `/privacy`     | Shows Quoter's privacy policy.                        |
+| `/bugs`        | Shows how to report bugs, suggest features, and more. |
 
 ## License
 
