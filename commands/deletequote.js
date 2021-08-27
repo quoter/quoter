@@ -16,51 +16,53 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
-	hidden: false,
-	name: "deletequote",
-	description: "Deletes the specified quote",
-	usage: "<Quote ID>",
-	example: "",
-	aliases: ["delquote", "dquote", "rmquote", "removequote"],
+	data: new SlashCommandBuilder()
+		.setName("deletequote")
+		.setDescription("Deletes the specified quote")
+		.addIntegerOption((o) =>
+			o
+				.setName("id")
+				.setDescription("The ID of the quote to delete.")
+				.setRequired(true)
+		),
 	cooldown: 8,
-	args: true,
-	guildOnly: true,
-	async execute(message, args) {
+	async execute(interaction) {
 		if (
-			message.member.permissions.has("MANAGE_GUILD") ||
-			message.client.admins.get(message.author.id)
+			interaction.member.permissions.has("MANAGE_GUILD") ||
+			interaction.client.admins.includes(interaction.user.id)
 		) {
-			if (args[0] >= 1) {
-				const guild = await Guild.findOneAndUpdate(
-					{ _id: message.guild.id },
-					{},
-					{ upsert: true, new: true }
-				);
-				const serverQuotes = guild.quotes;
+			const id = interaction.options.getInteger("id");
+			const guild = await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			);
+			const serverQuotes = guild.quotes;
 
-				const quote = serverQuotes[args[0] - 1];
-				if (quote) {
-					await serverQuotes.splice(args[0] - 1, 1);
-					await guild.save();
+			const quote = serverQuotes[id - 1];
+			if (quote) {
+				await serverQuotes.splice(id - 1, 1);
+				await guild.save();
 
-					await message.channel.send(
-						`✅ **|** Deleted quote #${args[0]}.`
-					);
-				} else {
-					await message.channel.send(
-						"❌ **|** I couldn't find a quote with that ID."
-					);
-				}
+				await interaction.reply({
+					content: `✅ **|** Deleted quote #${id}.`,
+				});
 			} else {
-				await message.channel.send("❌ **|** That's not a valid ID.");
+				await interaction.reply({
+					content: "❌ **|** I couldn't find a quote with that ID.",
+					ephemeral: true,
+				});
 			}
 		} else {
-			await message.channel.send(
-				"✋ **|** That action requires the **Manage Guild** permission."
-			);
+			await interaction.reply({
+				content:
+					"✋ **|** That action requires the **Manage Guild** permission.",
+				ephemeral: true,
+			});
 		}
 	},
 };

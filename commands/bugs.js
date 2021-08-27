@@ -16,19 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
+
 module.exports = {
-	hidden: false,
-	name: "bugs",
-	description: "Shows how to report bugs, suggest features, and more.",
-	usage: "",
-	example: "",
-	aliases: ["suggestion", "suggest", "issue", "bug"],
-	cooldown: 3,
-	args: false,
-	guildOnly: false,
-	async execute(message) {
-		await message.channel.send(
-			"🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's GitHub Issues page: <http://git.io/QuoterIssues>."
-		);
+	data: new SlashCommandBuilder()
+		.setName("bugs")
+		.setDescription(
+			"Shows how to report bugs, suggest features, and more."
+		),
+	async execute(interaction) {
+		await interaction.reply({
+			content:
+				"🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](<https://github.com/nchristopher/quoter/issues>) page.",
+			ephemeral: true,
+		});
 	},
 };

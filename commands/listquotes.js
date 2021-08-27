@@ -16,67 +16,125 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
-module.exports = {
-	hidden: false,
-	name: "listquotes",
-	description: "Lists all of the server's quotes",
-	usage: "[Page #]",
-	example: "",
-	aliases: ["quotelist", "quotes", "lq"],
-	cooldown: 8,
-	args: false,
-	guildOnly: true,
-	async execute(message, args) {
-		const serverQuotes =
-			(await Guild.findById(message.guild.id))?.quotes || [];
+const render = (page, maxPage, quotes) => {
+	const start = (page - 1) * 10;
+	const end = start + 10;
+	const slicedQuotes = quotes.slice(start, end);
 
-		if (!serverQuotes.length) {
-			return await message.channel.send(
-				`❌ **|** This server doesn't have any quotes, use \`${message.prefix}newquote\` to add some!`
-			);
+	let quoteList = "";
+	let quoteNumber = 1;
+	slicedQuotes.forEach((quote) => {
+		if (quote.text && quote.text.length > 30) {
+			quote.text = `${quote.text.substr(0, 30)}...`;
+		}
+		if (quote.author && quote.author.length > 10) {
+			quote.author = `${quote.author.substr(0, 10)}...`;
 		}
 
-		const page = Math.floor(Number(args[0])) || 1;
-		const maxPageNum = Math.ceil(serverQuotes.length / 10);
-		if (page <= 0 || page > maxPageNum) {
-			return await message.channel.send(
-				`❌ **|** That's an invalid page, use a number between **1** and **${maxPageNum}**.`
-			);
+		quoteList += `**${quoteNumber + (page - 1) * 10}**. "${
+			quote.text || "An error occurred"
+		}"`;
+		quoteNumber++;
+
+		if (quote.author && quote.author.length > 0) {
+			quoteList += ` - ${quote.author}`;
 		}
 
-		const splicedQuotes = serverQuotes.splice((page - 1) * 10, 10);
+		quoteList += "\n";
+	});
 
-		let quoteList = "";
-		let quoteNumber = 1;
-		splicedQuotes.forEach((quote) => {
-			if (quote.text && quote.text.length > 30) {
-				quote.text = `${quote.text.substr(0, 30)}...`;
-			}
-			if (quote.author && quote.author.length > 10) {
-				quote.author = `${quote.author.substr(0, 10)}...`;
-			}
-
-			quoteList += `**${quoteNumber + (page - 1) * 10}**. "${
-				quote.text || "An error occurred"
-			}"`;
-			quoteNumber++;
-
-			if (quote.author && quote.author.length > 0) {
-				quoteList += ` - ${quote.author}`;
-			}
-
-			quoteList += "\n";
-		});
-
-		const quoteListEmbed = new Discord.MessageEmbed()
-			.setTitle(`Server Quotes • Page #${page} of ${maxPageNum}`)
-			.setColor("BLUE")
-			.setDescription(`Quotes might've shortened due to Discord limitations. Use \`${message.prefix}quote <ID>\` to get a specific quote, or use \`${message.prefix}listquotes [#]\` to see other pages.
+	const quoteListEmbed = new MessageEmbed()
+		.setTitle(`Server Quotes • Page #${page} of ${maxPage}`)
+		.setColor("BLUE")
+		.setDescription(`Quotes might've shortened due to Discord limitations. Use \`/quote <ID>\` to get a specific quote, or use \`/listquotes [#]\` to see other pages.
 
 ${quoteList}`);
-		await message.channel.send(quoteListEmbed);
+
+	const row = new MessageActionRow().addComponents(
+		new MessageButton()
+			.setCustomId("prev")
+			.setLabel("⬅️ Prev")
+			.setStyle("PRIMARY")
+			.setDisabled(page === 1),
+		new MessageButton()
+			.setCustomId("next")
+			.setLabel("Next ➡️")
+			.setStyle("PRIMARY")
+			.setDisabled(page === maxPage)
+	);
+
+	return { embeds: [quoteListEmbed], components: [row], fetchReply: true };
+};
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName("listquotes")
+		.setDescription("Lists all of the server's quotes")
+		.addIntegerOption((o) =>
+			o.setName("page").setDescription("The page of quotes to view.")
+		),
+	cooldown: 3,
+	guildOnly: true,
+	async execute(interaction) {
+		const serverQuotes =
+			(await Guild.findById(interaction.guild.id))?.quotes || [];
+
+		if (!serverQuotes.length) {
+			return await interaction.reply({
+				content:
+					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+				ephemeral: true,
+			});
+		}
+
+		let page = interaction.options.getInteger("page") || 1;
+		const maxPage = Math.ceil(serverQuotes.length / 10);
+		if (page > maxPage) {
+			return await interaction.reply({
+				content: `❌ **|** That page is too high! The maximum page is **${maxPage}**.`,
+				ephemeral: true,
+			});
+		}
+
+		const reply = await interaction.reply(
+			render(page, maxPage, serverQuotes)
+		);
+
+		const filter = (p) => {
+			if (p.user.id === interaction.user.id) {
+				return true;
+			} else {
+				p.reply({
+					content:
+						"❌ **|** You clicked on someone else's button. Get your own with `/listquotes`!",
+					ephemeral: true,
+				});
+			}
+		};
+		const awaitPress = async () => {
+			try {
+				const press = await reply.awaitMessageComponent({
+					filter,
+					componentType: "BUTTON",
+					time: 35000,
+				});
+
+				const id = press.component.customId;
+				if (id === "prev") {
+					await press.update(render(--page, maxPage, serverQuotes));
+					await awaitPress();
+				} else {
+					await press.update(render(++page, maxPage, serverQuotes));
+					await awaitPress();
+				}
+			} catch {
+				await reply.edit({ components: [] });
+			}
+		};
+		await awaitPress();
 	},
 };

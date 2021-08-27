@@ -13,7 +13,7 @@
 		"lint:fix": "eslint --fix . && prettier --write ."
 	},
 	"engines": {
-		"node": "^14.17.4",
+		"node": "^16.6.1",
 		"npm": "^7.20.3"
 	},
 	"bugs": {
@@ -24,7 +24,10 @@
 		"url": "git+https://github.com/nchristopher/quoter.git"
 	},
 	"dependencies": {
-		"discord.js": "^12.5.3",
+		"@discordjs/builders": "^0.6.0",
+		"@discordjs/rest": "^0.1.0-canary.0",
+		"discord-api-types": "^0.22.0",
+		"discord.js": "^13.1.0",
 		"fuse.js": "^6.4.6",
 		"mongoose": "^6.0.1",
 		"ms": "^2.1.3"

@@ -16,28 +16,26 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
+	data: new SlashCommandBuilder()
+		.setName("allquote")
+		.setDescription("Toggles whether everyone can create quotes."),
 	hidden: false,
-	name: "allquote",
-	description: "Toggles whether everyone can create quotes.",
-	usage: "",
-	example: "",
-	aliases: ["anyquote", "anyonecanquote", "allcanquote"],
-	cooldown: 10,
-	args: false,
+	cooldown: 3,
 	guildOnly: true,
-	async execute(message) {
+	async execute(interaction) {
 		if (
-			message.member.permissions.has("MANAGE_GUILD") ||
-			message.client.admins.get(message.author.id)
+			interaction.member.permissions.has("MANAGE_GUILD") ||
+			interaction.client.admins.includes(interaction.user.id)
 		) {
-			const currentState = (await Guild.findById(message.guild.id))
+			const currentState = (await Guild.findById(interaction.guild.id))
 				?.allQuote;
 
 			await Guild.findOneAndUpdate(
-				{ _id: message.guild.id },
+				{ _id: interaction.guild.id },
 				{ allQuote: !currentState },
 				{
 					upsert: true,
@@ -45,18 +43,21 @@ module.exports = {
 			);
 
 			if (currentState) {
-				await message.channel.send(
-					"✅ **|** Only server managers can now create quotes."
-				);
+				await interaction.reply({
+					content:
+						"✅ **|** Only server managers can now create quotes.",
+				});
 			} else {
-				await message.channel.send(
-					"✅ **|** Everyone can now create quotes."
-				);
+				await interaction.reply({
+					content: "✅ **|** Everyone can now create quotes.",
+				});
 			}
 		} else {
-			await message.channel.send(
-				"✋ **|** That action requires the **Manage Guild** permission."
-			);
+			await interaction.reply({
+				content:
+					"✋ **|** That action requires the **Manage Guild** permission.",
+				ephemeral: true,
+			});
 		}
 	},
 };

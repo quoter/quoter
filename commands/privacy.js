@@ -16,9 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { MessageEmbed } = require("discord.js");
 
-const privacyPolicyEmbed = new Discord.MessageEmbed()
+const privacyPolicyEmbed = new MessageEmbed()
 	.setTitle("🔒 Privacy Policy")
 	.setColor("BLUE")
 	.setDescription(
@@ -48,16 +49,13 @@ You can also contact us (refer to the beginning of this document) to manually re
 	);
 
 module.exports = {
-	hidden: false,
-	name: "privacy",
-	description: "Displays Quoter's Privacy Policy.",
-	usage: "",
-	example: "",
-	aliases: ["pp", "policy", "privacypolicy"],
-	cooldown: 3,
-	args: false,
-	guildOnly: false,
-	async execute(message) {
-		await message.channel.send(privacyPolicyEmbed);
+	data: new SlashCommandBuilder()
+		.setName("privacy")
+		.setDescription("View Quoter's privacy policy."),
+	async execute(interaction) {
+		await interaction.reply({
+			embeds: [privacyPolicyEmbed],
+			ephemeral: true,
+		});
 	},
 };
