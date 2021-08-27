@@ -2,7 +2,6 @@
 	"token": "TOKEN",
 	"defaultPrefix": ".",
 	"mongoPath": "mongodb://127.0.0.1:27017/quoter",
-	"upvoteChance": 1,
 	"maxGuildQuotes": 75,
 	"maxQuoteLength": 130,
 	"admins": [
