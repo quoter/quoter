@@ -51,7 +51,7 @@ You can also contact us (refer to the beginning of this document) to manually re
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("privacy")
-		.setDescription("View Quoter's privacy policy."),
+		.setDescription("Shows Quoter's privacy policy."),
 	async execute(interaction) {
 		await interaction.reply({
 			embeds: [privacyPolicyEmbed],
