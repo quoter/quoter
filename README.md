@@ -23,6 +23,26 @@ _Quoter_ is a Discord bot which stores quotes for servers & retrieves them on de
 | `/privacy`     | Shows Quoter's privacy policy.                        |
 | `/bugs`        | Shows how to report bugs, suggest features, and more. |
 
+## Contributing
+
+Thanks for your interest in contributing to Quoter! Before making any changes, [open an issue](https://github.com/nchristopher/quoter/issues) to make sure they're needed. Follow the project's [Code of Conduct](https://github.com/nchristopher/quoter/blob/main/CODE_OF_CONDUCT.md)!
+
+### Setup
+
+**Hosting Quoter yourself is not supported.** The recommended way to use the bot is through the [official, public instance](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200). These instructions are meant for contributors.
+
+-   Quoter requires **Node.js `v16.6.0`** and **mongoDB `v3.0.0` or higher**.
+
+1. Run `npm install` to install Quoter's dependencies.
+2. Copy `config.json.EXAMPLE` to `config.json` & change as necessary.
+    - You'll probably want to add your bot's `token`, and add your own user Id to the `admins` array.
+3. Run `node deployCommands.js <client Id> [guild Id]` to register slash commands.
+    - Replace `<client Id>` with your bot's Id & replace `[guild Id]` with your development guild.
+    - When deploying to production, omit `[guild Id]` to create global slash commands, rather than guild ones.
+4. Run the bot with `node .`!
+
+Before commiting any changes, run `npm run lint:fix` to run ESLint & Prettier. Address any issues ESLint has.
+
 ## License
 
     Copyright (C) 2020-2021 Nicholas Christopher
