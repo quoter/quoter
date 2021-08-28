@@ -31,7 +31,7 @@ Thanks for your interest in contributing to Quoter! Before making any changes, [
 
 **Hosting Quoter yourself is not supported.** The recommended way to use the bot is through the [official, public instance](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200). These instructions are meant for contributors.
 
--   Quoter requires **Node.js `v16.6.0`** and **mongoDB `v3.0.0` or higher**.
+-   Quoter requires **Node.js `v16.8.0`** and **mongoDB `v3.0.0` or higher**.
 
 1. Run `npm install` to install Quoter's dependencies.
 2. Copy `config.json.EXAMPLE` to `config.json` & change as necessary.
