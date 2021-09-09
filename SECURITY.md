@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest version of Quoter will be updated. Older versions will not recieve any patches (including security ones).
+Only the latest version of Quoter will be updated. Older versions will not receive any patches (including security ones).
 
 ## Reporting a Vulnerability
 
