@@ -4,9 +4,6 @@ config.json
 # Dependencies
 node_modules/
 
-# Database
-*.sqlite
-
 # Logs
 logs
 *.log
