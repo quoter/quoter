@@ -41,7 +41,7 @@ Thanks for your interest in contributing to Quoter! Before making any changes, [
     - When deploying to production, omit `[guild Id]` to create global slash commands, rather than guild ones.
 4. Run the bot with `node .`!
 
-Before commiting any changes, run `npm run lint:fix` to run ESLint & Prettier. Address any issues ESLint has.
+Before committing any changes, run `npm run lint:fix` to run ESLint & Prettier. Address any issues ESLint has.
 
 ## License
 
