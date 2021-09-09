@@ -23,7 +23,6 @@ const { Client } = require("discord.js");
  * Resolves a mention to a user tag.
  * @param {string} mention - The mention to parse.
  * @param {Client} client - A discord.js client, used to fetch users.
- * @async
  * @returns {Promise<string>} - The user's tag (if the ID was valid), or the shortened original string.
  */
 module.exports = async (mention, client) => {
