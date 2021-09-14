@@ -23,7 +23,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("allquote")
 		.setDescription("Toggles whether everyone can create quotes."),
-	hidden: false,
 	cooldown: 3,
 	guildOnly: true,
 	async execute(interaction) {

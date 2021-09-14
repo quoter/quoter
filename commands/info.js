@@ -25,7 +25,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("info")
 		.setDescription("Displays information about Quoter."),
-	hidden: false,
 	cooldown: 1,
 	guildOnly: false,
 	async execute(interaction) {
