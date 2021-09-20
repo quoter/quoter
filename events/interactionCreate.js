@@ -27,7 +27,7 @@ module.exports = {
 	async execute(interaction, client) {
 		const { commandName, user } = interaction;
 
-		if (!interaction.isCommand()) return;
+		if (!interaction.isCommand() && !interaction.isContextMenu()) return;
 
 		const command = client.commands.get(commandName);
 		if (!command) return;
