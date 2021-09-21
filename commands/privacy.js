@@ -23,7 +23,7 @@ const privacyPolicyEmbed = new MessageEmbed()
 	.setTitle("🔒 Privacy Policy")
 	.setColor("BLUE")
 	.setDescription(
-		`> Last updated on 5/7/2021
+		`> Last updated on 9/20/2021
 
 This document explains what data is collected, how it's used, and how you can delete your data. **If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email \`nchristopher@tuta.io\`**.`
 	)
@@ -33,7 +33,7 @@ This document explains what data is collected, how it's used, and how you can de
 			value: `We store the information that you provide to Quoter. Additionally, we automatically collect some other data:
 
 -   The current time & date when creating a quote. This is displayed when viewing a singular quote.
--   The Discord user ID of whoever created the quote. This isn't currently used.
+-   The Discord user ID of whoever created the quote. This is displayed when using the \`whoquoted\` command.
 -   The message ID & channel ID of the original message when using the \`quotethat\` command.
 
 Data storage is necessary for the bot to do it's basic function - displaying quotes. We never use/collect data for marketing and/or analytics, and we don't sell it either. Data is **only** accessible by Quoter developers & the end user.`,
