@@ -45,7 +45,7 @@ module.exports = {
 			});
 		}
 
-		const searchTerm = interaction.options.getString("term").toLowerCase();
+		const searchTerm = interaction.options.getString("term");
 
 		if (searchTerm.length < 3) {
 			return await interaction.reply({
@@ -58,7 +58,6 @@ module.exports = {
 		const fuse = new Fuse(serverQuotes, {
 			keys: ["text", "author"],
 		});
-
 		const matches = fuse.search(searchTerm);
 
 		if (!matches.length) {
@@ -84,7 +83,7 @@ module.exports = {
 				quote.author = `${quote.author.substr(0, 10)}...`;
 			}
 
-			result += `**${quoteID}**. "${quote.text || "An error occurred"}"`;
+			result += `**${quoteID}**. "${quote.text}"`;
 
 			if (quote.author && quote.author.length > 0) {
 				result += ` - ${quote.author}`;
@@ -99,7 +98,6 @@ module.exports = {
 			.setDescription(`Quotes might've been shortened due to Discord limitations. Use \`/quote <ID>\` to get a specific quote.
 
 ${list.join("\n")}`);
-
 		await interaction.reply({ embeds: [quoteListEmbed] });
 	},
 };

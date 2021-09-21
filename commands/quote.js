@@ -40,34 +40,28 @@ module.exports = {
 			});
 		}
 
-		let quote;
-		const id = interaction.options.getInteger("id");
+		const id =
+			interaction.options.getInteger("id") ||
+			Math.floor(Math.random() * serverQuotes.length);
 
-		if (id) {
-			quote = serverQuotes[id - 1];
-			if (!quote) {
-				return await interaction.reply({
-					content: "❌ **|** I couldn't find a quote with that ID.",
-					ephemeral: true,
-				});
-			}
-		} else {
-			quote =
-				serverQuotes[Math.floor(Math.random() * serverQuotes.length)];
+		const quote = serverQuotes[id - 1];
+		if (!quote) {
+			return await interaction.reply({
+				content: "❌ **|** I couldn't find a quote with that ID.",
+				ephemeral: true,
+			});
 		}
 
 		const quoteEmbed = new MessageEmbed()
 			.setColor("BLUE")
 			.setDescription(
-				`"${
-					quote.text ||
-					"An error occurred while retrieving that quote"
-				}"${
+				`"${quote.text}"${
 					quote.ogMessageID && quote.ogChannelID
 						? `\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 						: ""
 				}`
-			);
+			)
+			.setFooter(`Quote #${id}`);
 
 		if (quote.createdTimestamp) {
 			quoteEmbed.setTimestamp(
@@ -75,11 +69,9 @@ module.exports = {
 			);
 		}
 
-		if (quote.author?.length > 1) {
+		if (quote.author) {
 			quoteEmbed.setAuthor(quote.author);
 		}
-
-		quoteEmbed.setFooter(`Quote #${serverQuotes.indexOf(quote) + 1}`);
 
 		await interaction.reply({ embeds: [quoteEmbed] });
 	},

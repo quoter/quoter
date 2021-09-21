@@ -19,6 +19,7 @@ _Quoter_ is a Discord bot which stores quotes for servers & retrieves them on de
 | `/editquote`   | Edits the specified quote.                            |
 | `/deletequote` | Deletes the specified quote.                          |
 | `/allquote`    | Toggles whether everyone can create quotes.           |
+| `/whoquoted`   | Shows who created a quote.                            |
 | `/info`        | Displays information about Quoter.                    |
 | `/privacy`     | Shows Quoter's privacy policy.                        |
 | `/bugs`        | Shows how to report bugs, suggest features, and more. |
