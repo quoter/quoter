@@ -95,7 +95,7 @@ module.exports = {
 		const quoteListEmbed = new MessageEmbed()
 			.setTitle("🔎 Search Results")
 			.setColor("BLUE")
-			.setDescription(`Quotes might've been shortened due to Discord limitations. Use \`/quote <ID>\` to get a specific quote.
+			.setDescription(`Use \`/quote <ID>\` to view a specific quote.
 
 ${list.join("\n")}`);
 		await interaction.reply({ embeds: [quoteListEmbed] });
