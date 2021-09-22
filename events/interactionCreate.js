@@ -18,6 +18,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 
 const { Collection } = require("discord.js");
 const { disabledCommands } = require("../config.json");
+const Guild = require("../schemas/guild.js");
 
 const cooldowns = new Collection();
 
@@ -25,7 +26,7 @@ module.exports = {
 	name: "interactionCreate",
 	once: false,
 	async execute(interaction, client) {
-		const { commandName, user } = interaction;
+		const { commandName, user, member } = interaction;
 
 		if (!interaction.isCommand() && !interaction.isContextMenu()) return;
 
@@ -47,7 +48,9 @@ module.exports = {
 			});
 		}
 
-		if (!client.admins.includes(user.id) && command.cooldown) {
+		const isAdmin = client.admins.includes(user.id);
+
+		if (!isAdmin && command.cooldown) {
 			if (!cooldowns.has(commandName)) {
 				cooldowns.set(commandName, new Collection());
 			}
@@ -70,6 +73,34 @@ module.exports = {
 
 			timestamps.set(user.id, now);
 			setTimeout(() => timestamps.delete(user.id), cooldownAmount);
+		}
+
+		if (!isAdmin && command.permission) {
+			const isManager = member.permissions.has("MANAGE_GUILD");
+			if (command.permission === "create") {
+				const { allQuote } = await Guild.findOneAndUpdate(
+					{ _id: interaction.guild.id },
+					{},
+					{ upsert: true, new: true }
+				);
+
+				if (!allQuote && !isManager) {
+					return await interaction.reply({
+						content: `✋ **|** That action requires the **Manage Guild** permission.
+		
+**❗ To allow anyone to create quotes**, have an admin use \`/allquote\`.`,
+						ephemeral: true,
+					});
+				}
+			} else if (command.permission === "manage") {
+				if (!isManager) {
+					return await interaction.reply({
+						content:
+							"✋ **|** That action requires the **Manage Guild** permission.",
+						ephemeral: true,
+					});
+				}
+			}
 		}
 
 		try {

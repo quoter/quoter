@@ -30,37 +30,27 @@ module.exports = {
 				.setRequired(true)
 		),
 	cooldown: 8,
+	permission: "manage",
 	async execute(interaction) {
-		if (
-			interaction.member.permissions.has("MANAGE_GUILD") ||
-			interaction.client.admins.includes(interaction.user.id)
-		) {
-			const id = interaction.options.getInteger("id");
-			const guild = await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true }
-			);
-			const serverQuotes = guild.quotes;
+		const id = interaction.options.getInteger("id");
+		const guild = await Guild.findOneAndUpdate(
+			{ _id: interaction.guild.id },
+			{},
+			{ upsert: true, new: true }
+		);
+		const serverQuotes = guild.quotes;
 
-			const quote = serverQuotes[id - 1];
-			if (quote) {
-				await serverQuotes.splice(id - 1, 1);
-				await guild.save();
+		const quote = serverQuotes[id - 1];
+		if (quote) {
+			await serverQuotes.splice(id - 1, 1);
+			await guild.save();
 
-				await interaction.reply({
-					content: `✅ **|** Deleted quote #${id}.`,
-				});
-			} else {
-				await interaction.reply({
-					content: "❌ **|** I couldn't find a quote with that ID.",
-					ephemeral: true,
-				});
-			}
+			await interaction.reply({
+				content: `✅ **|** Deleted quote #${id}.`,
+			});
 		} else {
 			await interaction.reply({
-				content:
-					"✋ **|** That action requires the **Manage Guild** permission.",
+				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
 		}

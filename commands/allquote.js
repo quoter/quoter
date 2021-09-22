@@ -25,37 +25,26 @@ module.exports = {
 		.setDescription("Toggles whether everyone can create quotes."),
 	cooldown: 3,
 	guildOnly: true,
+	permission: "manage",
 	async execute(interaction) {
-		if (
-			interaction.member.permissions.has("MANAGE_GUILD") ||
-			interaction.client.admins.includes(interaction.user.id)
-		) {
-			const currentState = (await Guild.findById(interaction.guild.id))
-				?.allQuote;
+		const currentState = (await Guild.findById(interaction.guild.id))
+			?.allQuote;
 
-			await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{ allQuote: !currentState },
-				{
-					upsert: true,
-				}
-			);
-
-			if (currentState) {
-				await interaction.reply({
-					content:
-						"✅ **|** Only server managers can now create quotes.",
-				});
-			} else {
-				await interaction.reply({
-					content: "✅ **|** Everyone can now create quotes.",
-				});
+		await Guild.findOneAndUpdate(
+			{ _id: interaction.guild.id },
+			{ allQuote: !currentState },
+			{
+				upsert: true,
 			}
+		);
+
+		if (currentState) {
+			await interaction.reply({
+				content: "✅ **|** Only server managers can now create quotes.",
+			});
 		} else {
 			await interaction.reply({
-				content:
-					"✋ **|** That action requires the **Manage Guild** permission.",
-				ephemeral: true,
+				content: "✅ **|** Everyone can now create quotes.",
 			});
 		}
 	},

@@ -35,6 +35,7 @@ module.exports = {
 	},
 	cooldown: 10,
 	guildOnly: true,
+	permission: "create",
 	async execute(interaction) {
 		const guild = await Guild.findOneAndUpdate(
 			{ _id: interaction.guild.id },

@@ -43,67 +43,57 @@ module.exports = {
 		),
 	cooldown: 10,
 	guildOnly: true,
+	permission: "manage",
 	async execute(interaction) {
-		if (
-			interaction.member.permissions.has("MANAGE_GUILD") ||
-			interaction.client.admins.includes(interaction.user.id)
-		) {
-			interaction.deferReply({ ephemeral: true });
-			const quoteID = interaction.options.getInteger("id");
+		interaction.deferReply({ ephemeral: true });
+		const quoteID = interaction.options.getInteger("id");
 
-			const guild = await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true }
-			);
+		const guild = await Guild.findOneAndUpdate(
+			{ _id: interaction.guild.id },
+			{},
+			{ upsert: true, new: true }
+		);
 
-			const serverQuotes = guild.quotes;
-			const quote = serverQuotes[quoteID - 1];
+		const serverQuotes = guild.quotes;
+		const quote = serverQuotes[quoteID - 1];
 
-			if (!quote) {
-				return await interaction.editReply({
-					content: "❌ **|** I couldn't find a quote with that ID.",
-					ephemeral: true,
-				});
-			}
-
-			let author = interaction.options.getString("author");
-			author &&= await mentionParse(author);
-
-			const text = interaction.options.getString("text");
-
-			if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
-				return await interaction.editReply({
-					content: `❌ **|** Quotes cannot be longer than ${
-						guild.maxQuoteLength || maxQuoteLength || 130
-					} characters.`,
-					ephemeral: true,
-				});
-			}
-
-			await serverQuotes.set(quoteID - 1, {
-				text,
-				author,
-				createdTimestamp: quote.createdTimestamp,
-				editedTimestamp: Date.now(),
-				quoterID: quote.quoterID,
-				editorID: interaction.user.id,
-			});
-
-			await guild.save();
-
-			const successEmbed = new MessageEmbed()
-				.setTitle("✅ Edited quote")
-				.setColor("GREEN")
-				.setDescription(`"${text}"${author ? ` - ${author}` : ""}`)
-				.setFooter(`Quote #${quoteID}`);
-			await interaction.editReply({ embeds: [successEmbed] });
-		} else {
-			await interaction.reply({
-				content:
-					"✋ **|** That action requires the **Manage Guild** permission.",
+		if (!quote) {
+			return await interaction.editReply({
+				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
 		}
+
+		let author = interaction.options.getString("author");
+		author &&= await mentionParse(author);
+
+		const text = interaction.options.getString("text");
+
+		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
+			return await interaction.editReply({
+				content: `❌ **|** Quotes cannot be longer than ${
+					guild.maxQuoteLength || maxQuoteLength || 130
+				} characters.`,
+				ephemeral: true,
+			});
+		}
+
+		await serverQuotes.set(quoteID - 1, {
+			text,
+			author,
+			createdTimestamp: quote.createdTimestamp,
+			editedTimestamp: Date.now(),
+			quoterID: quote.quoterID,
+			editorID: interaction.user.id,
+		});
+
+		await guild.save();
+
+		const successEmbed = new MessageEmbed()
+			.setTitle("✅ Edited quote")
+			.setColor("GREEN")
+			.setDescription(`"${text}"${author ? ` - ${author}` : ""}`)
+			.setFooter(`Quote #${quoteID}`);
+		await interaction.editReply({ embeds: [successEmbed] });
 	},
 };

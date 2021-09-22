@@ -39,6 +39,7 @@ module.exports = {
 		),
 	cooldown: 10,
 	guildOnly: true,
+	permission: "create",
 	async execute(interaction) {
 		const guild = await Guild.findOneAndUpdate(
 			{ _id: interaction.guild.id },
@@ -46,63 +47,50 @@ module.exports = {
 			{ upsert: true, new: true }
 		);
 
+		const serverQuotes = guild.quotes;
+
 		if (
-			guild.allQuote ||
-			interaction.member.permissions.has("MANAGE_GUILD") ||
-			interaction.client.admins.includes(interaction.user.id)
+			serverQuotes.length >=
+			(guild.maxGuildQuotes || maxGuildQuotes || 75)
 		) {
-			const serverQuotes = guild.quotes;
-
-			if (
-				serverQuotes.length >=
-				(guild.maxGuildQuotes || maxGuildQuotes || 75)
-			) {
-				return await interaction.reply({
-					content:
-						"❌ **|** This server has too many quotes! Use `/deletequote` before creating more.",
-					ephemeral: true,
-				});
-			}
-
-			let author = interaction.options.getString("author");
-			author &&= await mentionParse(author);
-
-			const text = interaction.options.getString("text");
-
-			if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
-				return await interaction.reply({
-					content: `❌ **|** Quotes cannot be longer than ${
-						guild.maxQuoteLength || maxQuoteLength || 130
-					} characters.`,
-					ephemeral: true,
-				});
-			}
-
-			await serverQuotes.push({
-				text,
-				author,
-				quoterID: interaction.user.id,
-			});
-
-			await guild.save();
-
-			const successEmbed = new MessageEmbed()
-				.setTitle("✅ Added quote")
-				.setColor("GREEN")
-				.setDescription(
-					`Created a new server quote:
-
-"${text}"${author ? ` - ${author}` : ""}`
-				)
-				.setFooter(`Quote #${serverQuotes.length}`);
-			await interaction.reply({ embeds: [successEmbed] });
-		} else {
-			await interaction.reply({
-				content: `✋ **|** That action requires the **Manage Guild** permission.
-
-**❗ To allow anyone to create quotes**, have an admin use \`/allquote\`.`,
+			return await interaction.reply({
+				content:
+					"❌ **|** This server has too many quotes! Use `/deletequote` before creating more.",
 				ephemeral: true,
 			});
 		}
+
+		let author = interaction.options.getString("author");
+		author &&= await mentionParse(author);
+
+		const text = interaction.options.getString("text");
+
+		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
+			return await interaction.reply({
+				content: `❌ **|** Quotes cannot be longer than ${
+					guild.maxQuoteLength || maxQuoteLength || 130
+				} characters.`,
+				ephemeral: true,
+			});
+		}
+
+		await serverQuotes.push({
+			text,
+			author,
+			quoterID: interaction.user.id,
+		});
+
+		await guild.save();
+
+		const successEmbed = new MessageEmbed()
+			.setTitle("✅ Added quote")
+			.setColor("GREEN")
+			.setDescription(
+				`Created a new server quote:
+
+"${text}"${author ? ` - ${author}` : ""}`
+			)
+			.setFooter(`Quote #${serverQuotes.length}`);
+		await interaction.reply({ embeds: [successEmbed] });
 	},
 };
