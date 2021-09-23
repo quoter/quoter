@@ -18,13 +18,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 
 console.log("Starting Quoter...");
 
-const {
-	Client,
-	Collection,
-	Intents: {
-		FLAGS: { GUILDS, GUILD_MESSAGES, DIRECT_MESSAGES },
-	},
-} = require("discord.js");
+const { Client, Collection, Intents } = require("discord.js");
 const mongoose = require("mongoose");
 const fs = require("fs");
 
@@ -32,7 +26,7 @@ const config = require("./config.json");
 
 const client = new Client({
 	allowedMentions: { parse: [] },
-	intents: [GUILDS, GUILD_MESSAGES, DIRECT_MESSAGES],
+	intents: [Intents.FLAGS.GUILDS],
 });
 
 client.admins = config.admins;
