@@ -92,6 +92,25 @@ module.exports = {
 						ephemeral: true,
 					});
 				}
+			} else if (command.permission === "manageSelf") {
+				const { manageSelf, quotes } = await Guild.findOneAndUpdate(
+					{ _id: interaction.guild.id },
+					{},
+					{ upsert: true, new: true }
+				);
+
+				const id = interaction.options.getInteger("id");
+				const createdQuote =
+					quotes[id - 1]?.quoterID === interaction.user.id;
+
+				if (!isManager && !(manageSelf && createdQuote)) {
+					return await interaction.reply({
+						content: `✋ **|** That action requires the **Manage Guild** permission.
+		
+**❗ To allow users to delete/edit quotes they've created**, have an admin use \`/manageself\`.`,
+						ephemeral: true,
+					});
+				}
 			} else if (command.permission === "manage") {
 				if (!isManager) {
 					return await interaction.reply({

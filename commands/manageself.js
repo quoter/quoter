@@ -21,37 +21,33 @@ const Guild = require("../schemas/guild.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("deletequote")
-		.setDescription("Deletes the specified quote")
-		.addIntegerOption((o) =>
-			o
-				.setName("id")
-				.setDescription("The ID of the quote to delete.")
-				.setRequired(true)
+		.setName("manageself")
+		.setDescription(
+			"Toggles whether users can delete/edit quotes they created."
 		),
-	cooldown: 8,
-	permission: "manageSelf",
+	cooldown: 3,
+	permission: "manage",
 	async execute(interaction) {
-		const id = interaction.options.getInteger("id");
-		const guild = await Guild.findOneAndUpdate(
+		const currentState = (await Guild.findById(interaction.guild.id))
+			?.manageSelf;
+
+		await Guild.findOneAndUpdate(
 			{ _id: interaction.guild.id },
-			{},
-			{ upsert: true, new: true }
+			{ manageSelf: !currentState },
+			{
+				upsert: true,
+			}
 		);
-		const serverQuotes = guild.quotes;
 
-		const quote = serverQuotes[id - 1];
-		if (quote) {
-			await serverQuotes.splice(id - 1, 1);
-			await guild.save();
-
+		if (currentState) {
 			await interaction.reply({
-				content: `✅ **|** Deleted quote #${id}.`,
+				content:
+					"✅ **|** Users __can no longer__ delete or edit quotes they've created..",
 			});
 		} else {
 			await interaction.reply({
-				content: "❌ **|** I couldn't find a quote with that ID.",
-				ephemeral: true,
+				content:
+					"✅ **|** Users __can now__ delete or edit quotes they've created.",
 			});
 		}
 	},

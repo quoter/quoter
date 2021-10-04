@@ -25,6 +25,7 @@ const guildSchema = new Schema({
 	},
 	prefix: String,
 	allQuote: Boolean,
+	manageSelf: Boolean,
 	maxGuildQuotes: Number,
 	maxQuoteLength: Number,
 	quotes: [
