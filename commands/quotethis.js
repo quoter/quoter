@@ -64,7 +64,7 @@ module.exports = {
 
 			if (!quoteMessage.content) {
 				return await interaction.reply({
-					content: `❌ **|** That [message](${quoteMessage.url}) doesn't contain text - embeds are not supported!`,
+					content: `❌ **|** [That message](${quoteMessage.url}) doesn't contain text - embeds are not supported!`,
 					ephemeral: true,
 				});
 			}
