@@ -11,18 +11,19 @@ _Quoter_ is a Discord bot which stores quotes for servers & retrieves them on de
 
 ## Commands
 
-| Command        | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| `/quote`       | Views a specific quote, otherwise shows a random one. |
-| `/newquote`    | Creates a new quote.                                  |
-| `/listquotes`  | Lists all of the server's quotes.                     |
-| `/editquote`   | Edits the specified quote.                            |
-| `/deletequote` | Deletes the specified quote.                          |
-| `/allquote`    | Toggles whether everyone can create quotes.           |
-| `/whoquoted`   | Shows who created a quote.                            |
-| `/info`        | Displays information about Quoter.                    |
-| `/privacy`     | Shows Quoter's privacy policy.                        |
-| `/bugs`        | Shows how to report bugs, suggest features, and more. |
+| Command        | Description                                                |
+| -------------- | ---------------------------------------------------------- |
+| `/quote`       | Views a specific quote, otherwise shows a random one.      |
+| `/newquote`    | Creates a new quote.                                       |
+| `/listquotes`  | Lists all of the server's quotes.                          |
+| `/editquote`   | Edits the specified quote.                                 |
+| `/deletequote` | Deletes the specified quote.                               |
+| `/allquote`    | Toggles whether everyone can create quotes.                |
+| `/manageself`  | Toggles whether users can delete/edit quotes they created. |
+| `/whoquoted`   | Shows who created a quote.                                 |
+| `/info`        | Displays information about Quoter.                         |
+| `/privacy`     | Shows Quoter's privacy policy.                             |
+| `/bugs`        | Shows how to report bugs, suggest features, and more.      |
 
 ## Contributing
 
