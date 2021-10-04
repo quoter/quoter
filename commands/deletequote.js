@@ -30,7 +30,7 @@ module.exports = {
 				.setRequired(true)
 		),
 	cooldown: 8,
-	permission: "manage",
+	permission: "manageSelf",
 	async execute(interaction) {
 		const id = interaction.options.getInteger("id");
 		const guild = await Guild.findOneAndUpdate(

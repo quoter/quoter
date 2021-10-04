@@ -43,7 +43,7 @@ module.exports = {
 		),
 	cooldown: 10,
 	guildOnly: true,
-	permission: "manage",
+	permission: "manageSelf",
 	async execute(interaction) {
 		interaction.deferReply({ ephemeral: true });
 		const quoteID = interaction.options.getInteger("id");
