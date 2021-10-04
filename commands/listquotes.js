@@ -48,9 +48,9 @@ const render = (page, maxPage, quotes) => {
 	});
 
 	const quoteListEmbed = new MessageEmbed()
-		.setTitle(`Server Quotes • Page #${page} of ${maxPage}`)
+		.setTitle(`📜 Server Quotes • Page #${page} of ${maxPage}`)
 		.setColor("BLUE")
-		.setDescription(`Quotes might've shortened due to Discord limitations. Use \`/quote <ID>\` to get a specific quote, or use \`/listquotes [#]\` to see other pages.
+		.setDescription(`Use \`/quote\` to view a specific quote.
 
 ${quoteList}`);
 
