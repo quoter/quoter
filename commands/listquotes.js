@@ -19,6 +19,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Guild = require("../schemas/guild.js");
+const cleanString = require("../util/cleanString.js");
 
 const render = (page, maxPage, quotes) => {
 	const start = (page - 1) * 10;
@@ -36,12 +37,12 @@ const render = (page, maxPage, quotes) => {
 		}
 
 		quoteList += `**${quoteNumber + (page - 1) * 10}**. "${
-			quote.text || "An error occurred"
+			cleanString(quote.text) || "An error occurred"
 		}"`;
 		quoteNumber++;
 
 		if (quote.author && quote.author.length > 0) {
-			quoteList += ` - ${quote.author}`;
+			quoteList += ` - ${cleanString(quote.author)}`;
 		}
 
 		quoteList += "\n";

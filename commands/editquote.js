@@ -20,6 +20,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const mentionParse = require("../util/mentionParse.js");
+const cleanString = require("../util/cleanString.js");
 const { maxQuoteLength } = require("../config.json");
 
 module.exports = {
@@ -94,7 +95,11 @@ module.exports = {
 		const successEmbed = new MessageEmbed()
 			.setTitle("✅ Edited quote")
 			.setColor("GREEN")
-			.setDescription(`"${text}"${author ? ` - ${author}` : ""}`)
+			.setDescription(
+				`"${cleanString(text, false)}"${
+					author ? ` - ${cleanString(author, false)}` : ""
+				}`
+			)
 			.setFooter(`Quote #${quoteID}`);
 		await interaction.editReply({ embeds: [successEmbed] });
 	},

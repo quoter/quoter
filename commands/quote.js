@@ -19,6 +19,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
+const cleanString = require("../util/cleanString.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -61,7 +62,7 @@ module.exports = {
 		const quoteEmbed = new MessageEmbed()
 			.setColor("BLUE")
 			.setDescription(
-				`"${quote.text}"${
+				`"${cleanString(quote.text, false)}"${
 					quote.ogMessageID && quote.ogChannelID
 						? `\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 						: ""

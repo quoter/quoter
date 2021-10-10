@@ -17,16 +17,17 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 /**
- * Removes hyperlinks & newlines from a string
+ * Removes hyperlinks & (optionally) newlines from a string
  * @param {string} string - The string to clean
+ * @param {boolean} replaceNewlines - Whether to replace newlines with spaces
  * @returns {string} - The cleaned string
  */
-module.exports = (string) => {
+module.exports = (string, replaceNewlines = true) => {
 	if (!string) return string;
 
 	string = string.replaceAll("\\", "\\\\");
 	string = string.replaceAll("[", "\\[");
-	string = string.replaceAll("\n", " ");
+	if (replaceNewlines) string = string.replaceAll("\n", " ");
 
 	return string;
 };

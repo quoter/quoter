@@ -18,7 +18,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 
 const Discord = require("discord.js");
 const Guild = require("../schemas/guild.js");
-
+const cleanString = require("../util/cleanString.js");
 const config = require("../config.json");
 
 module.exports = {
@@ -99,7 +99,7 @@ module.exports = {
 				.setDescription(
 					`Created a new server quote:
 
-"${quoteText}" - ${quoteAuthor}`
+"${cleanString(quoteText, false)}" - ${cleanString(quoteAuthor)}`
 				)
 				.setFooter(`Quote #${serverQuotes.length}`);
 			return await interaction.reply({ embeds: [successEmbed] });

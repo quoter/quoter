@@ -20,6 +20,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Fuse = require("fuse.js");
 const Guild = require("../schemas/guild.js");
+const cleanString = require("../util/cleanString.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -88,10 +89,10 @@ module.exports = {
 				quote.author = `${quote.author.substr(0, 10)}...`;
 			}
 
-			result += `**${quoteID}**. "${quote.text}"`;
+			result += `**${quoteID}**. "${cleanString(quote.text)}"`;
 
 			if (quote.author && quote.author.length > 0) {
-				result += ` - ${quote.author}`;
+				result += ` - ${cleanString(quote.author)}`;
 			}
 
 			return result;
