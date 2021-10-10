@@ -45,71 +45,58 @@ module.exports = {
 				{ upsert: true, new: true }
 			));
 
-		if (
-			guild.allQuote ||
-			interaction.member.permissions.has("MANAGE_GUILD") ||
-			interaction.client.admins.get(interaction.user.id)
-		) {
-			const serverQuotes = guild.quotes;
-			const maxGuildQuotes =
-				guild.maxGuildQuotes || config.maxGuildQuotes || 75;
+		const serverQuotes = guild.quotes;
+		const maxGuildQuotes =
+			guild.maxGuildQuotes || config.maxGuildQuotes || 75;
 
-			if (serverQuotes.length >= maxGuildQuotes) {
-				return await interaction.reply({
-					content:
-						"❌ **|** This server has too many quotes! Use `/deletequote` before creating more.",
-					ephemeral: true,
-				});
-			}
-
-			const quoteMessage = interaction.options.getMessage("message");
-
-			if (!quoteMessage.content) {
-				return await interaction.reply({
-					content: `❌ **|** [That message](${quoteMessage.url}) doesn't contain text - embeds are not supported!`,
-					ephemeral: true,
-				});
-			}
-
-			const quoteAuthor = quoteMessage.author?.tag;
-			const quoteText = quoteMessage.content;
-			const maxQuoteLength =
-				guild.maxQuoteLength || config.maxQuoteLength || 130;
-
-			if (quoteText.length > maxQuoteLength) {
-				return await interaction.reply({
-					content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
-					ephemeral: true,
-				});
-			}
-
-			await serverQuotes.push({
-				text: quoteText,
-				author: quoteAuthor,
-				ogMessageID: quoteMessage.id,
-				ogChannelID: quoteMessage.channel.id,
-				quoterID: interaction.user.id,
-			});
-
-			await guild.save();
-
-			const successEmbed = new Discord.MessageEmbed()
-				.setTitle("✅ Added quote")
-				.setColor("GREEN")
-				.setDescription(
-					`Created a new server quote:
-
-"${cleanString(quoteText, false)}" - ${cleanString(quoteAuthor)}`
-				)
-				.setFooter(`Quote #${serverQuotes.length}`);
-			return await interaction.reply({ embeds: [successEmbed] });
-		} else {
-			await interaction.reply({
-				content: `✋ **|** That action requires the **Manage Guild** permission.
-
-**❗ To allow anyone to create quotes**, use \`/allquote\`.`,
+		if (serverQuotes.length >= maxGuildQuotes) {
+			return await interaction.reply({
+				content:
+					"❌ **|** This server has too many quotes! Use `/deletequote` before creating more.",
 				ephemeral: true,
 			});
 		}
+
+		const quoteMessage = interaction.options.getMessage("message");
+
+		if (!quoteMessage.content) {
+			return await interaction.reply({
+				content: `❌ **|** [That message](${quoteMessage.url}) doesn't contain text - embeds are not supported!`,
+				ephemeral: true,
+			});
+		}
+
+		const quoteAuthor = quoteMessage.author?.tag;
+		const quoteText = quoteMessage.content;
+		const maxQuoteLength =
+			guild.maxQuoteLength || config.maxQuoteLength || 130;
+
+		if (quoteText.length > maxQuoteLength) {
+			return await interaction.reply({
+				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
+				ephemeral: true,
+			});
+		}
+
+		await serverQuotes.push({
+			text: quoteText,
+			author: quoteAuthor,
+			ogMessageID: quoteMessage.id,
+			ogChannelID: quoteMessage.channel.id,
+			quoterID: interaction.user.id,
+		});
+
+		await guild.save();
+
+		const successEmbed = new Discord.MessageEmbed()
+			.setTitle("✅ Added quote")
+			.setColor("GREEN")
+			.setDescription(
+				`Created a new server quote:
+
+"${cleanString(quoteText, false)}" - ${cleanString(quoteAuthor)}`
+			)
+			.setFooter(`Quote #${serverQuotes.length}`);
+		return await interaction.reply({ embeds: [successEmbed] });
 	},
 };
