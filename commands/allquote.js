@@ -27,8 +27,13 @@ module.exports = {
 	guildOnly: true,
 	permission: "manage",
 	async execute(interaction) {
-		const currentState = (await Guild.findById(interaction.guild.id))
-			?.allQuote;
+		const { allQuote: currentState } =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
 
 		await Guild.findOneAndUpdate(
 			{ _id: interaction.guild.id },

@@ -28,8 +28,13 @@ module.exports = {
 	cooldown: 3,
 	permission: "manage",
 	async execute(interaction) {
-		const currentState = (await Guild.findById(interaction.guild.id))
-			?.manageSelf;
+		const { manageSelf: currentState } =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
 
 		await Guild.findOneAndUpdate(
 			{ _id: interaction.guild.id },

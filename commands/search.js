@@ -34,10 +34,15 @@ module.exports = {
 	cooldown: 5,
 	guildOnly: true,
 	async execute(interaction) {
-		const serverQuotes =
-			(await Guild.findById(interaction.guild.id))?.quotes || [];
+		const { quotes } =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
 
-		if (!serverQuotes.length) {
+		if (!quotes.length) {
 			return await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
@@ -55,7 +60,7 @@ module.exports = {
 			});
 		}
 
-		const fuse = new Fuse(serverQuotes, {
+		const fuse = new Fuse(quotes, {
 			keys: ["text", "author"],
 		});
 		const matches = fuse.search(searchTerm);

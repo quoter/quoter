@@ -48,14 +48,16 @@ module.exports = {
 		interaction.deferReply({ ephemeral: true });
 		const quoteID = interaction.options.getInteger("id");
 
-		const guild = await Guild.findOneAndUpdate(
-			{ _id: interaction.guild.id },
-			{},
-			{ upsert: true, new: true }
-		);
+		const guild =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
 
-		const serverQuotes = guild.quotes;
-		const quote = serverQuotes[quoteID - 1];
+		const { quotes } = guild;
+		const quote = quotes[quoteID - 1];
 
 		if (!quote) {
 			return await interaction.editReply({
@@ -78,7 +80,7 @@ module.exports = {
 			});
 		}
 
-		await serverQuotes.set(quoteID - 1, {
+		await quotes.set(quoteID - 1, {
 			text,
 			author,
 			createdTimestamp: quote.createdTimestamp,

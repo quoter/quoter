@@ -80,10 +80,15 @@ module.exports = {
 	cooldown: 3,
 	guildOnly: true,
 	async execute(interaction) {
-		const serverQuotes =
-			(await Guild.findById(interaction.guild.id))?.quotes || [];
+		const { quotes } =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
 
-		if (!serverQuotes.length) {
+		if (!quotes.length) {
 			return await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
@@ -92,7 +97,7 @@ module.exports = {
 		}
 
 		let page = interaction.options.getInteger("page") || 1;
-		const maxPage = Math.ceil(serverQuotes.length / 10);
+		const maxPage = Math.ceil(quotes.length / 10);
 		if (page > maxPage) {
 			return await interaction.reply({
 				content: `❌ **|** That page is too high! The maximum page is **${maxPage}**.`,
@@ -100,9 +105,7 @@ module.exports = {
 			});
 		}
 
-		const reply = await interaction.reply(
-			render(page, maxPage, serverQuotes)
-		);
+		const reply = await interaction.reply(render(page, maxPage, quotes));
 
 		const filter = (p) => {
 			if (p.user.id === interaction.user.id) {
@@ -125,10 +128,10 @@ module.exports = {
 
 				const id = press.component.customId;
 				if (id === "prev") {
-					await press.update(render(--page, maxPage, serverQuotes));
+					await press.update(render(--page, maxPage, quotes));
 					await awaitPress();
 				} else {
-					await press.update(render(++page, maxPage, serverQuotes));
+					await press.update(render(++page, maxPage, quotes));
 					await awaitPress();
 				}
 			} catch {

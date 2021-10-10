@@ -41,11 +41,13 @@ module.exports = {
 	guildOnly: true,
 	permission: "create",
 	async execute(interaction) {
-		const guild = await Guild.findOneAndUpdate(
-			{ _id: interaction.guild.id },
-			{},
-			{ upsert: true, new: true }
-		);
+		const guild =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
 
 		const serverQuotes = guild.quotes;
 

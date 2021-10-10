@@ -33,16 +33,18 @@ module.exports = {
 	permission: "manageSelf",
 	async execute(interaction) {
 		const id = interaction.options.getInteger("id");
-		const guild = await Guild.findOneAndUpdate(
-			{ _id: interaction.guild.id },
-			{},
-			{ upsert: true, new: true }
-		);
-		const serverQuotes = guild.quotes;
+		const guild =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
+		const { quotes } = guild;
 
-		const quote = serverQuotes[id - 1];
+		const quote = quotes[id - 1];
 		if (quote) {
-			await serverQuotes.splice(id - 1, 1);
+			await quotes.splice(id - 1, 1);
 			await guild.save();
 
 			await interaction.reply({

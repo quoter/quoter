@@ -78,11 +78,12 @@ module.exports = {
 		if (!isAdmin && command.permission) {
 			const isManager = member.permissions.has("MANAGE_GUILD");
 			if (command.permission === "create") {
-				const { allQuote } = await Guild.findOneAndUpdate(
-					{ _id: interaction.guild.id },
-					{},
-					{ upsert: true, new: true }
-				);
+				const { allQuote } = (interaction.db ??=
+					await Guild.findOneAndUpdate(
+						{ _id: interaction.guild.id },
+						{},
+						{ upsert: true, new: true }
+					));
 
 				if (!allQuote && !isManager) {
 					return await interaction.reply({
@@ -93,11 +94,12 @@ module.exports = {
 					});
 				}
 			} else if (command.permission === "manageSelf") {
-				const { manageSelf, quotes } = await Guild.findOneAndUpdate(
-					{ _id: interaction.guild.id },
-					{},
-					{ upsert: true, new: true }
-				);
+				const { manageSelf, quotes } = (interaction.db ??=
+					await Guild.findOneAndUpdate(
+						{ _id: interaction.guild.id },
+						{},
+						{ upsert: true, new: true }
+					));
 
 				const id = interaction.options.getInteger("id");
 				const createdQuote =

@@ -33,9 +33,15 @@ module.exports = {
 	cooldown: 2,
 	guildOnly: true,
 	async execute(interaction) {
-		const serverQuotes =
-			(await Guild.findById(interaction.guild.id))?.quotes || [];
-		if (!serverQuotes.length) {
+		const { quotes } =
+			interaction.db ??
+			(await Guild.findOneAndUpdate(
+				{ _id: interaction.guild.id },
+				{},
+				{ upsert: true, new: true }
+			));
+
+		if (!quotes.length) {
 			return await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
@@ -44,7 +50,7 @@ module.exports = {
 		}
 
 		const id = interaction.options.getInteger("id");
-		const quote = serverQuotes[id - 1];
+		const quote = quotes[id - 1];
 		if (!quote) {
 			return await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
