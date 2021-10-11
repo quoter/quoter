@@ -10,7 +10,8 @@
 	"scripts": {
 		"start": "node .",
 		"lint": "eslint . && prettier --check .",
-		"lint:fix": "eslint --fix . && prettier --write ."
+		"lint:fix": "eslint --fix . && prettier --write .",
+		"deploy": "node deployCommands.js"
 	},
 	"engines": {
 		"node": "^16.11.0",
