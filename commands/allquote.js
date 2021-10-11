@@ -27,7 +27,7 @@ module.exports = {
 	guildOnly: true,
 	permission: "manage",
 	async execute(interaction) {
-		const { allQuote: currentState } =
+		const guild =
 			interaction.db ??
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
@@ -35,21 +35,16 @@ module.exports = {
 				{ upsert: true, new: true }
 			));
 
-		await Guild.findOneAndUpdate(
-			{ _id: interaction.guild.id },
-			{ allQuote: !currentState },
-			{
-				upsert: true,
-			}
-		);
+		guild.allQuote = !guild.allQuote;
+		await guild.save();
 
-		if (currentState) {
+		if (guild.allQuote) {
 			await interaction.reply({
-				content: "✅ **|** Only server managers can now create quotes.",
+				content: "✅ **|** Everyone can now create quotes.",
 			});
 		} else {
 			await interaction.reply({
-				content: "✅ **|** Everyone can now create quotes.",
+				content: "✅ **|** Only server managers can now create quotes.",
 			});
 		}
 	},

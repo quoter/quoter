@@ -46,7 +46,6 @@ module.exports = {
 	guildOnly: true,
 	permission: "manageSelf",
 	async execute(interaction) {
-		interaction.deferReply({ ephemeral: true });
 		const quoteID = interaction.options.getInteger("id");
 
 		const guild =
@@ -61,7 +60,7 @@ module.exports = {
 		const quote = quotes[quoteID - 1];
 
 		if (!quote) {
-			return await interaction.editReply({
+			return await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
@@ -73,7 +72,7 @@ module.exports = {
 		const text = interaction.options.getString("text");
 
 		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
-			return await interaction.editReply({
+			return await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${
 					guild.maxQuoteLength || maxQuoteLength || 130
 				} characters.`,
@@ -92,15 +91,18 @@ module.exports = {
 
 		await guild.save();
 
-		const successEmbed = new MessageEmbed()
-			.setTitle("✅ Edited quote")
-			.setColor("GREEN")
-			.setDescription(
-				`"${cleanString(text, false)}"${
-					author ? ` - ${cleanString(author, false)}` : ""
-				}`
-			)
-			.setFooter(`Quote #${quoteID}`);
-		await interaction.editReply({ embeds: [successEmbed] });
+		await interaction.reply({
+			embeds: [
+				new MessageEmbed()
+					.setTitle("✅ Edited quote")
+					.setColor("GREEN")
+					.setDescription(
+						`"${cleanString(text, false)}"${
+							author ? ` - ${cleanString(author, false)}` : ""
+						}`
+					)
+					.setFooter(`Quote #${quoteID}`),
+			],
+		});
 	},
 };

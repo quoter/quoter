@@ -43,11 +43,13 @@ module.exports = {
 			.reduce((acc, g) => acc + g.memberCount, 0)
 			.toLocaleString();
 
-		const infoEmbed = new MessageEmbed()
-			.setTitle("💬 Information")
-			.setColor("BLUE")
-			.setDescription(
-				`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!
+		await interaction.reply({
+			embeds: [
+				new MessageEmbed()
+					.setTitle("💬 Information")
+					.setColor("BLUE")
+					.setDescription(
+						`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!
 
 **[🤖 Add Quoter to your server](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200)**
 [🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
@@ -55,23 +57,24 @@ module.exports = {
 [🛠️ Source Code](https://github.com/nchristopher/quoter)
 [🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
 [💰 Donate](https://ko-fi.com/nchristopher)`
-			)
-			.addField(
-				"Server Count",
-				`I'm in **${serverCount}** servers with a total of **${memberCount}** members!`,
-				true
-			)
-			.addField(
-				"Uptime",
-				`Online since **${startedAt}**, that's **${duration}**!`,
-				true
-			)
-			.addField(
-				"Latency",
-				`I received your message in \`${msgPing}\`ms. WebSocket ping is \`${ws.ping}\`ms`,
-				true
-			)
-			.setFooter(`Quoter v${version}`);
-		await interaction.reply({ embeds: [infoEmbed] });
+					)
+					.addField(
+						"Server Count",
+						`I'm in **${serverCount}** servers with a total of **${memberCount}** members!`,
+						true
+					)
+					.addField(
+						"Uptime",
+						`Online since **${startedAt}**, that's **${duration}**!`,
+						true
+					)
+					.addField(
+						"Latency",
+						`I received your message in \`${msgPing}\`ms. WebSocket ping is \`${ws.ping}\`ms`,
+						true
+					)
+					.setFooter(`Quoter v${version}`),
+			],
+		});
 	},
 };

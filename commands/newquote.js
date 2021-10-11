@@ -83,15 +83,18 @@ module.exports = {
 
 		await guild.save();
 
-		const successEmbed = new MessageEmbed()
-			.setTitle("✅ Added quote")
+		const embed = new MessageEmbed()
+			.setTitle("✅ Created a new quote")
 			.setColor("GREEN")
-			.setDescription(
-				`Created a new server quote:
-
-"${cleanString(text, false)}"${author ? ` - ${cleanString(author)}` : ""}`
-			)
+			.setDescription(`"${cleanString(text, false)}"`)
 			.setFooter(`Quote #${serverQuotes.length}`);
-		await interaction.reply({ embeds: [successEmbed] });
+
+		if (author) {
+			embed.setDescription(
+				embed.description + ` - ${cleanString(author)}`
+			);
+		}
+
+		await interaction.reply({ embeds: [embed] });
 	},
 };

@@ -58,11 +58,14 @@ module.exports = {
 			});
 		}
 
-		const quoterEmbed = new MessageEmbed()
-			.setColor("GREEN")
-			.setDescription(
-				`Quote #${id} was created by <@${quote.quoterID}>.`
-			);
-		await interaction.reply({ embeds: [quoterEmbed] });
+		await interaction.reply({
+			embeds: [
+				new MessageEmbed()
+					.setColor("GREEN")
+					.setDescription(
+						`Quote #${id} was created by <@${quote.quoterID}>.`
+					),
+			],
+		});
 	},
 };

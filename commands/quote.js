@@ -59,27 +59,24 @@ module.exports = {
 			});
 		}
 
-		const quoteEmbed = new MessageEmbed()
+		const embed = new MessageEmbed()
 			.setColor("BLUE")
-			.setDescription(
-				`"${cleanString(quote.text, false)}"${
-					quote.ogMessageID && quote.ogChannelID
-						? `\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
-						: ""
-				}`
-			)
+			.setDescription(`"${cleanString(quote.text, false)}"`)
 			.setFooter(`Quote #${id}`);
 
-		if (quote.createdTimestamp) {
-			quoteEmbed.setTimestamp(
-				quote.editedTimestamp || quote.createdTimestamp
+		if (quote.ogMessageID && quote.ogChannelID) {
+			embed.setDescription(
+				embed.description +
+					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 			);
 		}
 
-		if (quote.author) {
-			quoteEmbed.setAuthor(quote.author);
+		if (quote.createdTimestamp) {
+			embed.setTimestamp(quote.editedTimestamp || quote.createdTimestamp);
 		}
 
-		await interaction.reply({ embeds: [quoteEmbed] });
+		if (quote.author) embed.setAuthor(quote.author);
+
+		await interaction.reply({ embeds: [embed] });
 	},
 };

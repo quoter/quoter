@@ -28,7 +28,7 @@ module.exports = {
 	cooldown: 3,
 	permission: "manage",
 	async execute(interaction) {
-		const { manageSelf: currentState } =
+		const guild =
 			interaction.db ??
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
@@ -36,23 +36,18 @@ module.exports = {
 				{ upsert: true, new: true }
 			));
 
-		await Guild.findOneAndUpdate(
-			{ _id: interaction.guild.id },
-			{ manageSelf: !currentState },
-			{
-				upsert: true,
-			}
-		);
+		guild.manageSelf = !guild.manageSelf;
+		await guild.save();
 
-		if (currentState) {
+		if (guild.manageSelf) {
 			await interaction.reply({
 				content:
-					"✅ **|** Users __can no longer__ delete or edit quotes they've created..",
+					"✅ **|** Users __can now__ delete or edit quotes they've created.",
 			});
 		} else {
 			await interaction.reply({
 				content:
-					"✅ **|** Users __can now__ delete or edit quotes they've created.",
+					"✅ **|** Users __can no longer__ delete or edit quotes they've created..",
 			});
 		}
 	},

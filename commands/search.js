@@ -98,12 +98,15 @@ module.exports = {
 			return result;
 		});
 
-		const quoteListEmbed = new MessageEmbed()
-			.setTitle("🔎 Search Results")
-			.setColor("BLUE")
-			.setDescription(`Use \`/quote <ID>\` to view a specific quote.
+		await interaction.reply({
+			embeds: [
+				new MessageEmbed()
+					.setTitle("🔎 Search Results")
+					.setColor("BLUE")
+					.setDescription(`Use \`/quote <ID>\` to view a specific quote.
 
-${list.join("\n")}`);
-		await interaction.reply({ embeds: [quoteListEmbed] });
+${list.join("\n")}`),
+			],
+		});
 	},
 };

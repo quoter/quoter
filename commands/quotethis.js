@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const cleanString = require("../util/cleanString.js");
 const config = require("../config.json");
@@ -45,11 +45,11 @@ module.exports = {
 				{ upsert: true, new: true }
 			));
 
-		const serverQuotes = guild.quotes;
+		const { quotes } = guild;
 		const maxGuildQuotes =
 			guild.maxGuildQuotes || config.maxGuildQuotes || 75;
 
-		if (serverQuotes.length >= maxGuildQuotes) {
+		if (quotes.length >= maxGuildQuotes) {
 			return await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Use `/deletequote` before creating more.",
@@ -57,46 +57,47 @@ module.exports = {
 			});
 		}
 
-		const quoteMessage = interaction.options.getMessage("message");
+		const message = interaction.options.getMessage("message");
 
-		if (!quoteMessage.content) {
+		if (!message.content) {
 			return await interaction.reply({
-				content: `❌ **|** [That message](${quoteMessage.url}) doesn't contain text - embeds are not supported!`,
+				content: `❌ **|** [That message](${message.url}) doesn't contain text - embeds are not supported!`,
 				ephemeral: true,
 			});
 		}
 
-		const quoteAuthor = quoteMessage.author?.tag;
-		const quoteText = quoteMessage.content;
+		const author = message.author?.tag;
+		const text = message.content;
 		const maxQuoteLength =
 			guild.maxQuoteLength || config.maxQuoteLength || 130;
 
-		if (quoteText.length > maxQuoteLength) {
+		if (text.length > maxQuoteLength) {
 			return await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
 				ephemeral: true,
 			});
 		}
 
-		await serverQuotes.push({
-			text: quoteText,
-			author: quoteAuthor,
-			ogMessageID: quoteMessage.id,
-			ogChannelID: quoteMessage.channel.id,
+		await quotes.push({
+			text,
+			author,
+			ogMessageID: message.id,
+			ogChannelID: message.channel.id,
 			quoterID: interaction.user.id,
 		});
 
 		await guild.save();
 
-		const successEmbed = new Discord.MessageEmbed()
-			.setTitle("✅ Added quote")
-			.setColor("GREEN")
-			.setDescription(
-				`Created a new server quote:
-
-"${cleanString(quoteText, false)}" - ${cleanString(quoteAuthor)}`
-			)
-			.setFooter(`Quote #${serverQuotes.length}`);
-		return await interaction.reply({ embeds: [successEmbed] });
+		return await interaction.reply({
+			embeds: [
+				new MessageEmbed()
+					.setTitle("✅ Created a new quote")
+					.setColor("GREEN")
+					.setDescription(
+						`"${cleanString(text, false)}" - ${cleanString(author)}`
+					)
+					.setFooter(`Quote #${quotes.length}`),
+			],
+		});
 	},
 };

@@ -48,27 +48,31 @@ const render = (page, maxPage, quotes) => {
 		quoteList += "\n";
 	});
 
-	const quoteListEmbed = new MessageEmbed()
-		.setTitle(`📜 Server Quotes • Page #${page} of ${maxPage}`)
-		.setColor("BLUE")
-		.setDescription(`Use \`/quote\` to view a specific quote.
+	return {
+		embeds: [
+			new MessageEmbed()
+				.setTitle(`📜 Server Quotes • Page #${page} of ${maxPage}`)
+				.setColor("BLUE")
+				.setDescription(`Use \`/quote\` to view a specific quote.
 
-${quoteList}`);
-
-	const row = new MessageActionRow().addComponents(
-		new MessageButton()
-			.setCustomId("prev")
-			.setLabel("⬅️ Prev")
-			.setStyle("PRIMARY")
-			.setDisabled(page === 1),
-		new MessageButton()
-			.setCustomId("next")
-			.setLabel("Next ➡️")
-			.setStyle("PRIMARY")
-			.setDisabled(page === maxPage)
-	);
-
-	return { embeds: [quoteListEmbed], components: [row], fetchReply: true };
+${quoteList}`),
+		],
+		components: [
+			new MessageActionRow().addComponents(
+				new MessageButton()
+					.setCustomId("prev")
+					.setLabel("⬅️ Prev")
+					.setStyle("PRIMARY")
+					.setDisabled(page === 1),
+				new MessageButton()
+					.setCustomId("next")
+					.setLabel("Next ➡️")
+					.setStyle("PRIMARY")
+					.setDisabled(page === maxPage)
+			),
+		],
+		fetchReply: true,
+	};
 };
 
 module.exports = {
