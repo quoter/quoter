@@ -74,6 +74,7 @@ module.exports = {
 				ephemeral: true,
 			});
 		}
+
 		await serverQuotes.push({
 			text,
 			author,
