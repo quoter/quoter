@@ -17,19 +17,19 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const Guild = require("../schemas/guild.js");
-const cleanString = require("../util/cleanString.js");
 const { registerFont, createCanvas, loadImage } = require("canvas");
 const drawMultilineText = require("canvas-multiline-text");
 const path = require("path");
+const Guild = require("../schemas/guild.js");
+const cleanString = require("../util/cleanString.js");
 registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), { family: "Regular" });
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("inspire")
-		.setDescription("Creates an inspirational image based on a quote")
+		.setDescription("Creates an inspirational image from a quote")
 		.addIntegerOption((o) =>
-			o.setName("id").setDescription("The ID of the quote to view.")
+			o.setName("id").setDescription("The ID of the quote to use.")
 		),
 	cooldown: 2,
 	guildOnly: true,
