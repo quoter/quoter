@@ -79,29 +79,28 @@ module.exports = {
 		// set the text baseline to middle
 		ctx.textBaseline = "middle";
 		ctx.textAlign = "center";
-
 		// quote
 		drawMultilineText(canvas.getContext("2d"), `"${quoteText}"`, {
 			rect: {
 				x: canvas.width / 2,
 				y: 40,
 				width: canvas.width - 500,
-				height: 100,
+				height: 1000,
 			},
 			font: "regular",
-			minFontSize: 50,
-			maxFontSize: 80,
+			minFontSize: 170,
+			maxFontSize: 250,
 		});
 
 		// author
 		if(quote.author) {
 			ctx.textAlign = "left";
-			ctx.font = "70px \"regular\"";
+			ctx.font = "200px \"regular\"";
 			ctx.fillStyle = "#ffffff";
-			ctx.fillText(`- ${quote.author ?? "Unknown"}`, 20, canvas.height - 40);
+			ctx.fillText(`- ${quote.author}`, canvas.width - ctx.measureText(`- ${quote.author}`).width - 80, canvas.height - 130);
 		}
 		// create a buffer from the canvas
-		const buffer = await canvas.toBuffer();
+		const buffer = await canvas.toBuffer("image/jpeg", { quality: 0.5 });
 
 		// send the buffer as a file
 		await interaction.reply({
