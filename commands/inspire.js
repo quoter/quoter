@@ -94,10 +94,12 @@ module.exports = {
 		});
 
 		// author
-		ctx.textAlign = "left";
-		ctx.font = "70px \"regular\"";
-		ctx.fillStyle = "#ffffff";
-		ctx.fillText(`- ${quote.author ?? "Unknown"}`, 20, canvas.height - 40);
+		if(quote.author) {
+			ctx.textAlign = "left";
+			ctx.font = "70px \"regular\"";
+			ctx.fillStyle = "#ffffff";
+			ctx.fillText(`- ${quote.author ?? "Unknown"}`, 20, canvas.height - 40);
+		}
 		// create a buffer from the canvas
 		const buffer = await canvas.toBuffer();
 
