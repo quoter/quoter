@@ -32,7 +32,7 @@ Thanks for your interest in contributing to Quoter! Before making any changes, [
 
 ### Setup
 
-**Hosting Quoter yourself is not supported.** The recommended way to use the bot is through the [official, public instance](https://discord.com/oauth2/authorize?client_id=784853298271748136&scope=bot&permissions=347200). These instructions are meant for contributors.
+**Hosting Quoter yourself is not supported.** The recommended way to use the bot is through the [official, public instance](https://discord.com/api/oauth2/authorize?client_id=784853298271748136&permissions=19456&scope=bot%20applications.commands). These instructions are meant for contributors.
 
 -   Quoter requires **Node.js `v16.8.0`** and **mongoDB `v3.0.0` or higher**.
 
