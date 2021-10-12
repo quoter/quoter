@@ -74,7 +74,7 @@ module.exports = {
 				ephemeral: true,
 			});
 		}
-
+		if(!author) author = interaction.user.tag;
 		await serverQuotes.push({
 			text,
 			author,
@@ -87,7 +87,7 @@ module.exports = {
 			.setTitle("✅ Created a new quote")
 			.setColor("GREEN")
 			.setDescription(`"${cleanString(text, false)}"`)
-			.setFooter(`Quote #${serverQuotes.length}`);
+			.setFooter(`Quote #${serverQuotes.length - 1}`);
 
 		if (author) {
 			embed.setDescription(
