@@ -66,13 +66,13 @@ module.exports = {
 			});
 		}
 		// Getting a random index out of any available images
-		const randIndex = Math.floor(Math.random() * Object.keys(quotesImageData).length) + 1;
+		const randIndex = Math.floor(Math.random() * quotesImageData.quoteImages.length) + 1;
 
 		// Getting the respective image and data for how to place the quote
 		const background = await loadImage(
 			`${__dirname}/../assets/quoteImage${randIndex}.jpg`
 		);
-		const imageData = Object.values(quotesImageData)[randIndex - 1];
+		const imageData = quotesImageData.quoteImages[randIndex - 1];
 
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext("2d");
