@@ -20,6 +20,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { registerFont, createCanvas, loadImage } = require("canvas");
 const drawMultilineText = require("canvas-multiline-text");
 const path = require("path");
+const fs = require("fs");
 const Guild = require("../schemas/guild.js");
 
 registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), {
@@ -36,6 +37,7 @@ module.exports = {
 	cooldown: 4,
 	guildOnly: true,
 	async execute(interaction) {
+		await interaction.deferReply();
 		const { quotes } =
 			interaction.db ??
 			(await Guild.findOneAndUpdate(
@@ -43,9 +45,10 @@ module.exports = {
 				{},
 				{ upsert: true, new: true }
 			));
+		const quotesImageData = JSON.parse(fs.readFileSync("./assets/quoteImages.json"));
 
 		if (!quotes.length) {
-			return await interaction.reply({
+			return await interaction.editReply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
 				ephemeral: true,
@@ -57,50 +60,51 @@ module.exports = {
 
 		const quote = quotes[id - 1];
 		if (!quote) {
-			return await interaction.reply({
+			return await interaction.editReply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
 		}
+		// Getting a random index out of any available images
+		const randIndex = Math.floor(Math.random() * Object.keys(quotesImageData).length) + 1;
 
+		// Getting the respective image and data for how to place the quote
 		const background = await loadImage(
-			`${__dirname}/../assets/quoteImage.jpg`
+			`${__dirname}/../assets/quoteImage${randIndex}.jpg`
 		);
+		const imageData = Object.values(quotesImageData)[randIndex - 1];
 
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext("2d");
-
 		ctx.drawImage(background, 0, 0);
 
-		ctx.font = '70px "regular"';
-
 		ctx.textBaseline = "middle";
-		ctx.textAlign = "center";
+		ctx.textAlign = imageData.multiline.textAlign;
 
+		// Drawing the quote using the dat
 		drawMultilineText(canvas.getContext("2d"), `"${quote.text}"`, {
 			rect: {
-				x: canvas.width / 2,
-				y: 40,
-				width: canvas.width - 500,
-				height: 1000,
+				x: canvas.width * imageData.multiline.rect.xFactor,
+				y: imageData.multiline.rect.y,
+				width: canvas.width - (imageData.multiline.rect.widthPadding * 2),
+				height: imageData.multiline.rect.height,
 			},
-			font: "regular",
-			minFontSize: 170,
-			maxFontSize: 250,
+			font: imageData.multiline.font,
+			minFontSize: imageData.multiline.minFontSize,
+			maxFontSize: imageData.multiline.maxFontSize,
 		});
 
 		if (quote.author) {
-			ctx.textAlign = "left";
-			ctx.font = '200px "regular"';
-			ctx.fillStyle = "#ffffff";
+			ctx.textAlign = imageData.author.textAlign;
+			ctx.font = imageData.author.font;
+			ctx.fillStyle = imageData.author.color;
 			ctx.fillText(
 				`- ${quote.author}`,
-				canvas.width - ctx.measureText(`- ${quote.author}`).width - 120,
-				canvas.height - 160
+				canvas.width - (imageData.author.widthPadding * 2),
+				canvas.height - (imageData.author.heightPadding * 2)
 			);
 		}
-
-		await interaction.reply({
+		await interaction.editReply({
 			files: [canvas.toBuffer("image/jpeg", { quality: 0.5 })],
 		});
 	},
