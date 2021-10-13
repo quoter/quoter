@@ -97,10 +97,10 @@ module.exports = {
 			ctx.textAlign = "left";
 			ctx.font = "200px \"regular\"";
 			ctx.fillStyle = "#ffffff";
-			ctx.fillText(`- ${quote.author}`, canvas.width - ctx.measureText(`- ${quote.author}`).width - 80, canvas.height - 130);
+			ctx.fillText(`- ${quote.author}`, canvas.width - ctx.measureText(`- ${quote.author}`).width - 120, canvas.height - 160);
 		}
 		// create a buffer from the canvas
-		const buffer = await canvas.toBuffer("image/jpeg", { quality: 0.5 });
+		const buffer = canvas.toBuffer("image/jpeg", { quality: 0.5 });
 
 		// send the buffer as a file
 		await interaction.reply({
