@@ -20,8 +20,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { registerFont, createCanvas, loadImage } = require("canvas");
 const drawMultilineText = require("canvas-multiline-text");
 const path = require("path");
-const fs = require("fs");
 const Guild = require("../schemas/guild.js");
+const quotesImageData = require("../assets/quoteImages.json");
 
 registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), {
 	family: "Regular",
@@ -45,7 +45,6 @@ module.exports = {
 				{},
 				{ upsert: true, new: true }
 			));
-		const quotesImageData = JSON.parse(fs.readFileSync("./assets/quoteImages.json"));
 
 		if (!quotes.length) {
 			return await interaction.editReply({
