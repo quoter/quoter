@@ -50,11 +50,10 @@ module.exports = {
 			});
 		}
 
-		const id =
-			interaction.options.getInteger("id") ||
-			Math.floor(Math.random() * (quotes.length));
+		let id = interaction.options.getInteger("id");
+		id ??= Math.ceil(Math.random() * quotes.length);
 
-		const quote = quotes[id];
+		const quote = quotes[id - 1];
 		if (!quote) {
 			return await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
