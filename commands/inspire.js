@@ -101,7 +101,8 @@ module.exports = {
 			ctx.fillText(
 				`- ${quote.author}`,
 				canvas.width - (imageData.author.widthPadding * 2),
-				canvas.height - (imageData.author.heightPadding * 2)
+				canvas.height - (imageData.author.heightPadding * 2),
+				canvas.width - 200
 			);
 		}
 		await interaction.editReply({
