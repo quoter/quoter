@@ -23,10 +23,10 @@ const config = require("../config.json");
 
 module.exports = {
 	data: {
-		name: "quotethis",
+		name: "Quote This",
 		toJSON() {
 			return {
-				name: "quotethis",
+				name: "Quote This",
 				type: 3,
 				options: [],
 				default_permission: undefined,
