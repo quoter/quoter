@@ -1,17 +1,10 @@
 {
 	"token": "TOKEN",
-	"defaultPrefix": ".",
 	"mongoPath": "mongodb://127.0.0.1:27017/quoter",
 	"maxGuildQuotes": 75,
 	"maxQuoteLength": 130,
-	"admins": [
-		"USER-ID"
-	],
+	"admins": [],
 	"disabledCommands": [],
-	"blockedGuilds": [
-		"GUILD-ID"
-	],
-	"blockedUsers": [
-		"USER-ID"
-	]
+	"blockedGuilds": [],
+	"blockedUsers": []
 }
