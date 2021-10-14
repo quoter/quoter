@@ -18,7 +18,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-const { token } = require("./config.json");
+const { token, disabledCommands } = require("./config.json");
 const fs = require("fs");
 
 const commands = [];
@@ -30,7 +30,7 @@ const [, , clientId, guildId] = process.argv;
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	if (command.hidden) continue;
+	if (disabledCommands?.includes(command.data.name)) continue;
 	commands.push(command.data.toJSON());
 }
 
