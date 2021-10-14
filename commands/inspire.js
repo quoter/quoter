@@ -21,7 +21,7 @@ const { registerFont, createCanvas, loadImage } = require("canvas");
 const drawMultilineText = require("canvas-multiline-text");
 const path = require("path");
 const Guild = require("../schemas/guild.js");
-const quotesImageData = require("../assets/quoteImages.json");
+const { quoteImages } = require("../assets/quoteImages.json");
 
 registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), {
 	family: "Regular",
@@ -64,14 +64,13 @@ module.exports = {
 				ephemeral: true,
 			});
 		}
-		// Getting a random index out of any available images
-		const randIndex = Math.floor(Math.random() * quotesImageData.quoteImages.length) + 1;
 
-		// Getting the respective image and data for how to place the quote
+		const index = Math.floor(Math.random() * quoteImages.length);
+
 		const background = await loadImage(
-			`${__dirname}/../assets/quoteImage${randIndex}.jpg`
+			`${__dirname}/../assets/${index}.jpg`
 		);
-		const imageData = quotesImageData.quoteImages[randIndex - 1];
+		const imageData = quoteImages[index];
 
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext("2d");
@@ -85,7 +84,7 @@ module.exports = {
 			rect: {
 				x: canvas.width * imageData.multiline.rect.xFactor,
 				y: imageData.multiline.rect.y,
-				width: canvas.width - (imageData.multiline.rect.widthPadding * 2),
+				width: canvas.width - imageData.multiline.rect.widthPadding * 2,
 				height: imageData.multiline.rect.height,
 			},
 			font: imageData.multiline.font,
@@ -99,11 +98,12 @@ module.exports = {
 			ctx.fillStyle = imageData.author.color;
 			ctx.fillText(
 				`- ${quote.author}`,
-				canvas.width - (imageData.author.widthPadding * 2),
-				canvas.height - (imageData.author.heightPadding * 2),
+				canvas.width - imageData.author.widthPadding * 2,
+				canvas.height - imageData.author.heightPadding * 2,
 				canvas.width - 200
 			);
 		}
+
 		await interaction.editReply({
 			files: [canvas.toBuffer("image/jpeg", { quality: 0.5 })],
 		});
