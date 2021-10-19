@@ -20,19 +20,10 @@ const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const cleanString = require("../util/cleanString.js");
 const config = require("../config.json");
+const { ContextMenuCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
-	data: {
-		name: "Quote This",
-		toJSON() {
-			return {
-				name: "Quote This",
-				type: 3,
-				options: [],
-				default_permission: undefined,
-			};
-		},
-	},
+	data: new ContextMenuCommandBuilder().setName("Quote This").setType(3),
 	cooldown: 10,
 	guildOnly: true,
 	permission: "create",
