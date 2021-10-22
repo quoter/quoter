@@ -77,7 +77,7 @@ module.exports = {
 
 		if (!isAdmin && command.permission) {
 			const isManager = member.permissions.has("MANAGE_GUILD");
-			if (command.permission === "create") {
+			if (command.permission.includes("create")) {
 				const { allQuote } = (interaction.db ??=
 					await Guild.findOneAndUpdate(
 						{ _id: interaction.guild.id },
@@ -93,7 +93,23 @@ module.exports = {
 						ephemeral: true,
 					});
 				}
-			} else if (command.permission === "manageSelf") {
+			}
+			if (command.permission.includes("newQuote")) {
+				const { verifiedQuotes } = (interaction.db ??=
+					await Guild.findOneAndUpdate(
+						{ _id: interaction.guild.id },
+						{},
+						{ upsert: true, new: true }
+					));
+				if (verifiedQuotes && !isManager) {
+					return await interaction.reply({
+						content: `✋ **|** That action requires the **Manage Guild** permission.
+		
+**❗ To allow anyone to use \`/newquote\`**, have an admin use \`/verifiedquote\`.`,
+						ephemeral: true,
+					});
+				}
+			} else if (command.permission.includes("manageSelf")) {
 				const { manageSelf, quotes } = (interaction.db ??=
 					await Guild.findOneAndUpdate(
 						{ _id: interaction.guild.id },
@@ -113,7 +129,7 @@ module.exports = {
 						ephemeral: true,
 					});
 				}
-			} else if (command.permission === "manage") {
+			} else if (command.permission.includes("manage")) {
 				if (!isManager) {
 					return await interaction.reply({
 						content:
