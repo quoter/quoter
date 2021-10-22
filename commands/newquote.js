@@ -19,6 +19,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
+const mentionParse = require("../util/mentionParse.js");
 const cleanString = require("../util/cleanString.js");
 const { maxGuildQuotes, maxQuoteLength } = require("../config.json");
 
@@ -32,11 +33,8 @@ module.exports = {
 				.setDescription("The quote's text.")
 				.setRequired(true)
 		)
-		.addUserOption((o) =>
-			o.setName("author_user").setDescription("User that said the quote. This option will take precedent over author_name.")
-		)
 		.addStringOption((o) =>
-			o.setName("author_name").setDescription("Name of the person that said the quote.")
+			o.setName("author").setDescription("The quote's author.")
 		),
 	cooldown: 10,
 	guildOnly: true,
@@ -63,15 +61,8 @@ module.exports = {
 			});
 		}
 
-		let author = interaction.options.getUser("author_user"); // user if specific
-		if(!author) {
-			if(interaction.options.getString("author_name")) {
-				author &&= interaction.options.getString("author_name") // user string if specified
-			}
-			else {
-				author = interaction.author.tag; // user that used the command if no author_name or author_user
-			}
-		};
+		let author = interaction.options.getString("author");
+		author &&= await mentionParse(author);
 
 		const text = interaction.options.getString("text");
 
