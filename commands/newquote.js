@@ -62,7 +62,7 @@ module.exports = {
 		}
 
 		let author = interaction.options.getString("author");
-		author &&= await mentionParse(author);
+		author &&= await mentionParse(author, interaction.client);
 
 		const text = interaction.options.getString("text");
 
