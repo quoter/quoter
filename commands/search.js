@@ -63,6 +63,7 @@ module.exports = {
 
 		const fuse = new Fuse(quotes, {
 			keys: ["text", "author"],
+			threshold: 0.4,
 		});
 		const matches = fuse.search(searchTerm);
 
