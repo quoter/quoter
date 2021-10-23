@@ -47,9 +47,8 @@ module.exports = {
 			});
 		}
 
-		const id =
-			interaction.options.getInteger("id") ??
-			Math.ceil(Math.random() * quotes.length);
+		const choice = interaction.options.getInteger("id");
+		const id = choice ?? Math.ceil(Math.random() * quotes.length);
 
 		const quote = quotes[id - 1];
 		if (!quote) {
@@ -62,7 +61,7 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor("BLUE")
 			.setDescription(`"${cleanString(quote.text, false)}"`)
-			.setFooter(`Quote #${id}`);
+			.setFooter(`Quote #${id}${!choice ? " (random)" : ""}`);
 
 		if (quote.ogMessageID && quote.ogChannelID) {
 			embed.setDescription(
