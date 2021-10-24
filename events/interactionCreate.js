@@ -76,7 +76,12 @@ module.exports = {
 		}
 
 		if (!isAdmin && command.permission) {
-			const isManager = member.permissions.has("MANAGE_GUILD");
+			const isManager =
+				member.permissions.has("MANAGE_GUILD") ||
+				member.roles.cache.some(
+					(r) => r.name.toLowerCase() === "quote manager"
+				);
+
 			if (command.permission === "create") {
 				const { allQuote } = (interaction.db ??=
 					await Guild.findOneAndUpdate(
