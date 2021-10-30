@@ -20,6 +20,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const mentionParse = require("../util/mentionParse.js");
+const trimQuotes = require("../util/trimQuotes.js");
 const cleanString = require("../util/cleanString.js");
 const { maxGuildQuotes, maxQuoteLength } = require("../config.json");
 
@@ -64,7 +65,7 @@ module.exports = {
 		let author = interaction.options.getString("author");
 		author &&= await mentionParse(author, interaction.client);
 
-		const text = interaction.options.getString("text");
+		const text = trimQuotes(interaction.options.getString("text"));
 
 		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
 			return await interaction.reply({
