@@ -30,7 +30,7 @@
 		"bufferutil": "^4.0.5",
 		"canvas": "^2.8.0",
 		"canvas-multiline-text": "^1.0.3",
-		"discord-api-types": "^0.25.2",
+		"discord-api-types": "^0.26.0",
 		"discord.js": "^13.4.0",
 		"fuse.js": "^6.5.3",
 		"mongoose": "^6.1.3",
