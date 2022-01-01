@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020-2021 Nicholas Christopher
+Copyright (C) 2020-2022 Nicholas Christopher
 
 This file is part of Quoter.
 
