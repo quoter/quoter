@@ -14,8 +14,8 @@
 		"deploy": "node deployCommands.js"
 	},
 	"engines": {
-		"node": "^16.13.1",
-		"npm": "^8.3.0"
+		"node": "^16.14.2",
+		"npm": "^8.5.5"
 	},
 	"bugs": {
 		"url": "https://github.com/nchristopher/quoter/issues"
