@@ -87,7 +87,7 @@ module.exports = {
 					.setDescription(
 						`"${cleanString(text, false)}" - ${cleanString(author)}`
 					)
-					.setFooter(`Quote #${quotes.length}`),
+					.setFooter({ text: `Quote #${quotes.length}` }),
 			],
 		});
 	},

@@ -61,7 +61,7 @@ module.exports = {
 		const embed = new MessageEmbed()
 			.setColor("BLUE")
 			.setDescription(`"${cleanString(quote.text, false)}"`)
-			.setFooter(`Quote #${id}${!choice ? " (random)" : ""}`);
+			.setFooter({ text: `Quote #${id}${!choice ? " (random)" : ""}` });
 
 		if (quote.ogMessageID && quote.ogChannelID) {
 			embed.setDescription(

@@ -102,7 +102,7 @@ module.exports = {
 							author ? ` - ${cleanString(author, false)}` : ""
 						}`
 					)
-					.setFooter(`Quote #${quoteID}`),
+					.setFooter({ text: `Quote #${quoteID}` }),
 			],
 		});
 	},

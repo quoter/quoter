@@ -73,7 +73,7 @@ module.exports = {
 						`I received your message in \`${msgPing}\`ms. WebSocket ping is \`${ws.ping}\`ms`,
 						true
 					)
-					.setFooter(`Quoter v${version}`),
+					.setFooter({ text: `Quoter v${version}` }),
 			],
 		});
 	},

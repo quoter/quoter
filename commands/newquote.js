@@ -88,7 +88,7 @@ module.exports = {
 			.setTitle("✅ Created a new quote")
 			.setColor("GREEN")
 			.setDescription(`"${cleanString(text, false)}"`)
-			.setFooter(`Quote #${serverQuotes.length}`);
+			.setFooter({ text: `Quote #${serverQuotes.length}` });
 
 		if (author) {
 			embed.setDescription(
