@@ -42,7 +42,7 @@ const guildSchema = new Schema({
 			createdTimestamp: {
 				type: Number,
 				min: 0,
-				default: Date.now(),
+				default: Date.now,
 			},
 			editedTimestamp: {
 				type: Number,
