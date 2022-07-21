@@ -25,7 +25,7 @@
 		"url": "git+https://github.com/nchristopher/quoter.git"
 	},
 	"dependencies": {
-		"@discordjs/builders": "0.15.0",
+		"@discordjs/builders": "1.0.0",
 		"@discordjs/rest": "1.0.0",
 		"bufferutil": "4.0.6",
 		"canvas": "2.9.3",
