@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageAttachment } = require("discord.js");
+const { AttachmentBuilder, SlashCommandBuilder } = require("discord.js");
 const { Readable } = require("stream");
 const Guild = require("../schemas/guild.js");
 
@@ -42,7 +41,9 @@ module.exports = {
 			" "
 		);
 		const stream = Readable.from(json);
-		const attachment = new MessageAttachment(stream, "quotes.json");
+		const attachment = new AttachmentBuilder(stream, {
+			name: "quotes.json",
+		});
 
 		await interaction.reply({
 			content: "📥 **|** Here are this server's quotes for download.",

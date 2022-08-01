@@ -16,11 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { MessageEmbed } = require("discord.js");
+const {
+	EmbedBuilder,
+	ContextMenuCommandBuilder,
+	Colors,
+} = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const cleanString = require("../util/cleanString.js");
 const config = require("../config.json");
-const { ContextMenuCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
 	data: new ContextMenuCommandBuilder().setName("Quote This").setType(3),
@@ -81,9 +84,9 @@ module.exports = {
 
 		return await interaction.reply({
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setTitle("✅ Created a new quote")
-					.setColor("GREEN")
+					.setColor(Colors.Green)
 					.setDescription(
 						`"${cleanString(text, false)}" - ${cleanString(author)}`
 					)

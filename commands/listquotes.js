@@ -16,8 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const {
+	EmbedBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	SlashCommandBuilder,
+	Colors,
+	ButtonStyle,
+	ComponentType,
+} = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const cleanString = require("../util/cleanString.js");
 
@@ -50,24 +57,24 @@ const render = (page, maxPage, quotes) => {
 
 	return {
 		embeds: [
-			new MessageEmbed()
+			new EmbedBuilder()
 				.setTitle(`📜 Server Quotes • Page #${page} of ${maxPage}`)
-				.setColor("BLUE")
+				.setColor(Colors.Blue)
 				.setDescription(`Use \`/quote\` to view a specific quote.
 
 ${quoteList}`),
 		],
 		components: [
-			new MessageActionRow().addComponents(
-				new MessageButton()
+			new ActionRowBuilder().addComponents(
+				new ButtonBuilder()
 					.setCustomId("prev")
 					.setLabel("⬅️ Prev")
-					.setStyle("PRIMARY")
+					.setStyle(ButtonStyle.Primary)
 					.setDisabled(page === 1),
-				new MessageButton()
+				new ButtonBuilder()
 					.setCustomId("next")
 					.setLabel("Next ➡️")
-					.setStyle("PRIMARY")
+					.setStyle(ButtonStyle.Primary)
 					.setDisabled(page === maxPage)
 			),
 		],
@@ -127,7 +134,7 @@ module.exports = {
 			try {
 				const press = await reply.awaitMessageComponent({
 					filter,
-					componentType: "BUTTON",
+					componentType: ComponentType.Button,
 					time: 35000,
 				});
 

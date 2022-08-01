@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,9 +25,9 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.reply({
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setTitle("🔒 Privacy Policy")
-					.setColor("BLUE")
+					.setColor(Colors.Blue)
 					.setDescription(
 						`> Last updated on 7/9/2022
 			

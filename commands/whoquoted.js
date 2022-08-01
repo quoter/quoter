@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
@@ -60,8 +59,8 @@ module.exports = {
 
 		await interaction.reply({
 			embeds: [
-				new MessageEmbed()
-					.setColor("GREEN")
+				new EmbedBuilder()
+					.setColor(Colors.Green)
 					.setDescription(
 						`Quote #${id} was created by <@${quote.quoterID}>.`
 					),

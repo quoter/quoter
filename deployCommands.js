@@ -17,7 +17,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { Routes } = require("discord.js");
 const { token, disabledCommands } = require("./config.json");
 const fs = require("fs");
 
