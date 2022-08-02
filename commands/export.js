@@ -40,8 +40,8 @@ module.exports = {
 			["text", "author", "createdTimestamp", "editedTimestamp"],
 			" "
 		);
-		const stream = Readable.from(json);
-		const attachment = new AttachmentBuilder(stream, {
+		const buffer = Buffer.from(json);
+		const attachment = new AttachmentBuilder(buffer, {
 			name: "quotes.json",
 		});
 
