@@ -91,7 +91,7 @@ module.exports = {
 
 		if (author) {
 			embed.setDescription(
-				embed.description + ` - ${cleanString(author)}`
+				embed.data.description + ` - ${cleanString(author)}`
 			);
 		}
 

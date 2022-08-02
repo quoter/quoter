@@ -64,7 +64,7 @@ module.exports = {
 
 		if (quote.ogMessageID && quote.ogChannelID) {
 			embed.setDescription(
-				embed.description +
+				embed.data.description +
 					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 			);
 		}
