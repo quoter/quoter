@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
 const { version } = require("../package.json");
 const ms = require("ms");
 
@@ -45,9 +44,9 @@ module.exports = {
 
 		await interaction.reply({
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setTitle("💬 Information")
-					.setColor("BLUE")
+					.setColor(Colors.Blue)
 					.setDescription(
 						`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!
 
@@ -58,21 +57,23 @@ module.exports = {
 [🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
 [💰 Donate](https://ko-fi.com/nchristopher)`
 					)
-					.addField(
-						"Server Count",
-						`I'm in **${serverCount}** servers with a total of **${memberCount}** members!`,
-						true
-					)
-					.addField(
-						"Uptime",
-						`Online since **${startedAt}**, that's **${duration}**!`,
-						true
-					)
-					.addField(
-						"Latency",
-						`I received your message in \`${msgPing}\`ms. WebSocket ping is \`${ws.ping}\`ms`,
-						true
-					)
+					.addFields([
+						{
+							name: "Server Count",
+							value: `I'm in **${serverCount}** servers with a total of **${memberCount}** members!`,
+							inline: true,
+						},
+						{
+							name: "Uptime",
+							value: `Online since **${startedAt}**, that's **${duration}**!`,
+							inline: true,
+						},
+						{
+							name: "Latency",
+							value: `I received your message in \`${msgPing}\`ms. WebSocket ping is \`${ws.ping}\`ms`,
+							inline: true,
+						},
+					])
 					.setFooter({ text: `Quoter v${version}` }),
 			],
 		});

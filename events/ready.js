@@ -19,6 +19,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 const mongoose = require("mongoose");
 const Guild = require("../schemas/guild.js");
 const { mongoPath } = require("../config.json");
+const { ActivityType } = require("discord.js");
 
 module.exports = {
 	name: "ready",
@@ -51,7 +52,7 @@ module.exports = {
 				activities: [
 					{
 						name: `${client.guilds.cache.size} servers!`,
-						type: "WATCHING",
+						type: ActivityType.Watching,
 					},
 				],
 			});

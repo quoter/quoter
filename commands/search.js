@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
 const Fuse = require("fuse.js");
 const Guild = require("../schemas/guild.js");
 const cleanString = require("../util/cleanString.js");
@@ -101,9 +100,9 @@ module.exports = {
 
 		await interaction.reply({
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setTitle("🔎 Search Results")
-					.setColor("BLUE")
+					.setColor(Colors.Blue)
 					.setDescription(`Use \`/quote <ID>\` to view a specific quote.
 
 ${list.join("\n")}`),

@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const mentionParse = require("../util/mentionParse.js");
 const trimQuotes = require("../util/trimQuotes.js");
@@ -84,15 +83,15 @@ module.exports = {
 
 		await guild.save();
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle("✅ Created a new quote")
-			.setColor("GREEN")
+			.setColor(Colors.Green)
 			.setDescription(`"${cleanString(text, false)}"`)
 			.setFooter({ text: `Quote #${serverQuotes.length}` });
 
 		if (author) {
 			embed.setDescription(
-				embed.description + ` - ${cleanString(author)}`
+				embed.data.description + ` - ${cleanString(author)}`
 			);
 		}
 

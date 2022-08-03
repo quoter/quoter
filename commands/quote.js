@@ -16,8 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
 const Guild = require("../schemas/guild.js");
 const cleanString = require("../util/cleanString.js");
 
@@ -58,14 +57,14 @@ module.exports = {
 			});
 		}
 
-		const embed = new MessageEmbed()
-			.setColor("BLUE")
+		const embed = new EmbedBuilder()
+			.setColor(Colors.Blue)
 			.setDescription(`"${cleanString(quote.text, false)}"`)
 			.setFooter({ text: `Quote #${id}${!choice ? " (random)" : ""}` });
 
 		if (quote.ogMessageID && quote.ogChannelID) {
 			embed.setDescription(
-				embed.description +
+				embed.data.description +
 					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
 			);
 		}
@@ -74,7 +73,7 @@ module.exports = {
 			embed.setTimestamp(quote.editedTimestamp || quote.createdTimestamp);
 		}
 
-		if (quote.author) embed.setAuthor(quote.author);
+		if (quote.author) embed.setAuthor({ name: quote.author });
 
 		await interaction.reply({ embeds: [embed] });
 	},
