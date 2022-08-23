@@ -16,9 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const mongoose = require("mongoose");
 const Guild = require("../schemas/guild.js");
-const { mongoPath } = require("../config.json");
 const { ActivityType } = require("discord.js");
 
 module.exports = {
@@ -26,13 +24,6 @@ module.exports = {
 	once: true,
 	async execute(client) {
 		console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
-
-		await mongoose.connect(mongoPath, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-		});
-
-		console.log("Connected to mongoDB");
 
 		const currentGuilds = client.guilds.cache.map((g) => g.id);
 

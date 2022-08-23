@@ -61,6 +61,12 @@ for (const file of eventFiles) {
 	}
 }
 
+(async () => {
+	await mongoose.connect(config.mongoPath);
+})();
+
+mongoose.connection.on("connected", () => console.log("Connected to mongoDB"));
+
 process.on("SIGINT", async () => {
 	mongoose.connection.close(() => {
 		console.log("Closed mongoDB connection");
