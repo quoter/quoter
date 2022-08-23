@@ -79,7 +79,7 @@ module.exports = {
 
 		if (!isAdmin && command.permission) {
 			const isManager =
-				member.permissions.has("MANAGE_GUILD") ||
+				member.permissions.has("ManageGuild") ||
 				member.roles.cache.some(
 					(r) => r.name.toLowerCase() === "quote manager"
 				);
