@@ -1,6 +1,6 @@
 {
 	"name": "quoter",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"description": "A Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!",
 	"homepage": "https://github.com/nchristopher/quoter#readme",
 	"author": "Nicholas Christopher <nchristopher@tuta.io> (https://nchristopher.me)",
