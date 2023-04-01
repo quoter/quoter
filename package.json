@@ -2,8 +2,8 @@
 	"name": "quoter",
 	"version": "4.0.2",
 	"description": "A Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!",
-	"homepage": "https://github.com/nchristopher/quoter#readme",
-	"author": "Nicholas Christopher <nchristopher@tuta.io> (https://nchristopher.me)",
+	"homepage": "https://github.com/n1ckoates/quoter#readme",
+	"author": "Nick Oates <nick@nickoates.com> (https://nickoates.com)",
 	"license": "AGPL-3.0-only",
 	"main": "main.js",
 	"private": true,
@@ -18,11 +18,11 @@
 		"npm": "^8.19.2"
 	},
 	"bugs": {
-		"url": "https://github.com/nchristopher/quoter/issues"
+		"url": "https://github.com/n1ckoates/quoter/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/nchristopher/quoter.git"
+		"url": "git+https://github.com/n1ckoates/quoter.git"
 	},
 	"dependencies": {
 		"@discordjs/rest": "1.6.0",

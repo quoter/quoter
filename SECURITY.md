@@ -6,4 +6,4 @@ Only the latest version of Quoter will be updated. Older versions will not recei
 
 ## Reporting a Vulnerability
 
-If you find a security vulnerability in Quoter, please e-mail Nicholas Christopher at [nchristopher@tuta.io](mailto:nchristopher@tuta.io) with your findings!
+If you find a security vulnerability in Quoter, please e-mail Nick Oates at [nick@nickoates.com](mailto:nick@nickoates.com) with your findings!

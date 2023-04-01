@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020-2023 Nicholas Christopher
+Copyright (C) 2020-2023 Nick Oates
 
 This file is part of Quoter.
 
@@ -52,10 +52,9 @@ module.exports = {
 
 **[🤖 Add Quoter to your server](https://discord.com/api/oauth2/authorize?client_id=784853298271748136&permissions=19456&scope=bot%20applications.commands)**
 [🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
-[🐛 Report Bugs](https://github.com/nchristopher/quoter/issues/new/choose)
-[🛠️ Source Code](https://github.com/nchristopher/quoter)
-[🔒 Privacy Policy](https://github.com/nchristopher/quoter/blob/main/privacy.md)
-[💰 Donate](https://ko-fi.com/nchristopher)`
+[🐛 Report Bugs](https://github.com/n1ckoates/quoter/issues/new/choose)
+[🛠️ Source Code](https://github.com/n1ckoates/quoter)
+[🔒 Privacy Policy](https://github.com/n1ckoates/quoter/blob/main/privacy.md)`
 					)
 					.addFields([
 						{

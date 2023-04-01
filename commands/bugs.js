@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020-2023 Nicholas Christopher
+Copyright (C) 2020-2023 Nick Oates
 
 This file is part of Quoter.
 
@@ -27,7 +27,7 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.reply({
 			content:
-				"🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](<https://github.com/nchristopher/quoter/issues>) page.",
+				"🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](<https://github.com/n1ckoates/quoter/issues>) page.",
 			ephemeral: true,
 		});
 	},

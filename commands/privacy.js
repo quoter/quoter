@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020-2023 Nicholas Christopher
+Copyright (C) 2020-2023 Nick Oates
 
 This file is part of Quoter.
 
