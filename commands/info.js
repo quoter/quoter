@@ -48,13 +48,14 @@ module.exports = {
 					.setTitle("💬 Information")
 					.setColor(Colors.Blue)
 					.setDescription(
-						`*Quoter* is a Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!
+						`**Quoter** is a Discord bot that allows you to save messages into a quote book, and share them with your friends.
 
 **[🤖 Add Quoter to your server](https://discord.com/api/oauth2/authorize?client_id=784853298271748136&permissions=19456&scope=bot%20applications.commands)**
 [🙋 Support Server](https://discord.gg/QzXTgS2CNk) 
 [🐛 Report Bugs](https://github.com/n1ckoates/quoter/issues/new/choose)
 [🛠️ Source Code](https://github.com/n1ckoates/quoter)
-[🔒 Privacy Policy](https://github.com/n1ckoates/quoter/blob/main/privacy.md)`
+[📜 Terms of Service](https://quoter.cc/terms)
+[🔒 Privacy Policy](https://quoter.cc/privacy)`
 					)
 					.addFields([
 						{
