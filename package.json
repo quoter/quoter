@@ -1,7 +1,7 @@
 {
 	"name": "quoter",
-	"version": "4.0.2",
-	"description": "A Discord bot which stores quotes for servers & retrieves them on demand. It supports listing, (randomly) displaying, deleting, and editing quotes!",
+	"version": "4.0.3",
+	"description": "The Quote Book for Discord.",
 	"homepage": "https://github.com/n1ckoates/quoter#readme",
 	"author": "Nick Oates <nick@nickoates.com> (https://nickoates.com)",
 	"license": "AGPL-3.0-only",
