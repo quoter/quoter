@@ -56,7 +56,7 @@ module.exports = {
 		) {
 			return await interaction.reply({
 				content:
-					"❌ **|** This server has too many quotes! Use `/deletequote` before creating more.",
+					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
 				ephemeral: true,
 			});
 		}
