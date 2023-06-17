@@ -17,7 +17,6 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 const { AttachmentBuilder, SlashCommandBuilder } = require("discord.js");
-const { Readable } = require("stream");
 const Guild = require("../schemas/guild.js");
 
 module.exports = {
@@ -26,6 +25,7 @@ module.exports = {
 		.setDescription("Exports the server's quotes into a JSON file."),
 	cooldown: 30,
 	permission: "manage",
+	guildOnly: true,
 	async execute(interaction) {
 		const { quotes } =
 			interaction.db ??

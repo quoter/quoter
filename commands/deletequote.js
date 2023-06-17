@@ -31,6 +31,7 @@ module.exports = {
 		),
 	cooldown: 8,
 	permission: "manageSelf",
+	guildOnly: true,
 	async execute(interaction) {
 		const id = interaction.options.getInteger("id");
 		const guild =

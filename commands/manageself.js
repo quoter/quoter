@@ -27,6 +27,7 @@ module.exports = {
 		),
 	cooldown: 3,
 	permission: "manage",
+	guildOnly: true,
 	async execute(interaction) {
 		const guild =
 			interaction.db ??
