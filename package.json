@@ -37,7 +37,7 @@
 		"zlib-sync": "0.1.8"
 	},
 	"devDependencies": {
-		"eslint": "8.45.0",
+		"eslint": "8.47.0",
 		"eslint-config-prettier": "8.8.0",
 		"prettier": "3.0.0"
 	}
