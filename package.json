@@ -25,7 +25,7 @@
 		"url": "git+https://github.com/n1ckoates/quoter.git"
 	},
 	"dependencies": {
-		"@discordjs/rest": "1.7.1",
+		"@discordjs/rest": "2.0.1",
 		"bufferutil": "4.0.7",
 		"canvas": "2.11.2",
 		"canvas-multiline-text": "1.0.3",
