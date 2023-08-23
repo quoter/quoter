@@ -23,7 +23,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("manageself")
 		.setDescription(
-			"Toggles whether users can delete/edit quotes they created."
+			"Toggles whether users can delete/edit quotes they created.",
 		),
 	cooldown: 3,
 	permission: "manage",
@@ -34,7 +34,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		guild.manageSelf = !guild.manageSelf;

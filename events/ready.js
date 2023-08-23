@@ -29,7 +29,7 @@ module.exports = {
 
 		if (currentGuilds.size <= 0) {
 			return console.warn(
-				"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped."
+				"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped.",
 			);
 		}
 

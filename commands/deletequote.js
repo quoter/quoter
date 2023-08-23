@@ -27,7 +27,7 @@ module.exports = {
 			o
 				.setName("id")
 				.setDescription("The ID of the quote to delete.")
-				.setRequired(true)
+				.setRequired(true),
 		),
 	cooldown: 8,
 	permission: "manageSelf",
@@ -39,7 +39,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 		const { quotes } = guild;
 

@@ -36,7 +36,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		const { quotes } = guild;
@@ -88,7 +88,9 @@ module.exports = {
 					.setTitle("✅ Created a new quote")
 					.setColor(Colors.Green)
 					.setDescription(
-						`"${cleanString(text, false)}" - ${cleanString(author)}`
+						`"${cleanString(text, false)}" - ${cleanString(
+							author,
+						)}`,
 					)
 					.setFooter({ text: `Quote #${quotes.length}` }),
 			],

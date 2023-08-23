@@ -31,16 +31,16 @@ module.exports = {
 			o
 				.setName("id")
 				.setDescription("The ID of the quote to edit.")
-				.setRequired(true)
+				.setRequired(true),
 		)
 		.addStringOption((o) =>
 			o
 				.setName("text")
 				.setDescription("The quote's new text.")
-				.setRequired(true)
+				.setRequired(true),
 		)
 		.addStringOption((o) =>
-			o.setName("author").setDescription("The quote's new author.")
+			o.setName("author").setDescription("The quote's new author."),
 		),
 	cooldown: 10,
 	guildOnly: true,
@@ -53,7 +53,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		const { quotes } = guild;
@@ -99,7 +99,7 @@ module.exports = {
 					.setDescription(
 						`"${cleanString(text, false)}"${
 							author ? ` - ${cleanString(author, false)}` : ""
-						}`
+						}`,
 					)
 					.setFooter({ text: `Quote #${quoteID}` }),
 			],

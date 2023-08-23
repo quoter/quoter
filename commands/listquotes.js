@@ -75,7 +75,7 @@ ${quoteList}`),
 					.setCustomId("next")
 					.setLabel("Next ➡️")
 					.setStyle(ButtonStyle.Primary)
-					.setDisabled(page === maxPage)
+					.setDisabled(page === maxPage),
 			),
 		],
 		fetchReply: true,
@@ -87,7 +87,7 @@ module.exports = {
 		.setName("listquotes")
 		.setDescription("Lists all of the server's quotes")
 		.addIntegerOption((o) =>
-			o.setName("page").setDescription("The page of quotes to view.")
+			o.setName("page").setDescription("The page of quotes to view."),
 		),
 	cooldown: 3,
 	guildOnly: true,
@@ -97,7 +97,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		if (!quotes.length) {

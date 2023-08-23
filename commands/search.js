@@ -29,7 +29,7 @@ module.exports = {
 			o
 				.setName("term")
 				.setDescription("The text to search for.")
-				.setRequired(true)
+				.setRequired(true),
 		),
 	cooldown: 5,
 	guildOnly: true,
@@ -39,7 +39,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		if (!quotes.length) {

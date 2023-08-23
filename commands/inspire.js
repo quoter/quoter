@@ -32,7 +32,7 @@ module.exports = {
 		.setName("inspire")
 		.setDescription("Creates an inspirational image from a quote")
 		.addIntegerOption((o) =>
-			o.setName("id").setDescription("The ID of the quote to use.")
+			o.setName("id").setDescription("The ID of the quote to use."),
 		),
 	cooldown: 4,
 	guildOnly: true,
@@ -43,7 +43,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		if (!quotes.length) {
@@ -69,7 +69,7 @@ module.exports = {
 		const index = Math.floor(Math.random() * quoteImages.length);
 
 		const background = await loadImage(
-			`${__dirname}/../assets/${index}.jpg`
+			`${__dirname}/../assets/${index}.jpg`,
 		);
 		const imageData = quoteImages[index];
 
@@ -101,7 +101,7 @@ module.exports = {
 				`- ${quote.author}`,
 				canvas.width - imageData.author.widthPadding * 2,
 				canvas.height - imageData.author.heightPadding * 2,
-				canvas.width - 200
+				canvas.width - 200,
 			);
 		}
 

@@ -22,7 +22,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("bugs")
 		.setDescription(
-			"Shows how to report bugs, suggest features, and more."
+			"Shows how to report bugs, suggest features, and more.",
 		),
 	async execute(interaction) {
 		await interaction.reply({

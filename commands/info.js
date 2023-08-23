@@ -55,7 +55,7 @@ module.exports = {
 [🐛 Report Bugs](https://github.com/n1ckoates/quoter/issues/new/choose)
 [🛠️ Source Code](https://github.com/n1ckoates/quoter)
 [📜 Terms of Service](https://quoter.cc/terms)
-[🔒 Privacy Policy](https://quoter.cc/privacy)`
+[🔒 Privacy Policy](https://quoter.cc/privacy)`,
 					)
 					.addFields([
 						{

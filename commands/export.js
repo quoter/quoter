@@ -32,13 +32,13 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		const json = JSON.stringify(
 			quotes,
 			["text", "author", "createdTimestamp", "editedTimestamp"],
-			" "
+			" ",
 		);
 		const buffer = Buffer.from(json);
 		const attachment = new AttachmentBuilder(buffer, {

@@ -31,10 +31,10 @@ module.exports = {
 			o
 				.setName("text")
 				.setDescription("The quote's text.")
-				.setRequired(true)
+				.setRequired(true),
 		)
 		.addStringOption((o) =>
-			o.setName("author").setDescription("The quote's author.")
+			o.setName("author").setDescription("The quote's author."),
 		),
 	cooldown: 10,
 	guildOnly: true,
@@ -45,7 +45,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		const serverQuotes = guild.quotes;
@@ -91,7 +91,7 @@ module.exports = {
 
 		if (author) {
 			embed.setDescription(
-				embed.data.description + ` - ${cleanString(author)}`
+				embed.data.description + ` - ${cleanString(author)}`,
 			);
 		}
 

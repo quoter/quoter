@@ -27,7 +27,7 @@ module.exports = {
 			o
 				.setName("id")
 				.setDescription("The ID of the quote to view.")
-				.setRequired(true)
+				.setRequired(true),
 		),
 	cooldown: 2,
 	guildOnly: true,
@@ -37,7 +37,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		if (!quotes.length) {
@@ -62,7 +62,7 @@ module.exports = {
 				new EmbedBuilder()
 					.setColor(Colors.Green)
 					.setDescription(
-						`Quote #${id} was created by <@${quote.quoterID}>.`
+						`Quote #${id} was created by <@${quote.quoterID}>.`,
 					),
 			],
 		});

@@ -25,7 +25,7 @@ module.exports = {
 		.setName("quote")
 		.setDescription("Views a specific quote, otherwise shows a random one.")
 		.addIntegerOption((o) =>
-			o.setName("id").setDescription("The ID of the quote to view.")
+			o.setName("id").setDescription("The ID of the quote to view."),
 		),
 	cooldown: 2,
 	guildOnly: true,
@@ -35,7 +35,7 @@ module.exports = {
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
 				{},
-				{ upsert: true, new: true }
+				{ upsert: true, new: true },
 			));
 
 		if (!quotes.length) {
@@ -65,7 +65,7 @@ module.exports = {
 		if (quote.ogMessageID && quote.ogChannelID) {
 			embed.setDescription(
 				embed.data.description +
-					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`
+					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`,
 			);
 		}
 

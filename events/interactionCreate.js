@@ -81,7 +81,7 @@ module.exports = {
 			const isManager =
 				member.permissions.has("ManageGuild") ||
 				member.roles.cache.some(
-					(r) => r.name.toLowerCase() === "quote manager"
+					(r) => r.name.toLowerCase() === "quote manager",
 				);
 
 			if (command.permission === "create") {
@@ -89,7 +89,7 @@ module.exports = {
 					await Guild.findOneAndUpdate(
 						{ _id: interaction.guild.id },
 						{},
-						{ upsert: true, new: true }
+						{ upsert: true, new: true },
 					));
 
 				if (!allQuote && !isManager) {
@@ -105,7 +105,7 @@ module.exports = {
 					await Guild.findOneAndUpdate(
 						{ _id: interaction.guild.id },
 						{},
-						{ upsert: true, new: true }
+						{ upsert: true, new: true },
 					));
 
 				const id = interaction.options.getInteger("id");
