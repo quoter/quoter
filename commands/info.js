@@ -34,7 +34,7 @@ module.exports = {
 
 		const now = Date.now();
 
-		const serverCount = guilds.cache.size;
+		const serverCount = guilds.cache.size.toLocaleString();
 		const msgPing = now - createdTimestamp;
 		const startedAt = new Date(now - uptime).toLocaleDateString();
 		const duration = ms(uptime, { long: true });
