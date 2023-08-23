@@ -6,5 +6,6 @@
 	"admins": [],
 	"disabledCommands": [],
 	"blockedGuilds": [],
-	"blockedUsers": []
+	"blockedUsers": [],
+	"guildId": "GUILD_ID"
 }

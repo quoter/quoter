@@ -16,41 +16,53 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord.js");
-const { token, disabledCommands } = require("./config.json");
+const { REST, Routes } = require("discord.js");
+const { token, disabledCommands, guildId } = require("./config.json");
 const fs = require("fs");
 
+const clientId = Buffer.from(token.split(".")[0], "base64").toString();
+const isUndeploy = process.argv.some((x) => x === "--undeploy");
+const isGuild = process.argv.some((x) => x === "--guild");
 const commands = [];
-const commandFiles = fs
-	.readdirSync("./commands")
-	.filter((file) => file.endsWith(".js"));
 
-const [, , clientId, guildId] = process.argv;
+if (!isUndeploy) {
+	const commandFiles = fs
+		.readdirSync("./commands")
+		.filter((file) => file.endsWith(".js"));
 
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	if (disabledCommands?.includes(command.data.name)) continue;
-	commands.push(command.data.toJSON());
+	for (const file of commandFiles) {
+		const command = require(`./commands/${file}`);
+		if (disabledCommands?.includes(command.data.name)) continue;
+		commands.push(command.data.toJSON());
+	}
 }
 
-const rest = new REST({ version: "9" }).setToken(token);
+const rest = new REST().setToken(token);
 
 (async () => {
 	try {
-		console.log("Started refreshing application (/) commands.");
+		if (isGuild) {
+			console.log(
+				isUndeploy ? "Undeploying" : "Deploying",
+				"commands to guild",
+				guildId,
+			);
 
-		if (guildId) {
 			await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
 				body: commands,
 			});
 		} else {
+			console.log(
+				isUndeploy ? "Undeploying" : "Deploying",
+				"commands globally",
+			);
+
 			await rest.put(Routes.applicationCommands(clientId), {
 				body: commands,
 			});
 		}
 
-		console.log("Successfully reloaded application (/) commands.");
+		console.log("Done!");
 	} catch (error) {
 		console.error(error);
 	}
