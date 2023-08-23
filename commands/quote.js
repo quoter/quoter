@@ -26,11 +26,28 @@ module.exports = {
 		.setDescription("Views a specific quote, otherwise shows a random one.")
 		.addIntegerOption((o) =>
 			o.setName("id").setDescription("The ID of the quote to view."),
+		)
+		.addStringOption((o) =>
+			o
+				.setName("author")
+				.setDescription(
+					"An author to randomly select a quote from (case-insensitive).",
+				),
 		),
 	cooldown: 2,
 	guildOnly: true,
 	async execute(interaction) {
-		const { quotes } =
+		const choice = interaction.options.getInteger("id");
+		const author = interaction.options.getString("author");
+
+		if (choice && author) {
+			return await interaction.reply({
+				content: "❌ **|** You can't specify both an ID and an author.",
+				ephemeral: true,
+			});
+		}
+
+		let { quotes } =
 			interaction.db ??
 			(await Guild.findOneAndUpdate(
 				{ _id: interaction.guild.id },
@@ -38,15 +55,21 @@ module.exports = {
 				{ upsert: true, new: true },
 			));
 
+		if (author) {
+			quotes = quotes.filter(
+				(q) =>
+					q.author && q.author.toLowerCase() === author.toLowerCase(),
+			);
+		}
+
 		if (!quotes.length) {
 			return await interaction.reply({
 				content:
-					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+					"❌ **|** This server doesn't have any quotes, or has none by that author. Use `/newquote` to add some!",
 				ephemeral: true,
 			});
 		}
 
-		const choice = interaction.options.getInteger("id");
 		const id = choice ?? Math.ceil(Math.random() * quotes.length);
 
 		const quote = quotes[id - 1];
