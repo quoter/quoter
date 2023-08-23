@@ -39,14 +39,17 @@ module.exports = {
 		console.log(`Deleted ${response.deletedCount} guilds from mongoDB`);
 
 		const update = () => {
-			client.user.setPresence({
-				activities: [
-					{
-						name: `${client.guilds.cache.size} servers!`,
-						type: ActivityType.Watching,
-					},
-				],
-			});
+			const formattedServerCount = Intl.NumberFormat("en-US", {
+				notation: "compact",
+				maximumFractionDigits: 2,
+			}).format(client.guilds.cache.size);
+
+			client.user.setActivity(
+				`The Quote Book for Discord | ${formattedServerCount} servers`,
+				{
+					type: ActivityType.Custom,
+				},
+			);
 		};
 		update();
 		setInterval(update, 600000);
