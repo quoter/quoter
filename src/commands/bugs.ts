@@ -16,9 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("discord.js");
+import { SlashCommandBuilder } from "discord.js";
+import QuoterCommand from "../QuoterCommand";
 
-module.exports = {
+const BugsCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("bugs")
 		.setDescription(
@@ -32,3 +33,5 @@ module.exports = {
 		});
 	},
 };
+
+export default BugsCommand;

@@ -16,14 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
-const Guild = require("../schemas/guild.js");
-const mentionParse = require("../util/mentionParse.js");
-const trimQuotes = require("../util/trimQuotes.js");
-const cleanString = require("../util/cleanString.js");
-const { maxQuoteLength } = require("../config.json");
+import {
+	EmbedBuilder,
+	SlashCommandBuilder,
+	Colors,
+	PermissionFlagsBits,
+	ChatInputCommandInteraction,
+} from "discord.js";
+import mentionParse from "../util/mentionParse.js";
+import trimQuotes from "../util/trimQuotes.js";
+import cleanString from "../util/cleanString.js";
+import { maxQuoteLength } from "../../config.json";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const EditQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("editquote")
 		.setDescription("Edits the specified quote.")
@@ -41,48 +48,48 @@ module.exports = {
 		)
 		.addStringOption((o) =>
 			o.setName("author").setDescription("The quote's new author."),
-		),
+		)
+		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 10,
-	guildOnly: true,
-	permission: "manageSelf",
-	async execute(interaction) {
-		const quoteID = interaction.options.getInteger("id");
+	// permission: "manageSelf",
+	async execute(interaction: ChatInputCommandInteraction) {
+		const id = interaction.options.getInteger("id");
+		if (id === null) throw new Error("ID is null");
 
-		const guild =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+		const guild = await fetchDbGuild(interaction);
 
 		const { quotes } = guild;
-		const quote = quotes[quoteID - 1];
+		const quote = quotes[id - 1];
 
 		if (!quote) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		let author = interaction.options.getString("author");
 		author &&= await mentionParse(author, interaction.client);
 
-		const text = trimQuotes(interaction.options.getString("text"));
+		const textInput = interaction.options.getString("text");
+		if (textInput === null) throw new Error("Text input is null");
+		const text = trimQuotes(textInput);
 
 		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${
 					guild.maxQuoteLength || maxQuoteLength || 130
 				} characters.`,
 				ephemeral: true,
 			});
+			return;
 		}
 
-		await quotes.set(quoteID - 1, {
+		quotes.set(id - 1, {
 			text,
-			author,
+			author: author || undefined,
 			createdTimestamp: quote.createdTimestamp,
 			editedTimestamp: Date.now(),
 			quoterID: quote.quoterID,
@@ -101,8 +108,10 @@ module.exports = {
 							author ? ` - ${cleanString(author, false)}` : ""
 						}`,
 					)
-					.setFooter({ text: `Quote #${quoteID}` }),
+					.setFooter({ text: `Quote #${id}` }),
 			],
 		});
 	},
 };
+
+export default EditQuoteCommand;

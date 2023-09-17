@@ -16,11 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
-const Guild = require("../schemas/guild.js");
-const cleanString = require("../util/cleanString.js");
+import {
+	EmbedBuilder,
+	SlashCommandBuilder,
+	Colors,
+	ChatInputCommandInteraction,
+} from "discord.js";
+import cleanString from "../util/cleanString.js";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const QuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("quote")
 		.setDescription("Views a specific quote, otherwise shows a random one.")
@@ -33,51 +39,49 @@ module.exports = {
 				.setDescription(
 					"An author to randomly select a quote from (case-insensitive).",
 				),
-		),
+		)
+		.setDMPermission(false),
 	cooldown: 2,
-	guildOnly: true,
-	async execute(interaction) {
+	async execute(interaction: ChatInputCommandInteraction) {
 		const choice = interaction.options.getInteger("id");
 		const author = interaction.options.getString("author");
 
 		if (choice && author) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: "❌ **|** You can't specify both an ID and an author.",
 				ephemeral: true,
 			});
+			return;
 		}
 
-		let { quotes } =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+		let { quotes } = await fetchDbGuild(interaction);
 
-		if (author) {
-			quotes = quotes.filter(
-				(q) =>
-					q.author && q.author.toLowerCase() === author.toLowerCase(),
-			);
-		}
-
-		if (!quotes.length) {
-			return await interaction.reply({
+		if (!quotes?.length) {
+			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, or has none by that author. Use `/newquote` to add some!",
 				ephemeral: true,
 			});
+			return;
 		}
 
-		const id = choice ?? Math.ceil(Math.random() * quotes.length);
+		const filteredQuotes = author
+			? quotes.filter(
+					(q) =>
+						q.author &&
+						q.author.toLowerCase() === author.toLowerCase(),
+			  )
+			: quotes;
 
-		const quote = quotes[id - 1];
+		const id = choice ?? Math.ceil(Math.random() * filteredQuotes.length);
+
+		const quote = filteredQuotes[id - 1];
 		if (!quote) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const embed = new EmbedBuilder()
@@ -85,6 +89,7 @@ module.exports = {
 			.setDescription(`"${cleanString(quote.text, false)}"`)
 			.setFooter({ text: `Quote #${id}${!choice ? " (random)" : ""}` });
 
+		if (interaction.guild === null) throw new Error("Guild is null");
 		if (quote.ogMessageID && quote.ogChannelID) {
 			embed.setDescription(
 				embed.data.description +
@@ -101,3 +106,5 @@ module.exports = {
 		await interaction.reply({ embeds: [embed] });
 	},
 };
+
+export default QuoteCommand;

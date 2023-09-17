@@ -16,10 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("discord.js");
-const Guild = require("../schemas/guild.js");
+import QuoterCommand from "../QuoterCommand";
+import {
+	ChatInputCommandInteraction,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
+} from "discord.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const DeleteQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("deletequote")
 		.setDescription("Deletes the specified quote")
@@ -28,24 +33,20 @@ module.exports = {
 				.setName("id")
 				.setDescription("The ID of the quote to delete.")
 				.setRequired(true),
-		),
-	cooldown: 8,
-	permission: "manageSelf",
-	guildOnly: true,
-	async execute(interaction) {
+		)
+		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+	cooldown: 5,
+	// permission: "manageSelf",
+	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");
-		const guild =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+		if (id === null) throw new Error("ID is null");
+		const guild = await fetchDbGuild(interaction);
 		const { quotes } = guild;
 
 		const quote = quotes[id - 1];
 		if (quote) {
-			await quotes.splice(id - 1, 1);
+			quotes.splice(id - 1, 1);
 			await guild.save();
 
 			await interaction.reply({
@@ -59,3 +60,5 @@ module.exports = {
 		}
 	},
 };
+
+export default DeleteQuoteCommand;

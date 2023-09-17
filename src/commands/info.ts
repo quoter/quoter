@@ -16,16 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
-const { version } = require("../package.json");
-const ms = require("ms");
+import { EmbedBuilder, SlashCommandBuilder, Colors } from "discord.js";
+import quoterPackage from "../../package.json";
+import ms from "ms";
+import QuoterCommand from "../QuoterCommand";
 
-module.exports = {
+const InfoCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("info")
 		.setDescription("Displays information about Quoter."),
 	cooldown: 1,
-	guildOnly: false,
 	async execute(interaction) {
 		const {
 			client: { uptime, guilds, ws },
@@ -74,8 +74,10 @@ module.exports = {
 							inline: true,
 						},
 					])
-					.setFooter({ text: `Quoter v${version}` }),
+					.setFooter({ text: `Quoter v${quoterPackage.version}` }),
 			],
 		});
 	},
 };
+
+export default InfoCommand;

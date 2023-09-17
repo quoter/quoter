@@ -16,24 +16,24 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { AttachmentBuilder, SlashCommandBuilder } = require("discord.js");
-const Guild = require("../schemas/guild.js");
+import {
+	AttachmentBuilder,
+	ChatInputCommandInteraction,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
+} from "discord.js";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const ExportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("export")
-		.setDescription("Exports the server's quotes into a JSON file."),
-	cooldown: 30,
-	permission: "manage",
-	guildOnly: true,
+		.setDescription("Exports the server's quotes into a JSON file.")
+		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+	cooldown: 60,
 	async execute(interaction) {
-		const { quotes } =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+		const { quotes } = await fetchDbGuild(interaction);
 
 		const json = JSON.stringify(
 			quotes,
@@ -52,3 +52,5 @@ module.exports = {
 		});
 	},
 };
+
+export default ExportCommand;

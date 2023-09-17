@@ -16,30 +16,30 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// eslint-disable-next-line no-unused-vars
-const { Client } = require("discord.js");
+import { Client } from "discord.js";
 
 /**
  * Resolves a mention to a user tag.
- * @param {string} mention - The mention to parse.
- * @param {Client} client - A discord.js client, used to fetch users.
- * @returns {Promise<string>} - The user's tag (if the ID was valid), or the shortened original string.
+ * @param mention - The mention to parse.
+ * @param client - Discord.js client, used to fetch users.
+ * @returns A promise that resolves to the user's tag (if the ID was valid), or a shortened version of the original string.
  */
-module.exports = async (mention, client) => {
+export default async function mentionParse(mention: string, client: Client) {
 	mention = mention.trim();
 
+	// Remove mention ID formatting
 	if (mention.startsWith("<@") && mention.endsWith(">")) {
 		mention = mention.slice(2, -1);
 	}
 
-	if (mention.startsWith("!")) {
-		mention = mention.slice(1);
-	}
+	// Remove deprecated nickname prefix
+	// https://discord.com/developers/docs/reference#message-formatting-formats
+	if (mention.startsWith("!")) mention = mention.slice(1);
 
 	try {
 		const result = await client.users.fetch(mention);
 		return result.tag;
 	} catch {
-		return mention.substr(0, 32);
+		return mention.substring(0, 32);
 	}
-};
+}

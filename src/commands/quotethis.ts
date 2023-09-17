@@ -16,48 +16,52 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {
+import {
 	EmbedBuilder,
 	ContextMenuCommandBuilder,
 	Colors,
-} = require("discord.js");
-const Guild = require("../schemas/guild.js");
-const cleanString = require("../util/cleanString.js");
-const config = require("../config.json");
+	ApplicationCommandType,
+	MessageContextMenuCommandInteraction,
+	PermissionFlagsBits,
+} from "discord.js";
+import cleanString from "../util/cleanString.js";
+import config from "../../config.json";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
-	data: new ContextMenuCommandBuilder().setName("Quote This").setType(3),
+const QuoteThisCommand: QuoterCommand = {
+	data: new ContextMenuCommandBuilder()
+		.setName("Quote This")
+		.setType(ApplicationCommandType.Message)
+		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 10,
-	guildOnly: true,
-	permission: "create",
-	async execute(interaction) {
-		const guild =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+	// permission: "create",
+	async execute(interaction: MessageContextMenuCommandInteraction) {
+		const guild = await fetchDbGuild(interaction);
 
 		const { quotes } = guild;
 		const maxGuildQuotes =
 			guild.maxGuildQuotes || config.maxGuildQuotes || 75;
 
 		if (quotes.length >= maxGuildQuotes) {
-			return await interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const message = interaction.options.getMessage("message");
+		if (!message) throw new Error("No message found");
 
 		if (!message.content) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: `❌ **|** [That message](${message.url}) doesn't contain text - embeds are not supported!`,
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const author = message.author?.tag;
@@ -66,13 +70,14 @@ module.exports = {
 			guild.maxQuoteLength || config.maxQuoteLength || 130;
 
 		if (text.length > maxQuoteLength) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
 				ephemeral: true,
 			});
+			return;
 		}
 
-		await quotes.push({
+		quotes.push({
 			text,
 			author,
 			ogMessageID: message.id,
@@ -82,7 +87,7 @@ module.exports = {
 
 		await guild.save();
 
-		return await interaction.reply({
+		await interaction.reply({
 			embeds: [
 				new EmbedBuilder()
 					.setTitle("✅ Created a new quote")
@@ -97,3 +102,5 @@ module.exports = {
 		});
 	},
 };
+
+export default QuoteThisCommand;

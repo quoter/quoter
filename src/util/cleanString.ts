@@ -17,14 +17,20 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 /**
- * Trims any double quotes (") from the start & end of a string. Only trims if quotes are present on both sides.
- * @param {string} string The text to trim
- * @returns {string} The trimmed string
+ * Removes hyperlinks & (optionally) newlines from a string
+ * @param string The string to clean
+ * @param replaceNewlines Whether to replace newlines with spaces
+ * @returns The cleaned string
  */
-module.exports = (string) => {
-	if (string.startsWith('"') && string.endsWith('"')) {
-		string = string.slice(1, -1);
-	}
+export default function cleanString(
+	string: string,
+	replaceNewlines: boolean = true,
+): string {
+	if (!string) return string;
+
+	string = string.replaceAll("\\", "\\\\");
+	string = string.replaceAll("[", "\\[");
+	if (replaceNewlines) string = string.replaceAll("\n", " ");
 
 	return string;
-};
+}

@@ -16,15 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const guildSchema = new Schema({
 	_id: {
 		type: String,
 		required: true,
 	},
-	prefix: String,
-	allQuote: Boolean,
+	// prefix: String,
+	// allQuote: Boolean,
 	manageSelf: Boolean,
 	maxGuildQuotes: Number,
 	maxQuoteLength: Number,
@@ -43,6 +43,7 @@ const guildSchema = new Schema({
 				type: Number,
 				min: 0,
 				default: Date.now,
+				required: false,
 			},
 			editedTimestamp: {
 				type: Number,
@@ -52,4 +53,6 @@ const guildSchema = new Schema({
 	],
 });
 
-module.exports = model("Guild", guildSchema);
+const Guild = model("Guild", guildSchema);
+
+export default Guild;

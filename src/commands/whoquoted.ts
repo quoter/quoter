@@ -16,10 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
-const Guild = require("../schemas/guild.js");
+import {
+	EmbedBuilder,
+	SlashCommandBuilder,
+	Colors,
+	ChatInputCommandInteraction,
+} from "discord.js";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const WhoQuotedCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("whoquoted")
 		.setDescription("Shows who created a quote.")
@@ -28,33 +34,30 @@ module.exports = {
 				.setName("id")
 				.setDescription("The ID of the quote to view.")
 				.setRequired(true),
-		),
+		)
+		.setDMPermission(false),
 	cooldown: 2,
-	guildOnly: true,
-	async execute(interaction) {
-		const { quotes } =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+	async execute(interaction: ChatInputCommandInteraction) {
+		const { quotes } = await fetchDbGuild(interaction);
 
 		if (!quotes.length) {
-			return await interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const id = interaction.options.getInteger("id");
+		if (id === null) throw new Error("ID is null");
 		const quote = quotes[id - 1];
 		if (!quote) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		await interaction.reply({
@@ -68,3 +71,5 @@ module.exports = {
 		});
 	},
 };
+
+export default WhoQuotedCommand;

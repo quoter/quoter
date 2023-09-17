@@ -16,13 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const Guild = require("../schemas/guild.js");
+import { Guild as DiscordGuild } from "discord.js";
+import Guild from "../schemas/guild.js";
 
-module.exports = {
-	name: "guildDelete",
-	once: false,
-	async execute(guild) {
-		await Guild.deleteOne({ _id: guild.id });
-		console.log(`Deleted data for guild ${guild.name} (${guild.id})`);
-	},
-};
+export default async function guildDelete(guild: DiscordGuild) {
+	await Guild.deleteOne({ _id: guild.id });
+	console.log(`Deleted data for guild ${guild.name} (${guild.id})`);
+}

@@ -16,12 +16,18 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
-const Fuse = require("fuse.js");
-const Guild = require("../schemas/guild.js");
-const cleanString = require("../util/cleanString.js");
+import QuoterCommand from "../QuoterCommand";
+import {
+	EmbedBuilder,
+	SlashCommandBuilder,
+	Colors,
+	ChatInputCommandInteraction,
+} from "discord.js";
+import Fuse from "fuse.js";
+import cleanString from "../util/cleanString.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const SearchCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("search")
 		.setDescription("Search through the server's quotes.")
@@ -30,34 +36,31 @@ module.exports = {
 				.setName("term")
 				.setDescription("The text to search for.")
 				.setRequired(true),
-		),
+		)
+		.setDMPermission(false),
 	cooldown: 5,
-	guildOnly: true,
-	async execute(interaction) {
-		const { quotes } =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+	async execute(interaction: ChatInputCommandInteraction) {
+		const { quotes } = await fetchDbGuild(interaction);
 
 		if (!quotes.length) {
-			return await interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const searchTerm = interaction.options.getString("term");
+		if (!searchTerm) throw new Error("Search term is empty or null");
 
 		if (searchTerm.length < 3) {
-			return await interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** That search term is too short! It should be at least 3 characters long.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const fuse = new Fuse(quotes, {
@@ -67,11 +70,12 @@ module.exports = {
 		const matches = fuse.search(searchTerm);
 
 		if (!matches.length) {
-			return await interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** There weren't any quotes that matched that search term.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		matches.length = 5;
@@ -110,3 +114,5 @@ ${list.join("\n")}`),
 		});
 	},
 };
+
+export default SearchCommand;
