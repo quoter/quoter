@@ -16,10 +16,6 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-console.log(
-	"   ____              _            \r\n  / __ \\            | |           \r\n | |  | |_   _  ___ | |_ ___ _ __ \r\n | |  | | | | |/ _ \\| __/ _ \\ '__|\r\n | |__| | |_| | (_) | ||  __/ |   \r\n  \\___\\_\\\\__,_|\\___/ \\__\\___|_|   \r\n                                  \r\n                                  ",
-);
-
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 import mongoose from "mongoose";
 import events from "./events";
