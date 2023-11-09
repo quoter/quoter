@@ -21,7 +21,6 @@
 		"url": "git+https://github.com/n1ckoates/quoter.git"
 	},
 	"dependencies": {
-		"@types/ms": "^0.7.31",
 		"bufferutil": "4.0.7",
 		"canvas": "2.11.2",
 		"canvas-multiline-text": "1.0.3",
@@ -33,6 +32,8 @@
 		"zlib-sync": "0.1.8"
 	},
 	"devDependencies": {
+		"@types/canvas-multiline-text": "^1.0.2",
+		"@types/ms": "^0.7.31",
 		"bun-types": "^1.0.1",
 		"eslint": "8.48.0",
 		"eslint-config-prettier": "^9.0.0",
