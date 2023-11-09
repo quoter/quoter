@@ -19,7 +19,6 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 import {
 	CommandInteraction,
 	ContextMenuCommandBuilder,
-	Interaction,
 	SlashCommandBuilder,
 } from "discord.js";
 
@@ -28,5 +27,3 @@ export default interface QuoterCommand {
 	cooldown?: number;
 	execute(interaction: CommandInteraction): Promise<void>;
 }
-
-// export default QuoterCommand;

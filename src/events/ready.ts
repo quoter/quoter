@@ -43,8 +43,7 @@ export default async function ready(client: Client) {
 			maximumFractionDigits: 2,
 		}).format(client.guilds.cache.size);
 
-		// @ts-expect-error client.user will always be available if this function is executed
-		client.user.setActivity(
+		client.user?.setActivity(
 			`The Quote Book for Discord | ${formattedServerCount} servers`,
 			{
 				type: ActivityType.Custom,
