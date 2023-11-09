@@ -19,7 +19,6 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 import mongoose from "mongoose";
 import events from "./events";
-import config from "../config.json";
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
@@ -30,12 +29,23 @@ const client = new Client({
 	}),
 });
 
-client.on(Events.ClientReady, events.ready);
-client.on(Events.GuildDelete, events.guildDelete);
-client.on(Events.InteractionCreate, events.interactionCreate);
+if (process.env.DISCORD_TOKEN === undefined) {
+	console.error("DISCORD_TOKEN environment variable not set");
+	process.exit(1);
+}
+client
+	.on(Events.ClientReady, events.ready)
+	.on(Events.GuildDelete, events.guildDelete)
+	.on(Events.InteractionCreate, events.interactionCreate)
+	.login(process.env.DISCORD_TOKEN);
 
-await mongoose.connect(config.mongoPath);
-mongoose.connection.on("connected", () => console.log("Connected to mongoDB"));
+if (process.env.MONGO_URI === undefined) {
+	console.error("MONGO_URI environment variable not set");
+	process.exit(1);
+}
+mongoose
+	.connect(process.env.MONGO_URI)
+	.then(() => console.log("Connected to mongoDB"));
 
 process.on("SIGINT", async () => {
 	await mongoose.connection.close();
@@ -46,5 +56,3 @@ process.on("SIGINT", async () => {
 
 	process.exit(0);
 });
-
-client.login(config.token);

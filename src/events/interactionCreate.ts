@@ -21,6 +21,8 @@ import commands from "../commands";
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
+const admins = process.env.DISCORD_ADMIN_ID?.split(" ");
+
 export default async function interactionCreate(interaction: Interaction) {
 	if (!interaction.isCommand() && !interaction.isContextMenuCommand()) return;
 
@@ -29,8 +31,7 @@ export default async function interactionCreate(interaction: Interaction) {
 	const command = commands[commandName];
 	if (!command) return;
 
-	// TODO: use admins from env variables
-	const isAdmin = false;
+	const isAdmin = admins !== undefined && admins.includes(user.id);
 
 	if (command.cooldown && !isAdmin) {
 		if (!cooldowns.has(commandName)) {

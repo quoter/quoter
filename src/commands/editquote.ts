@@ -26,9 +26,9 @@ import {
 import mentionParse from "../util/mentionParse.js";
 import trimQuotes from "../util/trimQuotes.js";
 import cleanString from "../util/cleanString.js";
-import { maxQuoteLength } from "../../config.json";
 import QuoterCommand from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
+import { maxQuoteLength } from "../util/quoteLimits.js";
 
 const EditQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -77,10 +77,10 @@ const EditQuoteCommand: QuoterCommand = {
 		if (textInput === null) throw new Error("Text input is null");
 		const text = trimQuotes(textInput);
 
-		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
+		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
 			await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${
-					guild.maxQuoteLength || maxQuoteLength || 130
+					guild.maxQuoteLength || maxQuoteLength
 				} characters.`,
 				ephemeral: true,
 			});

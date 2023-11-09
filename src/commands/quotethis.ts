@@ -25,9 +25,9 @@ import {
 	PermissionFlagsBits,
 } from "discord.js";
 import cleanString from "../util/cleanString.js";
-import config from "../../config.json";
 import QuoterCommand from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
+import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits.js";
 
 const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()
@@ -41,10 +41,8 @@ const QuoteThisCommand: QuoterCommand = {
 		const guild = await fetchDbGuild(interaction);
 
 		const { quotes } = guild;
-		const maxGuildQuotes =
-			guild.maxGuildQuotes || config.maxGuildQuotes || 75;
 
-		if (quotes.length >= maxGuildQuotes) {
+		if (quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
@@ -66,10 +64,8 @@ const QuoteThisCommand: QuoterCommand = {
 
 		const author = message.author?.tag;
 		const text = message.content;
-		const maxQuoteLength =
-			guild.maxQuoteLength || config.maxQuoteLength || 130;
 
-		if (text.length > maxQuoteLength) {
+		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
 			await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
 				ephemeral: true,

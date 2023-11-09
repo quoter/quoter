@@ -1,5 +1,5 @@
-# Quoter config
-config.json
+# Environment variables
+.env
 
 # Dependencies
 node_modules/
