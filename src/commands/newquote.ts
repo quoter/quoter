@@ -16,14 +16,21 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { EmbedBuilder, SlashCommandBuilder, Colors } = require("discord.js");
-const Guild = require("../schemas/guild.js");
-const mentionParse = require("../util/mentionParse.js");
-const trimQuotes = require("../util/trimQuotes.js");
-const cleanString = require("../util/cleanString.js");
-const { maxGuildQuotes, maxQuoteLength } = require("../config.json");
+import {
+	EmbedBuilder,
+	SlashCommandBuilder,
+	Colors,
+	PermissionFlagsBits,
+	ChatInputCommandInteraction,
+} from "discord.js";
+import mentionParse from "../util/mentionParse.js";
+import trimQuotes from "../util/trimQuotes.js";
+import cleanString from "../util/cleanString.js";
+import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-module.exports = {
+const NewQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("newquote")
 		.setDescription("Creates a new quote.")
@@ -35,49 +42,44 @@ module.exports = {
 		)
 		.addStringOption((o) =>
 			o.setName("author").setDescription("The quote's author."),
-		),
+		)
+		.setDMPermission(false)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 10,
-	guildOnly: true,
-	permission: "create",
-	async execute(interaction) {
-		const guild =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+	async execute(interaction: ChatInputCommandInteraction) {
+		const guild = await fetchDbGuild(interaction);
 
 		const serverQuotes = guild.quotes;
 
-		if (
-			serverQuotes.length >=
-			(guild.maxGuildQuotes || maxGuildQuotes || 75)
-		) {
-			return await interaction.reply({
+		if (serverQuotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
+			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		let author = interaction.options.getString("author");
 		author &&= await mentionParse(author, interaction.client);
 
-		const text = trimQuotes(interaction.options.getString("text"));
+		let text = interaction.options.getString("text");
+		if (text === null) throw new Error("Text is null or empty");
+		text = trimQuotes(text);
 
-		if (text.length > (guild.maxQuoteLength || maxQuoteLength || 130)) {
-			return await interaction.reply({
+		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
+			await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${
-					guild.maxQuoteLength || maxQuoteLength || 130
+					guild.maxQuoteLength || maxQuoteLength
 				} characters.`,
 				ephemeral: true,
 			});
+			return;
 		}
 
-		await serverQuotes.push({
+		serverQuotes.push({
 			text,
-			author,
+			author: author ?? undefined,
 			quoterID: interaction.user.id,
 		});
 
@@ -98,3 +100,5 @@ module.exports = {
 		await interaction.reply({ embeds: [embed] });
 	},
 };
+
+export default NewQuoteCommand;
