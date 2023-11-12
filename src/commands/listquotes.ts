@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {
+import {
 	EmbedBuilder,
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -24,11 +24,32 @@ const {
 	Colors,
 	ButtonStyle,
 	ComponentType,
-} = require("discord.js");
-const Guild = require("../schemas/guild.js");
-const cleanString = require("../util/cleanString.js");
+	ChatInputCommandInteraction,
+	ButtonInteraction,
+	InteractionUpdateOptions,
+	InteractionReplyOptions,
+	ButtonComponent,
+} from "discord.js";
+import cleanString from "../util/cleanString.js";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-const render = (page, maxPage, quotes) => {
+interface QuoterQuote {
+	text: string;
+	author?: string;
+	quoterID?: string;
+	editorID?: string;
+	ogMessageID?: string;
+	ogChannelID?: string;
+	createdTimestamp?: number;
+	editedTimestamp?: number;
+}
+
+function render(
+	page: number,
+	maxPage: number,
+	quotes: QuoterQuote[],
+): InteractionReplyOptions & InteractionUpdateOptions {
 	const start = (page - 1) * 10;
 	const end = start + 10;
 	const slicedQuotes = quotes.slice(start, end);
@@ -37,10 +58,10 @@ const render = (page, maxPage, quotes) => {
 	let quoteNumber = 1;
 	slicedQuotes.forEach((quote) => {
 		if (quote.text && quote.text.length > 30) {
-			quote.text = `${quote.text.substr(0, 30)}...`;
+			quote.text = `${quote.text.substring(0, 30)}...`;
 		}
 		if (quote.author && quote.author.length > 10) {
-			quote.author = `${quote.author.substr(0, 10)}...`;
+			quote.author = `${quote.author.substring(0, 10)}...`;
 		}
 
 		quoteList += `**${quoteNumber + (page - 1) * 10}**. "${
@@ -65,7 +86,7 @@ const render = (page, maxPage, quotes) => {
 ${quoteList}`),
 		],
 		components: [
-			new ActionRowBuilder().addComponents(
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder()
 					.setCustomId("prev")
 					.setLabel("⬅️ Prev")
@@ -80,56 +101,54 @@ ${quoteList}`),
 		],
 		fetchReply: true,
 	};
-};
+}
 
-module.exports = {
+const ListQuotesCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("listquotes")
 		.setDescription("Lists all of the server's quotes")
 		.addIntegerOption((o) =>
 			o.setName("page").setDescription("The page of quotes to view."),
-		),
+		)
+		.setDMPermission(false),
 	cooldown: 3,
-	guildOnly: true,
-	async execute(interaction) {
-		const { quotes } =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+	async execute(interaction: ChatInputCommandInteraction) {
+		const { quotes } = await fetchDbGuild(interaction);
 
 		if (!quotes.length) {
-			return await interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
 				ephemeral: true,
 			});
+			return;
 		}
 
 		let page = interaction.options.getInteger("page") || 1;
 		const maxPage = Math.ceil(quotes.length / 10);
 		if (page > maxPage) {
-			return await interaction.reply({
+			await interaction.reply({
 				content: `❌ **|** That page is too high! The maximum page is **${maxPage}**.`,
 				ephemeral: true,
 			});
+			return;
 		}
 
 		const reply = await interaction.reply(render(page, maxPage, quotes));
 
-		const filter = (p) => {
-			if (p.user.id === interaction.user.id) {
+		function filter(press: ButtonInteraction) {
+			if (press.user.id === interaction.user.id) {
 				return true;
 			} else {
-				p.reply({
+				press.reply({
 					content:
 						"❌ **|** You clicked on someone else's button. Get your own with `/listquotes`!",
 					ephemeral: true,
 				});
+				return false;
 			}
-		};
+		}
+
 		const awaitPress = async () => {
 			try {
 				const press = await reply.awaitMessageComponent({
@@ -138,7 +157,7 @@ module.exports = {
 					time: 35000,
 				});
 
-				const id = press.component.customId;
+				const id = (press.component as ButtonComponent).customId;
 				if (id === "prev") {
 					await press.update(render(--page, maxPage, quotes));
 					await awaitPress();
@@ -153,3 +172,5 @@ module.exports = {
 		await awaitPress();
 	},
 };
+
+export default ListQuotesCommand;
