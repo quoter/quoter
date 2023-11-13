@@ -28,7 +28,7 @@
 		"bufferutil": "4.0.8",
 		"canvas": "2.11.2",
 		"canvas-multiline-text": "1.0.3",
-		"discord.js": "^14.13.0",
+		"discord.js": "^14.14.1",
 		"fuse.js": "7.0.0",
 		"mongoose": "7.6.2",
 		"ms": "2.1.3",
