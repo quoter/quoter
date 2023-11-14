@@ -51,7 +51,7 @@ process.on("SIGINT", async () => {
 	await mongoose.connection.close();
 	console.log("Closed mongoDB connection");
 
-	client.destroy();
+	await client.destroy();
 	console.log("Destroyed client");
 
 	process.exit(0);
