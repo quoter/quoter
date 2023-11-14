@@ -16,18 +16,20 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const { SlashCommandBuilder } = require("discord.js");
-const { registerFont, createCanvas, loadImage } = require("canvas");
-const drawMultilineText = require("canvas-multiline-text");
-const path = require("path");
-const Guild = require("../schemas/guild.js");
-const { quoteImages } = require("../assets/quoteImages.json");
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
+import drawMultilineText from "canvas-multiline-text";
+import path from "path";
+import quoteImages from "../assets/quoteImages.js";
+import QuoterCommand from "../QuoterCommand.js";
+import fetchDbGuild from "../util/fetchDbGuild.js";
 
-registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), {
-	family: "Regular",
-});
+GlobalFonts.registerFromPath(
+	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
+	"Regular",
+);
 
-module.exports = {
+const InspireCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("inspire")
 		.setDescription("Creates an inspirational image from a quote")
@@ -40,29 +42,24 @@ module.exports = {
 				.setDescription(
 					"An author to randomly select a quote from (case-insensitive).",
 				),
-		),
+		)
+		.setDMPermission(false),
 	cooldown: 4,
-	guildOnly: true,
-	async execute(interaction) {
+	// guildOnly: true,
+	async execute(interaction: ChatInputCommandInteraction) {
 		await interaction.deferReply();
 
 		const choice = interaction.options.getInteger("id");
 		const author = interaction.options.getString("author");
 
 		if (choice && author) {
-			return await interaction.editReply({
+			await interaction.editReply({
 				content: "❌ **|** You can't specify both an ID and an author.",
-				ephemeral: true,
 			});
+			return;
 		}
 
-		let { quotes } =
-			interaction.db ??
-			(await Guild.findOneAndUpdate(
-				{ _id: interaction.guild.id },
-				{},
-				{ upsert: true, new: true },
-			));
+		let { quotes } = await fetchDbGuild(interaction);
 
 		if (author) {
 			quotes = quotes.filter(
@@ -72,21 +69,21 @@ module.exports = {
 		}
 
 		if (!quotes.length) {
-			return await interaction.editReply({
+			await interaction.editReply({
 				content:
 					"❌ **|** This server doesn't have any quotes, or has none by that author. Use `/newquote` to add some!",
-				ephemeral: true,
 			});
+			return;
 		}
 
 		const id = choice ?? Math.ceil(Math.random() * quotes.length);
 
 		const quote = quotes[id - 1];
 		if (!quote) {
-			return await interaction.editReply({
+			await interaction.editReply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
-				ephemeral: true,
 			});
+			return;
 		}
 
 		const index = Math.floor(Math.random() * quoteImages.length);
@@ -104,17 +101,23 @@ module.exports = {
 		ctx.textAlign = imageData.multiline.textAlign;
 
 		// Drawing the quote using the dat
-		drawMultilineText(canvas.getContext("2d"), `"${quote.text}"`, {
-			rect: {
-				x: canvas.width * imageData.multiline.rect.xFactor,
-				y: imageData.multiline.rect.y,
-				width: canvas.width - imageData.multiline.rect.widthPadding * 2,
-				height: imageData.multiline.rect.height,
+		drawMultilineText(
+			canvas.getContext("2d") as unknown as CanvasRenderingContext2D,
+			`"${quote.text}"`,
+			{
+				rect: {
+					x: canvas.width * imageData.multiline.rect.xFactor,
+					y: imageData.multiline.rect.y,
+					width:
+						canvas.width -
+						imageData.multiline.rect.widthPadding * 2,
+					height: imageData.multiline.rect.height,
+				},
+				font: imageData.multiline.font,
+				minFontSize: imageData.multiline.minFontSize,
+				maxFontSize: imageData.multiline.maxFontSize,
 			},
-			font: imageData.multiline.font,
-			minFontSize: imageData.multiline.minFontSize,
-			maxFontSize: imageData.multiline.maxFontSize,
-		});
+		);
 
 		if (quote.author) {
 			ctx.textAlign = imageData.author.textAlign;
@@ -128,8 +131,12 @@ module.exports = {
 			);
 		}
 
+		const jpeg = await canvas.encode("jpeg");
+
 		await interaction.editReply({
-			files: [canvas.toBuffer("image/jpeg", { quality: 0.5 })],
+			files: [jpeg],
 		});
 	},
 };
+
+export default InspireCommand;

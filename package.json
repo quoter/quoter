@@ -21,8 +21,8 @@
 		"url": "git+https://github.com/n1ckoates/quoter.git"
 	},
 	"dependencies": {
+		"@napi-rs/canvas": "^0.1.44",
 		"bufferutil": "4.0.7",
-		"canvas": "2.11.2",
 		"canvas-multiline-text": "1.0.3",
 		"discord.js": "^14.13.0",
 		"fuse.js": "6.6.2",
