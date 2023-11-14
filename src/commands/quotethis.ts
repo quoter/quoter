@@ -36,7 +36,6 @@ const QuoteThisCommand: QuoterCommand = {
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 10,
-	// permission: "create",
 	async execute(interaction: MessageContextMenuCommandInteraction) {
 		const guild = await fetchDbGuild(interaction);
 

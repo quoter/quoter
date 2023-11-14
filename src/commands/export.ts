@@ -18,7 +18,6 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 
 import {
 	AttachmentBuilder,
-	ChatInputCommandInteraction,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";

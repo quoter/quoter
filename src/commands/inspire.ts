@@ -45,7 +45,6 @@ const InspireCommand: QuoterCommand = {
 		)
 		.setDMPermission(false),
 	cooldown: 4,
-	// guildOnly: true,
 	async execute(interaction: ChatInputCommandInteraction) {
 		await interaction.deferReply();
 

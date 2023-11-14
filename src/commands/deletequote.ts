@@ -37,7 +37,6 @@ const DeleteQuoteCommand: QuoterCommand = {
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 5,
-	// permission: "manageSelf",
 	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
