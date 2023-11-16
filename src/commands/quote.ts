@@ -54,7 +54,7 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		let { quotes } = await fetchDbGuild(interaction);
+		const { quotes } = await fetchDbGuild(interaction);
 
 		if (!quotes?.length) {
 			await interaction.reply({
