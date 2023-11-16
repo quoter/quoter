@@ -44,19 +44,19 @@ const DeleteQuoteCommand: QuoterCommand = {
 		const guild = await fetchDbGuild(interaction);
 		const quote = guild.quotes[id - 1];
 
-		if (quote) {
-			await quote.deleteOne();
-			await guild.save();
-
-			await interaction.reply({
-				content: `✅ **|** Deleted quote #${id}.`,
-			});
-		} else {
+		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
 				ephemeral: true,
 			});
+			return;
 		}
+
+		await quote.deleteOne();
+		await guild.save();
+		await interaction.reply({
+			content: `✅ **|** Deleted quote #${id}.`,
+		});
 	},
 };
 
