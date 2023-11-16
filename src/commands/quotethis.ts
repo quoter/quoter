@@ -28,6 +28,7 @@ import cleanString from "../util/cleanString.js";
 import QuoterCommand from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
 import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits.js";
+import { Quote } from "../schemas/guild.js";
 
 const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()
@@ -39,9 +40,7 @@ const QuoteThisCommand: QuoterCommand = {
 	async execute(interaction: MessageContextMenuCommandInteraction) {
 		const guild = await fetchDbGuild(interaction);
 
-		const { quotes } = guild;
-
-		if (quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
+		if (guild.quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
@@ -53,16 +52,14 @@ const QuoteThisCommand: QuoterCommand = {
 		const message = interaction.options.getMessage("message");
 		if (!message) throw new Error("No message found");
 
-		if (!message.content) {
+		const text = message.content;
+		if (!text) {
 			await interaction.reply({
 				content: `❌ **|** [That message](${message.url}) doesn't contain text - embeds are not supported!`,
 				ephemeral: true,
 			});
 			return;
 		}
-
-		const author = message.author?.tag;
-		const text = message.content;
 
 		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
 			await interaction.reply({
@@ -72,7 +69,9 @@ const QuoteThisCommand: QuoterCommand = {
 			return;
 		}
 
-		quotes.push({
+		const author = message.author?.tag;
+
+		const quote = new Quote({
 			text,
 			author,
 			ogMessageID: message.id,
@@ -80,6 +79,7 @@ const QuoteThisCommand: QuoterCommand = {
 			quoterID: interaction.user.id,
 		});
 
+		guild.quotes.push(quote);
 		await guild.save();
 
 		await interaction.reply({
@@ -92,7 +92,7 @@ const QuoteThisCommand: QuoterCommand = {
 							author,
 						)}`,
 					)
-					.setFooter({ text: `Quote #${quotes.length}` }),
+					.setFooter({ text: `Quote #${guild.quotes.length}` }),
 			],
 		});
 	},

@@ -17,7 +17,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Guild as DiscordGuild } from "discord.js";
-import Guild from "../schemas/guild.js";
+import { Guild } from "../schemas/guild.js";
 
 export default async function guildDelete(guild: DiscordGuild) {
 	await Guild.deleteOne({ _id: guild.id });

@@ -40,12 +40,12 @@ const DeleteQuoteCommand: QuoterCommand = {
 	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
-		const guild = await fetchDbGuild(interaction);
-		const { quotes } = guild;
 
-		const quote = quotes[id - 1];
+		const guild = await fetchDbGuild(interaction);
+		const quote = guild.quotes[id - 1];
+
 		if (quote) {
-			quotes.splice(id - 1, 1);
+			quote.deleteOne();
 			await guild.save();
 
 			await interaction.reply({

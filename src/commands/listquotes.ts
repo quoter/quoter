@@ -33,17 +33,7 @@ import {
 import cleanString from "../util/cleanString.js";
 import QuoterCommand from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
-
-interface QuoterQuote {
-	text: string;
-	author?: string;
-	quoterID?: string;
-	editorID?: string;
-	ogMessageID?: string;
-	ogChannelID?: string;
-	createdTimestamp?: number;
-	editedTimestamp?: number;
-}
+import { QuoterQuote } from "../schemas/guild.js";
 
 function render(
 	page: number,

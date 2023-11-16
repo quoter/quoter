@@ -29,6 +29,7 @@ import cleanString from "../util/cleanString.js";
 import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
 import QuoterCommand from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
+import { Quote } from "../schemas/guild.js";
 
 const NewQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -49,9 +50,7 @@ const NewQuoteCommand: QuoterCommand = {
 	async execute(interaction: ChatInputCommandInteraction) {
 		const guild = await fetchDbGuild(interaction);
 
-		const serverQuotes = guild.quotes;
-
-		if (serverQuotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
+		if (guild.quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
@@ -77,11 +76,13 @@ const NewQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		serverQuotes.push({
+		const quote = new Quote({
 			text,
-			author: author ?? undefined,
+			author,
 			quoterID: interaction.user.id,
 		});
+
+		guild.quotes.push(quote);
 
 		await guild.save();
 
@@ -89,7 +90,7 @@ const NewQuoteCommand: QuoterCommand = {
 			.setTitle("✅ Created a new quote")
 			.setColor(Colors.Green)
 			.setDescription(`"${cleanString(text, false)}"`)
-			.setFooter({ text: `Quote #${serverQuotes.length}` });
+			.setFooter({ text: `Quote #${guild.quotes.length}` });
 
 		if (author) {
 			embed.setDescription(

@@ -17,7 +17,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { CommandInteraction } from "discord.js";
-import Guild from "../schemas/guild";
+import { Guild } from "../schemas/guild";
 
 export default async function fetchDbGuild(interaction: CommandInteraction) {
 	if (!interaction.guild) {

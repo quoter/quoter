@@ -23,6 +23,7 @@ import path from "path";
 import quoteImages from "../assets/quoteImages.js";
 import QuoterCommand from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
+import { QuoterQuote } from "../schemas/guild.js";
 
 GlobalFonts.registerFromPath(
 	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
@@ -58,7 +59,8 @@ const InspireCommand: QuoterCommand = {
 			return;
 		}
 
-		let { quotes } = await fetchDbGuild(interaction);
+		const guild = await fetchDbGuild(interaction);
+		let quotes: QuoterQuote[] = guild.quotes;
 
 		if (author) {
 			quotes = quotes.filter(

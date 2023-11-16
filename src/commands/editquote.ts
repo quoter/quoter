@@ -86,14 +86,10 @@ const EditQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		quotes.set(id - 1, {
-			text,
-			author: author || undefined,
-			createdTimestamp: quote.createdTimestamp,
-			editedTimestamp: Date.now(),
-			quoterID: quote.quoterID,
-			editorID: interaction.user.id,
-		});
+		quote.text = text;
+		if (author) quote.author = author;
+		quote.editedTimestamp = Date.now();
+		quote.editorID = interaction.user.id;
 
 		await guild.save();
 
