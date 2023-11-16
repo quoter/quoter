@@ -102,23 +102,17 @@ const InspireCommand: QuoterCommand = {
 		ctx.textAlign = imageData.multiline.textAlign;
 
 		// Drawing the quote using the dat
-		drawMultilineText(
-			canvas.getContext("2d") as unknown as CanvasRenderingContext2D,
-			`"${quote.text}"`,
-			{
-				rect: {
-					x: canvas.width * imageData.multiline.rect.xFactor,
-					y: imageData.multiline.rect.y,
-					width:
-						canvas.width -
-						imageData.multiline.rect.widthPadding * 2,
-					height: imageData.multiline.rect.height,
-				},
-				font: imageData.multiline.font,
-				minFontSize: imageData.multiline.minFontSize,
-				maxFontSize: imageData.multiline.maxFontSize,
+		drawMultilineText(canvas.getContext("2d"), `"${quote.text}"`, {
+			rect: {
+				x: canvas.width * imageData.multiline.rect.xFactor,
+				y: imageData.multiline.rect.y,
+				width: canvas.width - imageData.multiline.rect.widthPadding * 2,
+				height: imageData.multiline.rect.height,
 			},
-		);
+			font: imageData.multiline.font,
+			minFontSize: imageData.multiline.minFontSize,
+			maxFontSize: imageData.multiline.maxFontSize,
+		});
 
 		if (quote.author) {
 			ctx.textAlign = imageData.author.textAlign;
