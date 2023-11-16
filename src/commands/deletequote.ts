@@ -45,7 +45,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 		const quote = guild.quotes[id - 1];
 
 		if (quote) {
-			quote.deleteOne();
+			await quote.deleteOne();
 			await guild.save();
 
 			await interaction.reply({
