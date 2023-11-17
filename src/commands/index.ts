@@ -18,6 +18,8 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 
 import BugsCommand from "./bugs";
 import DeleteQuoteCommand from "./deletequote";
+import DeleteOwnQuoteCommand from "./delete-own-quote";
+import EditOwnQuoteCommand from "./edit-own-quote";
 import EditQuoteCommand from "./editquote";
 import ExportCommand from "./export";
 import InfoCommand from "./info";
@@ -32,6 +34,8 @@ import WhoQuotedCommand from "./whoquoted";
 const commands = {
 	[BugsCommand.data.name]: BugsCommand,
 	[DeleteQuoteCommand.data.name]: DeleteQuoteCommand,
+	[DeleteOwnQuoteCommand.data.name]: DeleteOwnQuoteCommand,
+	[EditOwnQuoteCommand.data.name]: EditOwnQuoteCommand,
 	[EditQuoteCommand.data.name]: EditQuoteCommand,
 	[ExportCommand.data.name]: ExportCommand,
 	[InfoCommand.data.name]: InfoCommand,
