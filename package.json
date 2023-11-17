@@ -22,14 +22,14 @@
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.44",
-		"bufferutil": "4.0.7",
+		"bufferutil": "4.0.8",
 		"canvas-multiline-text": "1.0.3",
 		"discord.js": "^14.13.0",
-		"fuse.js": "6.6.2",
-		"mongoose": "7.5.0",
+		"fuse.js": "7.0.0",
+		"mongoose": "7.6.2",
 		"ms": "2.1.3",
 		"utf-8-validate": "6.0.3",
-		"zlib-sync": "0.1.8"
+		"zlib-sync": "0.1.9"
 	},
 	"devDependencies": {
 		"@types/canvas-multiline-text": "^1.0.2",
@@ -37,7 +37,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.11.0",
 		"@typescript-eslint/parser": "^6.11.0",
 		"bun-types": "^1.0.1",
-		"eslint": "8.48.0",
+		"eslint": "8.53.0",
 		"eslint-config-prettier": "^9.0.0",
 		"prettier": "3.0.3"
 	},
