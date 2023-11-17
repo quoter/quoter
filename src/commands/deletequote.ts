@@ -22,7 +22,7 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
+import fetchDbGuild from "../util/fetchDbGuild";
 
 const DeleteQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

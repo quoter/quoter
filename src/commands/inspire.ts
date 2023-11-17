@@ -20,10 +20,10 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import drawMultilineText from "canvas-multiline-text";
 import path from "path";
-import quoteImages from "../assets/quoteImages.js";
-import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
-import { QuoterQuote } from "../schemas/guild.js";
+import quoteImages from "../assets/quoteImages";
+import QuoterCommand from "../QuoterCommand";
+import fetchDbGuild from "../util/fetchDbGuild";
+import { QuoterQuote } from "../schemas/guild";
 
 GlobalFonts.registerFromPath(
 	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),

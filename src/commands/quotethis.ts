@@ -24,11 +24,11 @@ import {
 	MessageContextMenuCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
-import cleanString from "../util/cleanString.js";
-import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
-import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits.js";
-import { Quote } from "../schemas/guild.js";
+import cleanString from "../util/cleanString";
+import QuoterCommand from "../QuoterCommand";
+import fetchDbGuild from "../util/fetchDbGuild";
+import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
+import { Quote } from "../schemas/guild";
 
 const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()

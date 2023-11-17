@@ -24,8 +24,8 @@ import {
 	ChatInputCommandInteraction,
 } from "discord.js";
 import Fuse from "fuse.js";
-import cleanString from "../util/cleanString.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
+import cleanString from "../util/cleanString";
+import fetchDbGuild from "../util/fetchDbGuild";
 
 const SearchCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

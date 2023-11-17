@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Guild } from "../schemas/guild.js";
+import { Guild } from "../schemas/guild";
 import { ActivityType, Client } from "discord.js";
 
 export default async function ready(client: Client) {

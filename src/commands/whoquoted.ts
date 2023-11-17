@@ -22,8 +22,8 @@ import {
 	Colors,
 	ChatInputCommandInteraction,
 } from "discord.js";
-import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
+import QuoterCommand from "../QuoterCommand";
+import fetchDbGuild from "../util/fetchDbGuild";
 
 const WhoQuotedCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

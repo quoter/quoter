@@ -30,10 +30,10 @@ import {
 	InteractionReplyOptions,
 	ButtonComponent,
 } from "discord.js";
-import cleanString from "../util/cleanString.js";
-import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
-import { QuoterQuote } from "../schemas/guild.js";
+import cleanString from "../util/cleanString";
+import QuoterCommand from "../QuoterCommand";
+import fetchDbGuild from "../util/fetchDbGuild";
+import { QuoterQuote } from "../schemas/guild";
 
 function render(
 	page: number,

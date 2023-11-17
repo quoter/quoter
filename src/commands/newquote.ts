@@ -23,13 +23,13 @@ import {
 	PermissionFlagsBits,
 	ChatInputCommandInteraction,
 } from "discord.js";
-import mentionParse from "../util/mentionParse.js";
-import trimQuotes from "../util/trimQuotes.js";
-import cleanString from "../util/cleanString.js";
+import mentionParse from "../util/mentionParse";
+import trimQuotes from "../util/trimQuotes";
+import cleanString from "../util/cleanString";
 import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
-import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
-import { Quote } from "../schemas/guild.js";
+import QuoterCommand from "../QuoterCommand";
+import fetchDbGuild from "../util/fetchDbGuild";
+import { Quote } from "../schemas/guild";
 
 const NewQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

@@ -23,12 +23,12 @@ import {
 	PermissionFlagsBits,
 	ChatInputCommandInteraction,
 } from "discord.js";
-import mentionParse from "../util/mentionParse.js";
-import trimQuotes from "../util/trimQuotes.js";
-import cleanString from "../util/cleanString.js";
-import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
-import { maxQuoteLength } from "../util/quoteLimits.js";
+import mentionParse from "../util/mentionParse";
+import trimQuotes from "../util/trimQuotes";
+import cleanString from "../util/cleanString";
+import QuoterCommand from "../QuoterCommand";
+import fetchDbGuild from "../util/fetchDbGuild";
+import { maxQuoteLength } from "../util/quoteLimits";
 
 const EditQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

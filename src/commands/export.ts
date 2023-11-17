@@ -22,7 +22,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import QuoterCommand from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
+import fetchDbGuild from "../util/fetchDbGuild";
 
 const ExportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

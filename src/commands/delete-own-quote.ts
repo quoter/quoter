@@ -16,13 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import QuoterCommand from "../QuoterCommand.js";
+import QuoterCommand from "../QuoterCommand";
 import {
 	ChatInputCommandInteraction,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
+import fetchDbGuild from "../util/fetchDbGuild";
 
 const DeleteOwnQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
