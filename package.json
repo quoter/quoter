@@ -2,7 +2,7 @@
 	"name": "quoter",
 	"version": "4.1.0",
 	"description": "The Quote Book for Discord.",
-	"homepage": "https://github.com/n1ckoates/quoter#readme",
+	"homepage": "https://quoter.cc",
 	"author": "Nick Oates <nick@nickoates.com> (https://nickoates.com)",
 	"license": "AGPL-3.0-only",
 	"main": "src/main.ts",
@@ -14,11 +14,11 @@
 		"deploy": "bun run ./src/util/deployCommands.ts"
 	},
 	"bugs": {
-		"url": "https://github.com/n1ckoates/quoter/issues"
+		"url": "https://github.com/quoter/quoter/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/n1ckoates/quoter.git"
+		"url": "git+https://github.com/quoter/quoter.git"
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.44",
