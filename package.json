@@ -5,17 +5,13 @@
 	"homepage": "https://github.com/n1ckoates/quoter#readme",
 	"author": "Nick Oates <nick@nickoates.com> (https://nickoates.com)",
 	"license": "AGPL-3.0-only",
-	"main": "main.js",
+	"main": "src/main.ts",
 	"private": true,
 	"scripts": {
 		"start": "node .",
 		"lint": "eslint . && prettier --check .",
 		"lint:fix": "eslint --fix . && prettier --write .",
-		"deploy": "node deployCommands.js"
-	},
-	"engines": {
-		"node": "^16.17.1",
-		"npm": "^8.19.2"
+		"deploy": "bun run ./src/util/deployCommands.ts"
 	},
 	"bugs": {
 		"url": "https://github.com/n1ckoates/quoter/issues"
@@ -25,8 +21,8 @@
 		"url": "git+https://github.com/n1ckoates/quoter.git"
 	},
 	"dependencies": {
+		"@napi-rs/canvas": "^0.1.44",
 		"bufferutil": "4.0.8",
-		"canvas": "2.11.2",
 		"canvas-multiline-text": "1.0.3",
 		"discord.js": "^14.13.0",
 		"fuse.js": "7.0.0",
@@ -36,8 +32,32 @@
 		"zlib-sync": "0.1.9"
 	},
 	"devDependencies": {
+		"@types/canvas-multiline-text": "^1.0.2",
+		"@types/ms": "^0.7.31",
+		"@typescript-eslint/eslint-plugin": "^6.11.0",
+		"@typescript-eslint/parser": "^6.11.0",
+		"bun-types": "^1.0.1",
 		"eslint": "8.53.0",
 		"eslint-config-prettier": "^9.0.0",
 		"prettier": "3.0.3"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"prettier": {
+		"useTabs": true,
+		"tabWidth": 4
+	},
+	"eslintConfig": {
+		"extends": [
+			"eslint:recommended",
+			"plugin:@typescript-eslint/recommended",
+			"prettier"
+		],
+		"parser": "@typescript-eslint/parser",
+		"plugins": [
+			"@typescript-eslint"
+		],
+		"root": true
 	}
 }
