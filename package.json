@@ -8,7 +8,7 @@
 	"main": "src/main.ts",
 	"private": true,
 	"scripts": {
-		"start": "node .",
+		"start": "bun run ./src/main.ts",
 		"lint": "eslint . && prettier --check .",
 		"lint:fix": "eslint --fix . && prettier --write .",
 		"deploy": "bun run ./src/util/deployCommands.ts"
