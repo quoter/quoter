@@ -22,7 +22,7 @@ import DeleteOwnQuoteCommand from "./delete-own-quote";
 import EditOwnQuoteCommand from "./edit-own-quote";
 import EditQuoteCommand from "./editquote";
 import ExportCommand from "./export";
-import InfoCommand from "./info";
+import AboutCommand from "./about";
 import InspireCommand from "./inspire";
 import ListQuotesCommand from "./listquotes";
 import NewQuoteCommand from "./newquote";
@@ -38,7 +38,7 @@ const commands = {
 	[EditOwnQuoteCommand.data.name]: EditOwnQuoteCommand,
 	[EditQuoteCommand.data.name]: EditQuoteCommand,
 	[ExportCommand.data.name]: ExportCommand,
-	[InfoCommand.data.name]: InfoCommand,
+	[AboutCommand.data.name]: AboutCommand,
 	[InspireCommand.data.name]: InspireCommand,
 	[ListQuotesCommand.data.name]: ListQuotesCommand,
 	[NewQuoteCommand.data.name]: NewQuoteCommand,
