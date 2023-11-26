@@ -27,12 +27,12 @@ import fetchDbGuild from "../util/fetchDbGuild";
 
 const WhoQuotedCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
-		.setName("whoquoted")
-		.setDescription("Shows who created a quote.")
+		.setName("who-quoted")
+		.setDescription("See who created a specific quote")
 		.addIntegerOption((o) =>
 			o
 				.setName("id")
-				.setDescription("The ID of the quote to view.")
+				.setDescription("The ID of the quote to view")
 				.setRequired(true),
 		)
 		.setDMPermission(false),
@@ -43,7 +43,7 @@ const WhoQuotedCommand: QuoterCommand = {
 		if (!quotes.length) {
 			await interaction.reply({
 				content:
-					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
 				ephemeral: true,
 			});
 			return;

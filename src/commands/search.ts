@@ -30,11 +30,11 @@ import fetchDbGuild from "../util/fetchDbGuild";
 const SearchCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("search")
-		.setDescription("Search through the server's quotes.")
+		.setDescription("Search through this server's quote book")
 		.addStringOption((o) =>
 			o
 				.setName("term")
-				.setDescription("The text to search for.")
+				.setDescription("The query to search for")
 				.setRequired(true),
 		)
 		.setDMPermission(false),
@@ -45,7 +45,7 @@ const SearchCommand: QuoterCommand = {
 		if (!quotes.length) {
 			await interaction.reply({
 				content:
-					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
 				ephemeral: true,
 			});
 			return;

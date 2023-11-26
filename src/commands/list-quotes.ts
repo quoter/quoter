@@ -95,10 +95,12 @@ ${quoteList}`),
 
 const ListQuotesCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
-		.setName("listquotes")
-		.setDescription("Lists all of the server's quotes")
+		.setName("list-quotes")
+		.setDescription("See all quotes in this server's quote book")
 		.addIntegerOption((o) =>
-			o.setName("page").setDescription("The page of quotes to view."),
+			o
+				.setName("page")
+				.setDescription("The page of the quote book to view"),
 		)
 		.setDMPermission(false),
 	cooldown: 3,
@@ -108,7 +110,7 @@ const ListQuotesCommand: QuoterCommand = {
 		if (!quotes.length) {
 			await interaction.reply({
 				content:
-					"❌ **|** This server doesn't have any quotes, use `/newquote` to add some!",
+					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
 				ephemeral: true,
 			});
 			return;
@@ -132,7 +134,7 @@ const ListQuotesCommand: QuoterCommand = {
 			} else {
 				press.reply({
 					content:
-						"❌ **|** You clicked on someone else's button. Get your own with `/listquotes`!",
+						"❌ **|** You clicked on someone else's button. Get your own with `/list-quotes`!",
 					ephemeral: true,
 				});
 				return false;

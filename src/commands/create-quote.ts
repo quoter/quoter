@@ -20,50 +20,38 @@ import {
 	EmbedBuilder,
 	SlashCommandBuilder,
 	Colors,
-	PermissionFlagsBits,
 	ChatInputCommandInteraction,
 } from "discord.js";
 import mentionParse from "../util/mentionParse";
 import trimQuotes from "../util/trimQuotes";
 import cleanString from "../util/cleanString";
+import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
 import QuoterCommand from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
-import { maxQuoteLength } from "../util/quoteLimits";
+import { Quote } from "../schemas/guild";
 
-const EditQuoteCommand: QuoterCommand = {
+const CreateQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
-		.setName("editquote")
-		.setDescription("Edits the specified quote.")
-		.addIntegerOption((o) =>
-			o
-				.setName("id")
-				.setDescription("The ID of the quote to edit.")
-				.setRequired(true),
-		)
+		.setName("create-quote")
+		.setDescription("Create a new quote in this server's quote book")
 		.addStringOption((o) =>
 			o
 				.setName("text")
-				.setDescription("The quote's new text.")
+				.setDescription("The text of the quote")
 				.setRequired(true),
 		)
 		.addStringOption((o) =>
-			o.setName("author").setDescription("The quote's new author."),
+			o.setName("author").setDescription("The author of the quote"),
 		)
-		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+		.setDMPermission(false),
 	cooldown: 10,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const id = interaction.options.getInteger("id");
-		if (id === null) throw new Error("ID is null");
-
 		const guild = await fetchDbGuild(interaction);
 
-		const { quotes } = guild;
-		const quote = quotes[id - 1];
-
-		if (!quote) {
+		if (guild.quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
 			await interaction.reply({
-				content: "❌ **|** I couldn't find a quote with that ID.",
+				content:
+					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
 				ephemeral: true,
 			});
 			return;
@@ -72,9 +60,9 @@ const EditQuoteCommand: QuoterCommand = {
 		let author = interaction.options.getString("author");
 		author &&= await mentionParse(author, interaction.client);
 
-		const textInput = interaction.options.getString("text");
-		if (textInput === null) throw new Error("Text input is null");
-		const text = trimQuotes(textInput);
+		let text = interaction.options.getString("text");
+		if (text === null) throw new Error("Text is null or empty");
+		text = trimQuotes(text);
 
 		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
 			await interaction.reply({
@@ -86,27 +74,30 @@ const EditQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		quote.text = text;
-		if (author) quote.author = author;
-		quote.editedTimestamp = Date.now();
-		quote.editorID = interaction.user.id;
+		const quote = new Quote({
+			text,
+			author,
+			quoterID: interaction.user.id,
+		});
+
+		guild.quotes.push(quote);
 
 		await guild.save();
 
-		await interaction.reply({
-			embeds: [
-				new EmbedBuilder()
-					.setTitle("✅ Edited quote")
-					.setColor(Colors.Green)
-					.setDescription(
-						`"${cleanString(text, false)}"${
-							author ? ` - ${cleanString(author, false)}` : ""
-						}`,
-					)
-					.setFooter({ text: `Quote #${id}` }),
-			],
-		});
+		const embed = new EmbedBuilder()
+			.setTitle("✅ Created a new quote")
+			.setColor(Colors.Green)
+			.setDescription(`"${cleanString(text, false)}"`)
+			.setFooter({ text: `Quote #${guild.quotes.length}` });
+
+		if (author) {
+			embed.setDescription(
+				embed.data.description + ` - ${cleanString(author)}`,
+			);
+		}
+
+		await interaction.reply({ embeds: [embed] });
 	},
 };
 
-export default EditQuoteCommand;
+export default CreateQuoteCommand;

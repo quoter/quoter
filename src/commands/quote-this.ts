@@ -22,7 +22,6 @@ import {
 	Colors,
 	ApplicationCommandType,
 	MessageContextMenuCommandInteraction,
-	PermissionFlagsBits,
 } from "discord.js";
 import cleanString from "../util/cleanString";
 import QuoterCommand from "../QuoterCommand";
@@ -34,8 +33,7 @@ const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()
 		.setName("Quote This")
 		.setType(ApplicationCommandType.Message)
-		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+		.setDMPermission(false),
 	cooldown: 10,
 	async execute(interaction: MessageContextMenuCommandInteraction) {
 		const guild = await fetchDbGuild(interaction);
@@ -43,7 +41,7 @@ const QuoteThisCommand: QuoterCommand = {
 		if (guild.quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
 			await interaction.reply({
 				content:
-					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/deletequote` before creating more.",
+					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
 				ephemeral: true,
 			});
 			return;

@@ -29,15 +29,15 @@ import fetchDbGuild from "../util/fetchDbGuild";
 const QuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("quote")
-		.setDescription("Views a specific quote, otherwise shows a random one.")
+		.setDescription("View a random or specific quote")
 		.addIntegerOption((o) =>
-			o.setName("id").setDescription("The ID of the quote to view."),
+			o.setName("id").setDescription("The ID of the quote to view"),
 		)
 		.addStringOption((o) =>
 			o
 				.setName("author")
 				.setDescription(
-					"An author to randomly select a quote from (case-insensitive).",
+					"The author to randomly select a quote from (case-insensitive)",
 				),
 		)
 		.setDMPermission(false),
@@ -59,7 +59,7 @@ const QuoteCommand: QuoterCommand = {
 		if (!quotes?.length) {
 			await interaction.reply({
 				content:
-					"❌ **|** This server doesn't have any quotes, or has none by that author. Use `/newquote` to add some!",
+					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
 				ephemeral: true,
 			});
 			return;

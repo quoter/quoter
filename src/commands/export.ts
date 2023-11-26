@@ -27,7 +27,7 @@ import fetchDbGuild from "../util/fetchDbGuild";
 const ExportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("export")
-		.setDescription("Exports the server's quotes into a JSON file.")
+		.setDescription("Export this server's quote book as a JSON file")
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,

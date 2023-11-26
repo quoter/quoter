@@ -33,15 +33,15 @@ GlobalFonts.registerFromPath(
 const InspireCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("inspire")
-		.setDescription("Creates an inspirational image from a quote")
+		.setDescription("Generate an inspirational image from a quote")
 		.addIntegerOption((o) =>
-			o.setName("id").setDescription("The ID of the quote to use."),
+			o.setName("id").setDescription("The ID of the quote to use"),
 		)
 		.addStringOption((o) =>
 			o
 				.setName("author")
 				.setDescription(
-					"An author to randomly select a quote from (case-insensitive).",
+					"The author to randomly select a quote from (case-insensitive)",
 				),
 		)
 		.setDMPermission(false),
@@ -72,7 +72,7 @@ const InspireCommand: QuoterCommand = {
 		if (!quotes.length) {
 			await interaction.editReply({
 				content:
-					"❌ **|** This server doesn't have any quotes, or has none by that author. Use `/newquote` to add some!",
+					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
 			});
 			return;
 		}

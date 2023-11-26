@@ -26,12 +26,12 @@ import fetchDbGuild from "../util/fetchDbGuild";
 
 const DeleteQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
-		.setName("deletequote")
-		.setDescription("Deletes the specified quote")
+		.setName("delete-quote")
+		.setDescription("Delete a quote from this server's quote book")
 		.addIntegerOption((o) =>
 			o
 				.setName("id")
-				.setDescription("The ID of the quote to delete.")
+				.setDescription("The ID of the quote to delete")
 				.setRequired(true),
 		)
 		.setDMPermission(false)

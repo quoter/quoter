@@ -17,25 +17,20 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import QuoterCommand from "../QuoterCommand";
-import {
-	ChatInputCommandInteraction,
-	PermissionFlagsBits,
-	SlashCommandBuilder,
-} from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const DeleteOwnQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("delete-own-quote")
-		.setDescription("Deletes a quote that you created.")
+		.setDescription("Delete a quote that you created")
 		.addIntegerOption((o) =>
 			o
 				.setName("id")
-				.setDescription("The ID of the quote to delete.")
+				.setDescription("The ID of the quote to delete")
 				.setRequired(true),
 		)
-		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+		.setDMPermission(false),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");
@@ -55,7 +50,7 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
 		if (quote.quoterID !== interaction.user.id) {
 			await interaction.reply({
 				content:
-					"❌ **|** You can only delete quotes that you created. If you have permission to use `/deletequote`, you can use that to delete any quote.",
+					"❌ **|** You can only delete quotes that you created. If you have permission to use `/delete-quote`, you can use that to delete any quote.",
 				ephemeral: true,
 			});
 			return;

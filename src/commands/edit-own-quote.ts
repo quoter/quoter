@@ -20,7 +20,6 @@ import {
 	EmbedBuilder,
 	SlashCommandBuilder,
 	Colors,
-	PermissionFlagsBits,
 	ChatInputCommandInteraction,
 } from "discord.js";
 import mentionParse from "../util/mentionParse";
@@ -33,24 +32,25 @@ import { maxQuoteLength } from "../util/quoteLimits";
 const EditOwnQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("edit-own-quote")
-		.setDescription("Edit a quote that you created.")
+		.setDescription("Edit a quote that you created")
 		.addIntegerOption((o) =>
 			o
 				.setName("id")
-				.setDescription("The ID of the quote to edit.")
+				.setDescription("The ID of the quote to edit")
 				.setRequired(true),
 		)
 		.addStringOption((o) =>
 			o
 				.setName("text")
-				.setDescription("The quote's new text.")
+				.setDescription("The updated text of the quote")
 				.setRequired(true),
 		)
 		.addStringOption((o) =>
-			o.setName("author").setDescription("The quote's new author."),
+			o
+				.setName("author")
+				.setDescription("The updated author of the quote"),
 		)
-		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+		.setDMPermission(false),
 	cooldown: 10,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");
@@ -72,7 +72,7 @@ const EditOwnQuoteCommand: QuoterCommand = {
 		if (quote.quoterID !== interaction.user.id) {
 			await interaction.reply({
 				content:
-					"❌ **|** You can only edit quotes that you created. If you have permission to use `/editquote`, you can use that to edit any quote.",
+					"❌ **|** You can only edit quotes that you created. If you have permission to use `/edit-quote`, you can use that to edit any quote.",
 				ephemeral: true,
 			});
 			return;

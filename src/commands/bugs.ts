@@ -23,7 +23,7 @@ const BugsCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("bugs")
 		.setDescription(
-			"Shows how to report bugs, suggest features, and more.",
+			"Get a link to report bugs, suggest features, or post other issues",
 		),
 	async execute(interaction) {
 		await interaction.reply({
