@@ -21,8 +21,8 @@
 		"url": "git+https://github.com/quoter/quoter.git"
 	},
 	"dependencies": {
-		"@napi-rs/canvas": "^0.1.44",
 		"bufferutil": "4.0.8",
+		"canvas": "Automattic/node-canvas#25fbac52c8",
 		"canvas-multiline-text": "1.0.3",
 		"discord.js": "^14.13.0",
 		"fuse.js": "7.0.0",

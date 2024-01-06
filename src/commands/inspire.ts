@@ -17,7 +17,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
+import { registerFont, createCanvas, loadImage } from "canvas";
 import drawMultilineText from "canvas-multiline-text";
 import path from "path";
 import quoteImages from "../assets/quoteImages";
@@ -25,10 +25,9 @@ import QuoterCommand from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { QuoterQuote } from "../schemas/guild";
 
-GlobalFonts.registerFromPath(
-	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
-	"Regular",
-);
+registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), {
+	family: "Regular",
+});
 
 const InspireCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -126,7 +125,7 @@ const InspireCommand: QuoterCommand = {
 			);
 		}
 
-		const jpeg = await canvas.encode("jpeg");
+		const jpeg = canvas.toBuffer("image/jpeg", { quality: 0.5 });
 
 		await interaction.editReply({
 			files: [jpeg],
