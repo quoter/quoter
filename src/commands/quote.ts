@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2020-2023 Nick Oates
+Copyright (C) 2020-2024 Nick Oates
 
 This file is part of Quoter.
 
@@ -70,7 +70,7 @@ const QuoteCommand: QuoterCommand = {
 					(q) =>
 						q.author &&
 						q.author.toLowerCase() === author.toLowerCase(),
-			  )
+				)
 			: quotes;
 
 		const id = choice ?? Math.ceil(Math.random() * filteredQuotes.length);

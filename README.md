@@ -90,7 +90,7 @@ Before submitting a pull request, please run `bun run lint` to ensure your code 
 
 ## 📜 License
 
-    Copyright (C) 2020-2023 Nick Oates
+    Copyright (C) 2020-2024 Nick Oates
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
