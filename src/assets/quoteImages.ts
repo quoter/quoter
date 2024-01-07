@@ -16,6 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import type { CanvasTextAlign } from "canvas";
+
 interface QuoteImage {
 	multiline: {
 		rect: {
