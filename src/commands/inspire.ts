@@ -19,13 +19,12 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { registerFont, createCanvas, loadImage } from "canvas";
 import drawMultilineText from "canvas-multiline-text";
-import path from "path";
 import quoteImages from "../assets/quoteImages";
 import QuoterCommand from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { QuoterQuote } from "../schemas/guild";
 
-registerFont(path.resolve(__dirname, "../assets/ScheherazadeNew-Regular.ttf"), {
+registerFont(`${import.meta.dir}/../assets/ScheherazadeNew-Regular.ttf`, {
 	family: "Regular",
 });
 
@@ -89,7 +88,7 @@ const InspireCommand: QuoterCommand = {
 		const index = Math.floor(Math.random() * quoteImages.length);
 
 		const background = await loadImage(
-			`${__dirname}/../assets/${index}.jpg`,
+			`${import.meta.dir}/../assets/${index}.jpg`,
 		);
 		const imageData = quoteImages[index];
 
