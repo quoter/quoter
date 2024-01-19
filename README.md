@@ -78,6 +78,12 @@ Finally, run the bot:
 bun run start
 ```
 
+### Running with PM2
+
+If you want to run Quoter in the background, we recommend using [PM2](https://pm2.keymetrics.io). Quoter includes an `ecosystem.config.js` file, which allows using PM2 without any additional configuration.
+
+Install PM2 with `bun install -g pm2`, then `cd` into the Quoter directory and run `pm2 start`. You can then manage Quoter with `pm2` commands, such as `pm2 restart quoter` to restart the bot.
+
 ## 🤝 Contributing
 
 Thank you for your interest in contributing to Quoter! Before you get started, please read our [Code of Conduct](CODE_OF_CONDUCT.md). If you're developing a new feature, or making significant changes, please open an issue first to discuss it with us.
