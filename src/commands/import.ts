@@ -53,16 +53,25 @@ const ImportCommand: QuoterCommand = {
 			return;
 		}
 
-		const resp = await fetch(attachment.url);
-		const json = await resp.json();
+		try {
+			const resp = await fetch(attachment.url);
+			const json = await resp.json();
 
-		// TODO: Validate JSON
-		// TODO: Import quotes
+			// TODO: Validate JSON
+			// TODO: Import quotes
 
-		interaction.reply({
-			content: "✅ **|** Quotes imported successfully.", // TODO: Return number of quotes imported
-			ephemeral: true,
-		});
+			interaction.reply({
+				content: "✅ **|** Quotes imported successfully.", // TODO: Return number of quotes imported
+				ephemeral: true,
+			});
+		} catch {
+			interaction.reply({
+				content:
+					"❌ **|** Something went wrong while importing the file. Make sure it is a valid JSON file.",
+				ephemeral: true,
+			});
+			return;
+		}
 	},
 };
 
