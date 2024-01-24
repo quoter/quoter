@@ -16,8 +16,29 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import {
+	SlashCommandBuilder,
+	ChatInputCommandInteraction,
+	PermissionFlagsBits,
+} from "discord.js";
 import QuoterCommand from "../QuoterCommand.js";
+import { z } from "zod";
+import fetchDbGuild from "../util/fetchDbGuild.js";
+import { maxGuildQuotes } from "../util/quoteLimits.js";
+
+const ImportSchema = z
+	.object({
+		text: z
+			.string()
+			.min(1)
+			.max(Number(process.env.MAX_QUOTE_LENGTH) ?? 250)
+			.trim(),
+		author: z.string().trim().nullish(),
+		createdTimestamp: z.number().int().nonnegative().safe().optional(),
+		editedTimestamp: z.number().int().nonnegative().safe().optional(),
+	})
+	.array()
+	.nonempty();
 
 const ImportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -30,13 +51,13 @@ const ImportCommand: QuoterCommand = {
 				.setRequired(true),
 		)
 		.setDMPermission(false)
-		.setDefaultMemberPermissions("0"),
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const attachment = interaction.options.getAttachment("file");
 		if (attachment === null) throw new Error("File is null");
 
-		if (attachment.contentType !== "application/json") {
+		if (!attachment.contentType?.startsWith("application/json")) {
 			interaction.reply({
 				content: "❌ **|** The file must be a JSON file.",
 				ephemeral: true,
@@ -53,25 +74,39 @@ const ImportCommand: QuoterCommand = {
 			return;
 		}
 
-		try {
-			const resp = await fetch(attachment.url);
-			const json = await resp.json();
+		const resp = await fetch(attachment.url);
+		const json = await resp.json();
+		const parsed = ImportSchema.safeParse(json);
 
-			// TODO: Validate JSON
-			// TODO: Import quotes
-
-			interaction.reply({
-				content: "✅ **|** Quotes imported successfully.", // TODO: Return number of quotes imported
-				ephemeral: true,
-			});
-		} catch {
+		if (!parsed.success) {
 			interaction.reply({
 				content:
-					"❌ **|** Something went wrong while importing the file. Make sure it is a valid JSON file.",
+					"❌ **|** That file is not a valid quote book. Visit [quoter.cc/format](https://quoter.cc/format) for more information.",
 				ephemeral: true,
 			});
 			return;
 		}
+
+		const guild = await fetchDbGuild(interaction);
+
+		const maxQuotes = guild.maxGuildQuotes ?? maxGuildQuotes;
+		const remaining = maxQuotes - guild.quotes.length;
+
+		if (parsed.data.length > remaining) {
+			interaction.reply({
+				content: `❌ **|** That file contains too many quotes. You can only have ${maxQuotes} quotes in this server.`,
+				ephemeral: true,
+			});
+			return;
+		}
+
+		guild.quotes.push(...parsed.data);
+		await guild.save();
+
+		interaction.reply({
+			content: `✅ **|** Imported **${parsed.data.length}** quotes.`,
+			ephemeral: true,
+		});
 	},
 };
 
