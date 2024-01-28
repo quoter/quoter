@@ -66,10 +66,17 @@ export default async function interactionCreate(interaction: Interaction) {
 		console.error(`Failed to execute command ${commandName}
 * ${error}`);
 
-		interaction.reply({
-			content:
-				"❌ **|** Something went wrong while executing that command. Report this with `/bugs`!",
-			ephemeral: true,
-		});
+		if (interaction.deferred || interaction.replied) {
+			interaction.editReply({
+				content:
+					"❌ **|** Something went wrong while executing that command. Report this with `/bugs`!",
+			});
+		} else {
+			interaction.reply({
+				content:
+					"❌ **|** Something went wrong while executing that command. Report this with `/bugs`!",
+				ephemeral: true,
+			});
+		}
 	}
 }
