@@ -30,8 +30,7 @@ const client = new Client({
 });
 
 if (process.env.DISCORD_TOKEN === undefined) {
-	console.error("DISCORD_TOKEN environment variable not set");
-	process.exit(1);
+	throw new Error("DISCORD_TOKEN environment variable not set");
 }
 client
 	.on(Events.ClientReady, events.ready)
@@ -40,8 +39,7 @@ client
 	.login(process.env.DISCORD_TOKEN);
 
 if (process.env.MONGO_URI === undefined) {
-	console.error("MONGO_URI environment variable not set");
-	process.exit(1);
+	throw new Error("MONGO_URI environment variable not set");
 }
 mongoose
 	.connect(process.env.MONGO_URI)

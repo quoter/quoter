@@ -24,8 +24,7 @@ import {
 import commands from "../commands";
 
 if (process.env.DISCORD_TOKEN === undefined) {
-	console.error("DISCORD_TOKEN environment variable not set");
-	process.exit(1);
+	throw new Error("DISCORD_TOKEN environment variable not set");
 }
 
 const clientId = Buffer.from(
@@ -49,8 +48,7 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 try {
 	if (isGuild) {
 		if (process.env.DISCORD_GUILD_ID === undefined) {
-			console.error("DISCORD_GUILD_ID environment variable not set");
-			process.exit(1);
+			throw new Error("DISCORD_GUILD_ID environment variable not set");
 		}
 
 		console.log(
