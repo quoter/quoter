@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import EightBallCommand from "./8-ball";
 import AboutCommand from "./about";
 import BugsCommand from "./bugs";
 import CreateQuoteCommand from "./create-quote";
@@ -33,6 +34,7 @@ import SearchCommand from "./search";
 import WhoQuotedCommand from "./who-quoted";
 
 const commands = {
+	[EightBallCommand.data.name]: EightBallCommand,
 	[AboutCommand.data.name]: AboutCommand,
 	[BugsCommand.data.name]: BugsCommand,
 	[CreateQuoteCommand.data.name]: CreateQuoteCommand,
