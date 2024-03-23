@@ -27,6 +27,7 @@ const client = new Client({
 		MessageManager: 0,
 		ThreadManager: 0,
 	}),
+	shards: "auto",
 });
 
 if (process.env.DISCORD_TOKEN === undefined) {
