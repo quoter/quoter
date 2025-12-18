@@ -21,7 +21,7 @@ import {
 	ChatInputCommandInteraction,
 	PermissionFlagsBits,
 } from "discord.js";
-import QuoterCommand from "../QuoterCommand.js";
+import { QuoterCommand } from "../QuoterCommand.js";
 import { z } from "zod";
 import fetchDbGuild from "../util/fetchDbGuild.js";
 import { maxGuildQuotes } from "../util/quoteLimits.js";

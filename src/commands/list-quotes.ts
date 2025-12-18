@@ -31,7 +31,7 @@ import {
 	ButtonComponent,
 } from "discord.js";
 import cleanString from "../util/cleanString";
-import QuoterCommand from "../QuoterCommand";
+import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { QuoterQuote } from "../schemas/guild";
 

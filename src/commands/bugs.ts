@@ -17,7 +17,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { SlashCommandBuilder } from "discord.js";
-import QuoterCommand from "../QuoterCommand";
+import { QuoterCommand } from "../QuoterCommand";
 
 const BugsCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

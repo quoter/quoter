@@ -26,7 +26,7 @@ import {
 } from "discord.js";
 import quoterPackage from "../../package.json";
 import ms from "ms";
-import QuoterCommand from "../QuoterCommand";
+import { QuoterCommand } from "../QuoterCommand";
 import { Guild } from "../schemas/guild";
 
 let totalQuotes = "0";

@@ -21,7 +21,7 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import QuoterCommand from "../QuoterCommand.js";
+import { QuoterCommand } from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const ExportCommand: QuoterCommand = {

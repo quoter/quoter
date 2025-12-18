@@ -20,10 +20,11 @@ import {
 	CommandInteraction,
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
+	SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 
-export default interface QuoterCommand {
-	data: SlashCommandBuilder | ContextMenuCommandBuilder;
+export type QuoterCommand = {
+	data: SlashCommandBuilder | ContextMenuCommandBuilder | SlashCommandOptionsOnlyBuilder;
 	cooldown?: number;
 	execute(interaction: CommandInteraction): Promise<void>;
 }

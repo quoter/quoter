@@ -20,7 +20,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import drawMultilineText from "canvas-multiline-text";
 import quoteImages from "../assets/quoteImages";
-import QuoterCommand from "../QuoterCommand";
+import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { QuoterQuote } from "../schemas/guild";
 import path from "path";

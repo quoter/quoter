@@ -26,7 +26,7 @@ import mentionParse from "../util/mentionParse";
 import trimQuotes from "../util/trimQuotes";
 import cleanString from "../util/cleanString";
 import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
-import QuoterCommand from "../QuoterCommand";
+import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { Quote } from "../schemas/guild";
 

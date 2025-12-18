@@ -22,7 +22,7 @@ import {
 	Colors,
 	ChatInputCommandInteraction,
 } from "discord.js";
-import QuoterCommand from "../QuoterCommand";
+import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const WhoQuotedCommand: QuoterCommand = {
