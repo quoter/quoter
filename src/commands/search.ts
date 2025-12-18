@@ -22,6 +22,7 @@ import {
 	SlashCommandBuilder,
 	Colors,
 	ChatInputCommandInteraction,
+	InteractionContextType,
 } from "discord.js";
 import Fuse from "fuse.js";
 import cleanString from "../util/cleanString";
@@ -37,7 +38,7 @@ const SearchCommand: QuoterCommand = {
 				.setDescription("The query to search for")
 				.setRequired(true),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const { quotes } = await fetchDbGuild(interaction);

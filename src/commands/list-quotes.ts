@@ -29,6 +29,7 @@ import {
 	InteractionUpdateOptions,
 	InteractionReplyOptions,
 	ButtonComponent,
+	InteractionContextType,
 } from "discord.js";
 import cleanString from "../util/cleanString";
 import { QuoterCommand } from "../QuoterCommand";
@@ -102,7 +103,7 @@ const ListQuotesCommand: QuoterCommand = {
 				.setName("page")
 				.setDescription("The page of the quote book to view"),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 3,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const { quotes } = await fetchDbGuild(interaction);

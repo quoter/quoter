@@ -20,6 +20,7 @@ import {
 	EmbedBuilder,
 	SlashCommandBuilder,
 	Colors,
+	InteractionContextType,
 	ChatInputCommandInteraction,
 } from "discord.js";
 import { QuoterCommand } from "../QuoterCommand";
@@ -35,7 +36,7 @@ const WhoQuotedCommand: QuoterCommand = {
 				.setDescription("The ID of the quote to view")
 				.setRequired(true),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const { quotes } = await fetchDbGuild(interaction);

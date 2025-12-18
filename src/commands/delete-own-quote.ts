@@ -17,7 +17,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { QuoterCommand } from "../QuoterCommand";
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder, InteractionContextType } from "discord.js";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const DeleteOwnQuoteCommand: QuoterCommand = {
@@ -30,7 +30,7 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
 				.setDescription("The ID of the quote to delete")
 				.setRequired(true),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");

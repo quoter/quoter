@@ -24,6 +24,7 @@ import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { QuoterQuote } from "../schemas/guild";
 import path from "path";
+import { InteractionContextType } from "discord.js";
 
 GlobalFonts.registerFromPath(
 	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
@@ -44,7 +45,7 @@ const InspireCommand: QuoterCommand = {
 					"The author to randomly select a quote from (case-insensitive)",
 				),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 4,
 	async execute(interaction: ChatInputCommandInteraction) {
 		await interaction.deferReply();

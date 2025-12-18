@@ -22,6 +22,7 @@ import {
 	Colors,
 	ApplicationCommandType,
 	MessageContextMenuCommandInteraction,
+	InteractionContextType,
 } from "discord.js";
 import cleanString from "../util/cleanString";
 import { QuoterCommand } from "../QuoterCommand";
@@ -33,7 +34,7 @@ const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()
 		.setName("Quote This")
 		.setType(ApplicationCommandType.Message)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 10,
 	async execute(interaction: MessageContextMenuCommandInteraction) {
 		const guild = await fetchDbGuild(interaction);

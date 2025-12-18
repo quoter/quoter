@@ -21,6 +21,7 @@ import {
 	SlashCommandBuilder,
 	Colors,
 	ChatInputCommandInteraction,
+	InteractionContextType,
 } from "discord.js";
 import mentionParse from "../util/mentionParse";
 import trimQuotes from "../util/trimQuotes";
@@ -43,7 +44,7 @@ const CreateQuoteCommand: QuoterCommand = {
 		.addStringOption((o) =>
 			o.setName("author").setDescription("The author of the quote"),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 10,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const guild = await fetchDbGuild(interaction);

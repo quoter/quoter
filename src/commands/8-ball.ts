@@ -21,6 +21,7 @@ import {
 	SlashCommandBuilder,
 	Colors,
 	ChatInputCommandInteraction,
+	InteractionContextType,
 } from "discord.js";
 import cleanString from "../util/cleanString";
 import { QuoterCommand } from "../QuoterCommand";
@@ -38,7 +39,7 @@ const EightBallCommand: QuoterCommand = {
 				.setDescription("The question to ask the magic 8-ball")
 				.setRequired(true),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const question = interaction.options.getString("question");

@@ -20,6 +20,7 @@ import {
 	AttachmentBuilder,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
+	InteractionContextType,
 } from "discord.js";
 import { QuoterCommand } from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild";
@@ -28,7 +29,7 @@ const ExportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
 		.setName("export")
 		.setDescription("Export this server's quote book as a JSON file")
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction) {

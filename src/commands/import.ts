@@ -20,6 +20,7 @@ import {
 	SlashCommandBuilder,
 	ChatInputCommandInteraction,
 	PermissionFlagsBits,
+	InteractionContextType,
 } from "discord.js";
 import { QuoterCommand } from "../QuoterCommand.js";
 import { z } from "zod";
@@ -50,7 +51,7 @@ const ImportCommand: QuoterCommand = {
 				.setDescription("The JSON file to import")
 				.setRequired(true),
 		)
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction: ChatInputCommandInteraction) {

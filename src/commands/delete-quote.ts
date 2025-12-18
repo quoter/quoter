@@ -19,6 +19,7 @@ along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
 import { QuoterCommand } from "../QuoterCommand";
 import {
 	ChatInputCommandInteraction,
+	InteractionContextType,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -34,7 +35,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 				.setDescription("The ID of the quote to delete")
 				.setRequired(true),
 		)
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {

@@ -21,6 +21,7 @@ import {
 	SlashCommandBuilder,
 	Colors,
 	ChatInputCommandInteraction,
+	InteractionContextType,
 } from "discord.js";
 import cleanString from "../util/cleanString";
 import { QuoterCommand } from "../QuoterCommand";
@@ -40,7 +41,7 @@ const QuoteCommand: QuoterCommand = {
 					"The author to randomly select a quote from (case-insensitive)",
 				),
 		)
-		.setDMPermission(false),
+		.setContexts(InteractionContextType.Guild),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
 		const choice = interaction.options.getInteger("id");

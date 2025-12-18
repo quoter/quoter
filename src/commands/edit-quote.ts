@@ -22,6 +22,7 @@ import {
 	Colors,
 	PermissionFlagsBits,
 	ChatInputCommandInteraction,
+	InteractionContextType,
 } from "discord.js";
 import mentionParse from "../util/mentionParse";
 import trimQuotes from "../util/trimQuotes";
@@ -51,7 +52,7 @@ const EditQuoteCommand: QuoterCommand = {
 				.setName("author")
 				.setDescription("The updated author of the quote"),
 		)
-		.setDMPermission(false)
+		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 10,
 	async execute(interaction: ChatInputCommandInteraction) {
