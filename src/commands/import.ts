@@ -17,8 +17,8 @@ const ImportSchema = z
 			.max(Number(process.env.MAX_QUOTE_LENGTH) ?? 250)
 			.trim(),
 		author: z.string().trim().nullish(),
-		createdTimestamp: z.number().int().nonnegative().safe().optional(),
-		editedTimestamp: z.number().int().nonnegative().safe().optional(),
+		createdTimestamp: z.int().nonnegative().optional(),
+		editedTimestamp: z.int().nonnegative().optional(),
 	})
 	.array()
 	.nonempty();
