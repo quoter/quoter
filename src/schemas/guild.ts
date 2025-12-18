@@ -1,21 +1,3 @@
-/*
-Copyright (C) 2020-2024 Nick Oates
-
-This file is part of Quoter.
-
-Quoter is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, version 3.
-
-Quoter is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with Quoter.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
 import { Document, Schema, model, Types } from "mongoose";
 
 interface QuoterQuote extends Types.Subdocument {
@@ -30,7 +12,7 @@ interface QuoterQuote extends Types.Subdocument {
 }
 
 interface QuoterGuild extends Document {
-	_id: string;
+	_id: Types.ObjectId;
 	maxGuildQuotes?: number;
 	maxQuoteLength?: number;
 	quotes: Types.DocumentArray<QuoterQuote>;
@@ -48,7 +30,7 @@ const QuoteSchema = new Schema<QuoterQuote>({
 });
 
 const GuildSchema = new Schema<QuoterGuild>({
-	_id: { type: String, required: true },
+	_id: { type: Types.ObjectId, required: true },
 	maxGuildQuotes: Number,
 	maxQuoteLength: Number,
 	quotes: [QuoteSchema],
