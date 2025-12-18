@@ -1,9 +1,9 @@
-import guildDelete from "./guildDelete";
-import interactionCreate from "./interactionCreate";
-import ready from "./ready";
+import { guildDelete } from "@/events/guild-delete";
+import { interactionCreate } from "@/events/interaction-create";
+import { ready } from "@/events/ready";
 
-export default {
-	interactionCreate,
+export const events = {
 	guildDelete,
+	interactionCreate,
 	ready,
 };

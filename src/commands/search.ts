@@ -6,9 +6,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import Fuse from "fuse.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import cleanString from "../util/cleanString";
-import fetchDbGuild from "../util/fetchDbGuild";
+import type { QuoterCommand } from "@/commands";
+import { cleanString, fetchDbGuild } from "@/lib/utils";
 
 const SearchCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

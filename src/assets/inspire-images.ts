@@ -1,6 +1,6 @@
 import type { CanvasTextAlign } from "@napi-rs/canvas";
 
-interface QuoteImage {
+interface InspireImage {
 	multiline: {
 		rect: {
 			xFactor: number;
@@ -22,7 +22,7 @@ interface QuoteImage {
 	};
 }
 
-const quoteImages: QuoteImage[] = [
+export const inspireImages: InspireImage[] = [
 	{
 		multiline: {
 			rect: {
@@ -129,5 +129,3 @@ const quoteImages: QuoteImage[] = [
 		},
 	},
 ];
-
-export default quoteImages;

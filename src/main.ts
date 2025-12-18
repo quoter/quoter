@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 import mongoose from "mongoose";
-import events from "./events";
+import { events } from "@/events";
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],

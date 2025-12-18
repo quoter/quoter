@@ -5,9 +5,9 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import { z } from "zod";
-import type { QuoterCommand } from "../QuoterCommand.js";
-import fetchDbGuild from "../util/fetchDbGuild.js";
-import { maxGuildQuotes } from "../util/quoteLimits.js";
+import type { QuoterCommand } from "@/commands";
+import { maxGuildQuotes } from "@/lib/quote-limits";
+import { fetchDbGuild } from "@/lib/utils";
 
 const ImportSchema = z
 	.object({

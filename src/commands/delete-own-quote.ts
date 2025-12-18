@@ -3,8 +3,8 @@ import {
 	InteractionContextType,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import fetchDbGuild from "../util/fetchDbGuild";
+import type { QuoterCommand } from "@/commands";
+import { fetchDbGuild } from "@/lib/utils";
 
 const DeleteOwnQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

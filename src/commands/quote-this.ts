@@ -6,11 +6,10 @@ import {
 	InteractionContextType,
 	type MessageContextMenuCommandInteraction,
 } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import { Quote } from "../schemas/guild";
-import cleanString from "../util/cleanString";
-import fetchDbGuild from "../util/fetchDbGuild";
-import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
+import type { QuoterCommand } from "@/commands";
+import { maxGuildQuotes, maxQuoteLength } from "@/lib/quote-limits";
+import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { Quote } from "@/schemas/guild";
 
 const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()

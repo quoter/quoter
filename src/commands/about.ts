@@ -7,9 +7,9 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import ms from "ms";
+import type { QuoterCommand } from "@/commands";
+import { Guild } from "@/schemas/guild";
 import quoterPackage from "../../package.json";
-import type { QuoterCommand } from "../QuoterCommand";
-import { Guild } from "../schemas/guild";
 
 let totalQuotes = "0";
 let totalQuotesLastUpdated = 0;

@@ -13,10 +13,9 @@ import {
 	type InteractionUpdateOptions,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import type { QuoterQuote } from "../schemas/guild";
-import cleanString from "../util/cleanString";
-import fetchDbGuild from "../util/fetchDbGuild";
+import type { QuoterCommand } from "@/commands";
+import { cleanString, fetchDbGuild } from "@/lib/utils";
+import type { QuoterQuote } from "@/schemas/guild";
 
 function render(
 	page: number,

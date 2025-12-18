@@ -1,11 +1,11 @@
 import { Collection, type Interaction } from "discord.js";
-import commands from "../commands";
+import { commands } from "@/commands";
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
 const admins = process.env.DISCORD_ADMIN_ID?.split(" ");
 
-export default async function interactionCreate(interaction: Interaction) {
+export async function interactionCreate(interaction: Interaction) {
 	if (!interaction.isCommand() && !interaction.isContextMenuCommand()) return;
 
 	const { commandName, user } = interaction;

@@ -1,3 +1,9 @@
+import type {
+	CommandInteraction,
+	ContextMenuCommandBuilder,
+	SlashCommandBuilder,
+	SlashCommandOptionsOnlyBuilder,
+} from "discord.js";
 import EightBallCommand from "./8-ball";
 import AboutCommand from "./about";
 import BugsCommand from "./bugs";
@@ -15,7 +21,16 @@ import QuoteThisCommand from "./quote-this";
 import SearchCommand from "./search";
 import WhoQuotedCommand from "./who-quoted";
 
-const commands = {
+export type QuoterCommand = {
+	data:
+		| SlashCommandBuilder
+		| ContextMenuCommandBuilder
+		| SlashCommandOptionsOnlyBuilder;
+	cooldown?: number;
+	execute(interaction: CommandInteraction): Promise<void>;
+};
+
+export const commands = {
 	[EightBallCommand.data.name]: EightBallCommand,
 	[AboutCommand.data.name]: AboutCommand,
 	[BugsCommand.data.name]: BugsCommand,
@@ -33,5 +48,3 @@ const commands = {
 	[SearchCommand.data.name]: SearchCommand,
 	[WhoQuotedCommand.data.name]: WhoQuotedCommand,
 };
-
-export default commands;

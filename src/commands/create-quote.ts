@@ -5,13 +5,15 @@ import {
 	InteractionContextType,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import { Quote } from "../schemas/guild";
-import cleanString from "../util/cleanString";
-import fetchDbGuild from "../util/fetchDbGuild";
-import mentionParse from "../util/mentionParse";
-import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
-import trimQuotes from "../util/trimQuotes";
+import type { QuoterCommand } from "@/commands";
+import { maxGuildQuotes, maxQuoteLength } from "@/lib/quote-limits";
+import {
+	cleanString,
+	fetchDbGuild,
+	mentionParse,
+	trimQuotes,
+} from "@/lib/utils";
+import { Quote } from "@/schemas/guild";
 
 const CreateQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

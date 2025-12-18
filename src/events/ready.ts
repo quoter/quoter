@@ -1,7 +1,7 @@
 import { ActivityType, type Client } from "discord.js";
-import { Guild } from "../schemas/guild";
+import { Guild } from "@/schemas/guild";
 
-export default async function ready(client: Client) {
+export async function ready(client: Client) {
 	if (!client.user) throw new Error("Client user is not available");
 	console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 

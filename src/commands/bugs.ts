@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
+import type { QuoterCommand } from "@/commands";
 
 const BugsCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

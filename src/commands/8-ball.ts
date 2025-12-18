@@ -5,9 +5,8 @@ import {
 	InteractionContextType,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import cleanString from "../util/cleanString";
-import fetchDbGuild from "../util/fetchDbGuild";
+import type { QuoterCommand } from "@/commands";
+import { cleanString, fetchDbGuild } from "@/lib/utils";
 
 const EightBallCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()

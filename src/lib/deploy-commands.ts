@@ -3,7 +3,7 @@ import {
 	type RESTPostAPIApplicationCommandsJSONBody,
 	Routes,
 } from "discord.js";
-import commands from "../commands";
+import { commands } from "@/commands";
 
 if (process.env.DISCORD_TOKEN === undefined) {
 	throw new Error("DISCORD_TOKEN environment variable not set");

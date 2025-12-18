@@ -6,10 +6,10 @@ import {
 	InteractionContextType,
 	SlashCommandBuilder,
 } from "discord.js";
-import quoteImages from "../assets/quoteImages";
-import type { QuoterCommand } from "../QuoterCommand";
-import type { QuoterQuote } from "../schemas/guild";
-import fetchDbGuild from "../util/fetchDbGuild";
+import { inspireImages } from "@/assets/inspire-images";
+import type { QuoterCommand } from "@/commands";
+import { fetchDbGuild } from "@/lib/utils";
+import type { QuoterQuote } from "@/schemas/guild";
 
 GlobalFonts.registerFromPath(
 	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
@@ -72,12 +72,12 @@ const InspireCommand: QuoterCommand = {
 			return;
 		}
 
-		const index = Math.floor(Math.random() * quoteImages.length);
+		const index = Math.floor(Math.random() * inspireImages.length);
 
 		const background = await loadImage(
 			`${import.meta.dir}/../assets/${index}.jpg`,
 		);
-		const imageData = quoteImages[index];
+		const imageData = inspireImages[index];
 
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext("2d");

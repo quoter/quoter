@@ -6,12 +6,14 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { QuoterCommand } from "../QuoterCommand";
-import cleanString from "../util/cleanString";
-import fetchDbGuild from "../util/fetchDbGuild";
-import mentionParse from "../util/mentionParse";
-import { maxQuoteLength } from "../util/quoteLimits";
-import trimQuotes from "../util/trimQuotes";
+import type { QuoterCommand } from "@/commands";
+import { maxQuoteLength } from "@/lib/quote-limits";
+import {
+	cleanString,
+	fetchDbGuild,
+	mentionParse,
+	trimQuotes,
+} from "@/lib/utils";
 
 const EditQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
