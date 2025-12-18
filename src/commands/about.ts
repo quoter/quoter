@@ -1,14 +1,14 @@
 import {
-	EmbedBuilder,
-	SlashCommandBuilder,
-	Colors,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	Colors,
+	EmbedBuilder,
+	SlashCommandBuilder,
 } from "discord.js";
-import quoterPackage from "../../package.json";
 import ms from "ms";
-import { QuoterCommand } from "../QuoterCommand";
+import quoterPackage from "../../package.json";
+import type { QuoterCommand } from "../QuoterCommand";
 import { Guild } from "../schemas/guild";
 
 let totalQuotes = "0";
@@ -20,8 +20,7 @@ const AboutCommand: QuoterCommand = {
 		.setDescription("View information about Quoter"),
 	cooldown: 1,
 	async execute(interaction) {
-		const serverCount =
-			interaction.client.guilds.cache.size.toLocaleString();
+		const serverCount = interaction.client.guilds.cache.size.toLocaleString();
 
 		const userCount = interaction.client.guilds.cache
 			.reduce((acc, g) => acc + g.memberCount, 0)
@@ -32,7 +31,7 @@ const AboutCommand: QuoterCommand = {
 		// Ping will be -1 if it hasn't been measured yet
 		const ping =
 			interaction.client.ws.ping >= 0
-				? interaction.client.ws.ping + "ms"
+				? `${interaction.client.ws.ping}ms`
 				: "Not yet measured";
 
 		// Cache the total number of quotes in the database for 10 minutes
@@ -57,27 +56,27 @@ const AboutCommand: QuoterCommand = {
 					.addFields([
 						{
 							name: "🌐 Servers",
-							value: "```" + serverCount + "```",
+							value: `\`\`\`${serverCount}\`\`\``,
 							inline: true,
 						},
 						{
 							name: "👤 Total Users",
-							value: "```" + userCount + "```",
+							value: `\`\`\`${userCount}\`\`\``,
 							inline: true,
 						},
 						{
 							name: "💬 Total Quotes",
-							value: "```" + totalQuotes + "```",
+							value: `\`\`\`${totalQuotes}\`\`\``,
 							inline: true,
 						},
 						{
 							name: "⏱️ Ping",
-							value: "```" + ping + "```",
+							value: `\`\`\`${ping}\`\`\``,
 							inline: true,
 						},
 						{
 							name: "⏳ Uptime",
-							value: "```" + uptimeDuration + "```",
+							value: `\`\`\`${uptimeDuration}\`\`\``,
 							inline: true,
 						},
 					])

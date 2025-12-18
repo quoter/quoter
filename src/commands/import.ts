@@ -1,11 +1,11 @@
 import {
-	SlashCommandBuilder,
-	ChatInputCommandInteraction,
-	PermissionFlagsBits,
+	type ChatInputCommandInteraction,
 	InteractionContextType,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
-import { QuoterCommand } from "../QuoterCommand.js";
 import { z } from "zod";
+import type { QuoterCommand } from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild.js";
 import { maxGuildQuotes } from "../util/quoteLimits.js";
 

@@ -1,4 +1,4 @@
-import {
+import type {
 	CommandInteraction,
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
@@ -6,7 +6,10 @@ import {
 } from "discord.js";
 
 export type QuoterCommand = {
-	data: SlashCommandBuilder | ContextMenuCommandBuilder | SlashCommandOptionsOnlyBuilder;
+	data:
+		| SlashCommandBuilder
+		| ContextMenuCommandBuilder
+		| SlashCommandOptionsOnlyBuilder;
 	cooldown?: number;
 	execute(interaction: CommandInteraction): Promise<void>;
-}
+};

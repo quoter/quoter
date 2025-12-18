@@ -1,17 +1,17 @@
 import {
-	EmbedBuilder,
-	SlashCommandBuilder,
+	type ChatInputCommandInteraction,
 	Colors,
-	PermissionFlagsBits,
-	ChatInputCommandInteraction,
+	EmbedBuilder,
 	InteractionContextType,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
-import mentionParse from "../util/mentionParse";
-import trimQuotes from "../util/trimQuotes";
+import type { QuoterCommand } from "../QuoterCommand";
 import cleanString from "../util/cleanString";
-import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
+import mentionParse from "../util/mentionParse";
 import { maxQuoteLength } from "../util/quoteLimits";
+import trimQuotes from "../util/trimQuotes";
 
 const EditQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -30,9 +30,7 @@ const EditQuoteCommand: QuoterCommand = {
 				.setRequired(true),
 		)
 		.addStringOption((o) =>
-			o
-				.setName("author")
-				.setDescription("The updated author of the quote"),
+			o.setName("author").setDescription("The updated author of the quote"),
 		)
 		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),

@@ -1,5 +1,9 @@
-import { QuoterCommand } from "../QuoterCommand";
-import { ChatInputCommandInteraction, SlashCommandBuilder, InteractionContextType } from "discord.js";
+import {
+	type ChatInputCommandInteraction,
+	InteractionContextType,
+	SlashCommandBuilder,
+} from "discord.js";
+import type { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const DeleteOwnQuoteCommand: QuoterCommand = {

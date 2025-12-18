@@ -1,4 +1,4 @@
-import { Collection, Interaction } from "discord.js";
+import { Collection, type Interaction } from "discord.js";
 import commands from "../commands";
 
 const cooldowns = new Collection<string, Collection<string, number>>();
@@ -13,7 +13,7 @@ export default async function interactionCreate(interaction: Interaction) {
 	const command = commands[commandName];
 	if (!command) return;
 
-	const isAdmin = admins !== undefined && admins.includes(user.id);
+	const isAdmin = admins?.includes(user.id);
 
 	if (command.cooldown && !isAdmin) {
 		if (!cooldowns.has(commandName)) {
@@ -22,14 +22,15 @@ export default async function interactionCreate(interaction: Interaction) {
 
 		const now = Date.now();
 		const timestamps = cooldowns.get(commandName);
+		if (!timestamps) throw new Error("Timestamps missing");
 		const cooldownAmount = command.cooldown * 1000;
 
-		const lastUsedAt = timestamps!.get(user.id);
+		const lastUsedAt = timestamps.get(user.id);
 		if (lastUsedAt) {
-			const expirationTime = lastUsedAt + cooldownAmount;
+			const expiresAt = lastUsedAt + cooldownAmount;
 
-			if (now < expirationTime) {
-				const timeLeft = ((expirationTime - now) / 1000).toFixed(0);
+			if (now < expiresAt) {
+				const timeLeft = ((expiresAt - now) / 1000).toFixed(0);
 				interaction.reply({
 					content: `🛑 **|** That command is on cooldown! Wait ${timeLeft} second(s) before using it again.`,
 					ephemeral: true,
@@ -38,8 +39,8 @@ export default async function interactionCreate(interaction: Interaction) {
 			}
 		}
 
-		timestamps!.set(user.id, now);
-		setTimeout(() => timestamps!.delete(user.id), cooldownAmount);
+		timestamps.set(user.id, now);
+		setTimeout(() => timestamps.delete(user.id), cooldownAmount);
 	}
 
 	try {

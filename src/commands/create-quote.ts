@@ -1,17 +1,17 @@
 import {
-	EmbedBuilder,
-	SlashCommandBuilder,
+	type ChatInputCommandInteraction,
 	Colors,
-	ChatInputCommandInteraction,
+	EmbedBuilder,
 	InteractionContextType,
+	SlashCommandBuilder,
 } from "discord.js";
-import mentionParse from "../util/mentionParse";
-import trimQuotes from "../util/trimQuotes";
-import cleanString from "../util/cleanString";
-import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
-import { QuoterCommand } from "../QuoterCommand";
-import fetchDbGuild from "../util/fetchDbGuild";
+import type { QuoterCommand } from "../QuoterCommand";
 import { Quote } from "../schemas/guild";
+import cleanString from "../util/cleanString";
+import fetchDbGuild from "../util/fetchDbGuild";
+import mentionParse from "../util/mentionParse";
+import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
+import trimQuotes from "../util/trimQuotes";
 
 const CreateQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -75,7 +75,7 @@ const CreateQuoteCommand: QuoterCommand = {
 
 		if (author) {
 			embed.setDescription(
-				embed.data.description + ` - ${cleanString(author)}`,
+				`${embed.data.description} - ${cleanString(author)}`,
 			);
 		}
 

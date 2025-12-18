@@ -1,10 +1,10 @@
 import {
 	AttachmentBuilder,
+	InteractionContextType,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
-	InteractionContextType,
 } from "discord.js";
-import { QuoterCommand } from "../QuoterCommand.js";
+import type { QuoterCommand } from "../QuoterCommand.js";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const ExportCommand: QuoterCommand = {

@@ -1,5 +1,5 @@
+import { ActivityType, type Client } from "discord.js";
 import { Guild } from "../schemas/guild";
-import { ActivityType, Client } from "discord.js";
 
 export default async function ready(client: Client) {
 	if (!client.user) throw new Error("Client user is not available");

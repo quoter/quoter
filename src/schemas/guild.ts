@@ -1,4 +1,4 @@
-import { Document, Schema, model, Types } from "mongoose";
+import { type Document, model, Schema, Types } from "mongoose";
 
 interface QuoterQuote extends Types.Subdocument {
 	text: string;
@@ -39,4 +39,4 @@ const GuildSchema = new Schema<QuoterGuild>({
 const Guild = model<QuoterGuild>("Guild", GuildSchema);
 const Quote = model<QuoterQuote>("Quote", QuoteSchema);
 
-export { Guild, Quote, QuoterGuild, QuoterQuote };
+export { Guild, Quote, type QuoterGuild, type QuoterQuote };

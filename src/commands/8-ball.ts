@@ -1,12 +1,12 @@
 import {
-	EmbedBuilder,
-	SlashCommandBuilder,
+	type ChatInputCommandInteraction,
 	Colors,
-	ChatInputCommandInteraction,
+	EmbedBuilder,
 	InteractionContextType,
+	SlashCommandBuilder,
 } from "discord.js";
+import type { QuoterCommand } from "../QuoterCommand";
 import cleanString from "../util/cleanString";
-import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const EightBallCommand: QuoterCommand = {
@@ -61,9 +61,7 @@ const EightBallCommand: QuoterCommand = {
 		}
 
 		if (quote.createdTimestamp) {
-			quoteEmbed.setTimestamp(
-				quote.editedTimestamp || quote.createdTimestamp,
-			);
+			quoteEmbed.setTimestamp(quote.editedTimestamp || quote.createdTimestamp);
 		}
 
 		if (quote.author) quoteEmbed.setAuthor({ name: quote.author });

@@ -1,12 +1,12 @@
-import { QuoterCommand } from "../QuoterCommand";
 import {
-	EmbedBuilder,
-	SlashCommandBuilder,
+	type ChatInputCommandInteraction,
 	Colors,
-	ChatInputCommandInteraction,
+	EmbedBuilder,
 	InteractionContextType,
+	SlashCommandBuilder,
 } from "discord.js";
 import Fuse from "fuse.js";
+import type { QuoterCommand } from "../QuoterCommand";
 import cleanString from "../util/cleanString";
 import fetchDbGuild from "../util/fetchDbGuild";
 

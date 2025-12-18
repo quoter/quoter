@@ -1,7 +1,7 @@
 import {
 	REST,
+	type RESTPostAPIApplicationCommandsJSONBody,
 	Routes,
-	RESTPostAPIApplicationCommandsJSONBody,
 } from "discord.js";
 import commands from "../commands";
 
@@ -40,19 +40,13 @@ try {
 		);
 
 		await rest.put(
-			Routes.applicationGuildCommands(
-				clientId,
-				process.env.DISCORD_GUILD_ID,
-			),
+			Routes.applicationGuildCommands(clientId, process.env.DISCORD_GUILD_ID),
 			{
 				body: commandsToDeploy,
 			},
 		);
 	} else {
-		console.log(
-			isUndeploy ? "Undeploying" : "Deploying",
-			"commands globally",
-		);
+		console.log(isUndeploy ? "Undeploying" : "Deploying", "commands globally");
 
 		await rest.put(Routes.applicationCommands(clientId), {
 			body: commandsToDeploy,

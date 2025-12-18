@@ -1,12 +1,15 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
+import path from "node:path";
+import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
 import drawMultilineText from "canvas-multiline-text";
+import {
+	type ChatInputCommandInteraction,
+	InteractionContextType,
+	SlashCommandBuilder,
+} from "discord.js";
 import quoteImages from "../assets/quoteImages";
-import { QuoterCommand } from "../QuoterCommand";
+import type { QuoterCommand } from "../QuoterCommand";
+import type { QuoterQuote } from "../schemas/guild";
 import fetchDbGuild from "../util/fetchDbGuild";
-import { QuoterQuote } from "../schemas/guild";
-import path from "path";
-import { InteractionContextType } from "discord.js";
 
 GlobalFonts.registerFromPath(
 	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
@@ -47,8 +50,7 @@ const InspireCommand: QuoterCommand = {
 
 		if (author) {
 			quotes = quotes.filter(
-				(q) =>
-					q.author && q.author.toLowerCase() === author.toLowerCase(),
+				(q) => q.author && q.author.toLowerCase() === author.toLowerCase(),
 			);
 		}
 

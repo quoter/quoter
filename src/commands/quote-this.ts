@@ -1,16 +1,16 @@
 import {
-	EmbedBuilder,
-	ContextMenuCommandBuilder,
-	Colors,
 	ApplicationCommandType,
-	MessageContextMenuCommandInteraction,
+	Colors,
+	ContextMenuCommandBuilder,
+	EmbedBuilder,
 	InteractionContextType,
+	type MessageContextMenuCommandInteraction,
 } from "discord.js";
+import type { QuoterCommand } from "../QuoterCommand";
+import { Quote } from "../schemas/guild";
 import cleanString from "../util/cleanString";
-import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 import { maxGuildQuotes, maxQuoteLength } from "../util/quoteLimits";
-import { Quote } from "../schemas/guild";
 
 const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()
@@ -69,9 +69,7 @@ const QuoteThisCommand: QuoterCommand = {
 					.setTitle("✅ Created a new quote")
 					.setColor(Colors.Green)
 					.setDescription(
-						`"${cleanString(text, false)}" - ${cleanString(
-							author,
-						)}`,
+						`"${cleanString(text, false)}" - ${cleanString(author)}`,
 					)
 					.setFooter({ text: `Quote #${guild.quotes.length}` }),
 			],

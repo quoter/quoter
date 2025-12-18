@@ -1,22 +1,22 @@
 import {
-	EmbedBuilder,
 	ActionRowBuilder,
 	ButtonBuilder,
-	SlashCommandBuilder,
-	Colors,
+	type ButtonComponent,
+	type ButtonInteraction,
 	ButtonStyle,
+	type ChatInputCommandInteraction,
+	Colors,
 	ComponentType,
-	ChatInputCommandInteraction,
-	ButtonInteraction,
-	InteractionUpdateOptions,
-	InteractionReplyOptions,
-	ButtonComponent,
+	EmbedBuilder,
 	InteractionContextType,
+	type InteractionReplyOptions,
+	type InteractionUpdateOptions,
+	SlashCommandBuilder,
 } from "discord.js";
+import type { QuoterCommand } from "../QuoterCommand";
+import type { QuoterQuote } from "../schemas/guild";
 import cleanString from "../util/cleanString";
-import { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
-import { QuoterQuote } from "../schemas/guild";
 
 function render(
 	page: number,
@@ -81,9 +81,7 @@ const ListQuotesCommand: QuoterCommand = {
 		.setName("list-quotes")
 		.setDescription("See all quotes in this server's quote book")
 		.addIntegerOption((o) =>
-			o
-				.setName("page")
-				.setDescription("The page of the quote book to view"),
+			o.setName("page").setDescription("The page of the quote book to view"),
 		)
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 3,

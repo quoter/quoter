@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import type { CommandInteraction } from "discord.js";
 import { Guild } from "../schemas/guild";
 
 export default async function fetchDbGuild(interaction: CommandInteraction) {

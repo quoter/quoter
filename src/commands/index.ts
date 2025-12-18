@@ -10,8 +10,8 @@ import ExportCommand from "./export";
 import ImportCommand from "./import";
 import InspireCommand from "./inspire";
 import ListQuotesCommand from "./list-quotes";
-import QuoteThisCommand from "./quote-this";
 import QuoteCommand from "./quote";
+import QuoteThisCommand from "./quote-this";
 import SearchCommand from "./search";
 import WhoQuotedCommand from "./who-quoted";
 

@@ -1,4 +1,4 @@
-import { Guild as DiscordGuild } from "discord.js";
+import type { Guild as DiscordGuild } from "discord.js";
 import { Guild } from "../schemas/guild";
 
 export default async function guildDelete(guild: DiscordGuild) {

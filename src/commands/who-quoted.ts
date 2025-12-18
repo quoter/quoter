@@ -1,11 +1,11 @@
 import {
-	EmbedBuilder,
-	SlashCommandBuilder,
+	type ChatInputCommandInteraction,
 	Colors,
+	EmbedBuilder,
 	InteractionContextType,
-	ChatInputCommandInteraction,
+	SlashCommandBuilder,
 } from "discord.js";
-import { QuoterCommand } from "../QuoterCommand";
+import type { QuoterCommand } from "../QuoterCommand";
 import fetchDbGuild from "../util/fetchDbGuild";
 
 const WhoQuotedCommand: QuoterCommand = {
@@ -47,9 +47,7 @@ const WhoQuotedCommand: QuoterCommand = {
 			embeds: [
 				new EmbedBuilder()
 					.setColor(Colors.Green)
-					.setDescription(
-						`Quote #${id} was created by <@${quote.quoterID}>.`,
-					),
+					.setDescription(`Quote #${id} was created by <@${quote.quoterID}>.`),
 			],
 		});
 	},
