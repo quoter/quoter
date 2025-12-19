@@ -12,7 +12,7 @@ interface QuoterQuote extends Types.Subdocument {
 }
 
 interface QuoterGuild extends Document {
-	_id: Types.ObjectId;
+	_id: string;
 	maxGuildQuotes?: number;
 	maxQuoteLength?: number;
 	quotes: Types.DocumentArray<QuoterQuote>;
@@ -30,7 +30,7 @@ const QuoteSchema = new Schema<QuoterQuote>({
 });
 
 const GuildSchema = new Schema<QuoterGuild>({
-	_id: { type: Types.ObjectId, required: true },
+	_id: { type: String, required: true },
 	maxGuildQuotes: Number,
 	maxQuoteLength: Number,
 	quotes: [QuoteSchema],
