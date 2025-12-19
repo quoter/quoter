@@ -1,4 +1,4 @@
-import type { Client, CommandInteraction } from "discord.js";
+import type { BaseInteraction, Client } from "discord.js";
 import { Guild } from "@/schemas/guild";
 
 /**
@@ -20,7 +20,7 @@ export function cleanString(
 	return string;
 }
 
-export async function fetchDbGuild(interaction: CommandInteraction) {
+export async function fetchDbGuild(interaction: BaseInteraction) {
 	if (!interaction.guild) {
 		throw new Error("Interaction is not in a guild.");
 	}

@@ -4,6 +4,7 @@ import {
 	ContextMenuCommandBuilder,
 	EmbedBuilder,
 	InteractionContextType,
+	MessageFlags,
 	type MessageContextMenuCommandInteraction,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
@@ -24,7 +25,7 @@ const QuoteThisCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -36,7 +37,7 @@ const QuoteThisCommand: QuoterCommand = {
 		if (!text) {
 			await interaction.reply({
 				content: `❌ **|** [That message](${message.url}) doesn't contain text - embeds are not supported!`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -44,7 +45,7 @@ const QuoteThisCommand: QuoterCommand = {
 		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
 			await interaction.reply({
 				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

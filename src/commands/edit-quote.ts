@@ -3,6 +3,7 @@ import {
 	Colors,
 	EmbedBuilder,
 	InteractionContextType,
+	MessageFlags,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -49,7 +50,7 @@ const EditQuoteCommand: QuoterCommand = {
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -66,7 +67,7 @@ const EditQuoteCommand: QuoterCommand = {
 				content: `❌ **|** Quotes cannot be longer than ${
 					guild.maxQuoteLength || maxQuoteLength
 				} characters.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

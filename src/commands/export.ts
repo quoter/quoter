@@ -1,6 +1,7 @@
 import {
 	AttachmentBuilder,
 	InteractionContextType,
+	MessageFlags,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -30,7 +31,7 @@ const ExportCommand: QuoterCommand = {
 		await interaction.reply({
 			content: "📥 **|** Here are this server's quotes for download.",
 			files: [attachment],
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };

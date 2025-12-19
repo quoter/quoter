@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder } from "discord.js";
 import type { QuoterCommand } from "@/commands";
 
 const BugsCommand: QuoterCommand = {
@@ -11,7 +11,7 @@ const BugsCommand: QuoterCommand = {
 		await interaction.reply({
 			content:
 				"🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](<https://github.com/n1ckoates/quoter/issues>) page.",
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };

@@ -3,6 +3,7 @@ import {
 	Colors,
 	EmbedBuilder,
 	InteractionContextType,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
@@ -38,7 +39,7 @@ const EightBallCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

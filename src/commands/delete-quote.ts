@@ -1,6 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	InteractionContextType,
+	MessageFlags,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -30,7 +31,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

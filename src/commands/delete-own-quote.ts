@@ -1,6 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	InteractionContextType,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
@@ -28,7 +29,7 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -37,7 +38,7 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** You can only delete quotes that you created. If you have permission to use `/delete-quote`, you can use that to delete any quote.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

@@ -3,6 +3,7 @@ import {
 	Colors,
 	EmbedBuilder,
 	InteractionContextType,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import Fuse from "fuse.js";
@@ -28,7 +29,7 @@ const SearchCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -40,7 +41,7 @@ const SearchCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** That search term is too short! It should be at least 3 characters long.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -55,7 +56,7 @@ const SearchCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** There weren't any quotes that matched that search term.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

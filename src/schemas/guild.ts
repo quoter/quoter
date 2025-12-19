@@ -1,4 +1,5 @@
-import { type Document, model, Schema, Types } from "mongoose";
+import type { Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
 
 interface QuoterQuote extends Types.Subdocument {
 	text: string;
@@ -11,7 +12,7 @@ interface QuoterQuote extends Types.Subdocument {
 	editedTimestamp?: number;
 }
 
-interface QuoterGuild extends Document {
+interface QuoterGuild extends Document<string> {
 	_id: string;
 	maxGuildQuotes?: number;
 	maxQuoteLength?: number;

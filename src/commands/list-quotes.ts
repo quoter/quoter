@@ -1,27 +1,79 @@
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
-	type ButtonComponent,
 	type ButtonInteraction,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	Colors,
-	ComponentType,
 	EmbedBuilder,
 	InteractionContextType,
 	type InteractionReplyOptions,
 	type InteractionUpdateOptions,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
 import { cleanString, fetchDbGuild } from "@/lib/utils";
-import type { QuoterQuote } from "@/schemas/guild";
+import { Guild } from "@/schemas/guild";
 
-function render(
-	page: number,
-	maxPage: number,
-	quotes: QuoterQuote[],
-): InteractionReplyOptions & InteractionUpdateOptions {
+export async function handleListQuoteButtonPress(
+	interaction: ButtonInteraction,
+) {
+	const match = interaction.customId.match(/listquotes_u(\d+)p(\d+)/);
+	if (!match) return;
+	const userId = match[1];
+	const page = Number.parseInt(match[2], 10);
+
+	if (interaction.user.id !== userId) {
+		await interaction.reply({
+			content: "❌ **|** These buttons are not for you!",
+			flags: MessageFlags.Ephemeral,
+		});
+		return;
+	}
+
+	if (!interaction.guild) {
+		await interaction.reply({
+			content: "❌ **|** This command can only be used in a server.",
+			flags: MessageFlags.Ephemeral,
+		});
+		return;
+	}
+
+	const quoteList = await renderQuoteList({
+		page,
+		userId,
+		guildId: interaction.guild.id,
+	});
+	await interaction.update(quoteList);
+}
+
+export async function renderQuoteList({
+	page,
+	guildId,
+	userId,
+}: {
+	page: number;
+	guildId: string;
+	userId: string;
+}): Promise<InteractionReplyOptions & InteractionUpdateOptions> {
+	const { quotes } = await Guild.findOneAndUpdate(
+		{ _id: guildId },
+		{},
+		{ upsert: true, new: true },
+	);
+
+	if (quotes.length === 0) {
+		return {
+			content:
+				"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
+			embeds: [],
+			components: [],
+		};
+	}
+	const maxPage = Math.ceil(quotes.length / 10);
+	if (page > maxPage) page = maxPage;
+
 	const start = (page - 1) * 10;
 	const end = start + 10;
 	const slicedQuotes = quotes.slice(start, end);
@@ -60,18 +112,17 @@ ${quoteList}`),
 		components: [
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder()
-					.setCustomId("prev")
+					.setCustomId(`listquotes_u${userId}p${page - 1}`)
 					.setLabel("⬅️ Prev")
 					.setStyle(ButtonStyle.Primary)
 					.setDisabled(page === 1),
 				new ButtonBuilder()
-					.setCustomId("next")
+					.setCustomId(`listquotes_u${userId}p${page + 1}`)
 					.setLabel("Next ➡️")
 					.setStyle(ButtonStyle.Primary)
 					.setDisabled(page === maxPage),
 			),
 		],
-		fetchReply: true,
 	};
 }
 
@@ -87,61 +138,40 @@ const ListQuotesCommand: QuoterCommand = {
 	async execute(interaction: ChatInputCommandInteraction) {
 		const { quotes } = await fetchDbGuild(interaction);
 
+		if (!interaction.guild) {
+			await interaction.reply({
+				content: "❌ **|** This command can only be used in a server.",
+				flags: MessageFlags.Ephemeral,
+			});
+			return;
+		}
+
 		if (!quotes.length) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 
-		let page = interaction.options.getInteger("page") || 1;
+		const page = interaction.options.getInteger("page") || 1;
 		const maxPage = Math.ceil(quotes.length / 10);
 		if (page > maxPage) {
 			await interaction.reply({
 				content: `❌ **|** That page is too high! The maximum page is **${maxPage}**.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 
-		const reply = await interaction.reply(render(page, maxPage, quotes));
+		const quoteList = await renderQuoteList({
+			page,
+			guildId: interaction.guild.id,
+			userId: interaction.user.id,
+		});
 
-		function filter(press: ButtonInteraction) {
-			if (press.user.id === interaction.user.id) {
-				return true;
-			} else {
-				press.reply({
-					content:
-						"❌ **|** You clicked on someone else's button. Get your own with `/list-quotes`!",
-					ephemeral: true,
-				});
-				return false;
-			}
-		}
-
-		const awaitPress = async () => {
-			try {
-				const press = await reply.awaitMessageComponent({
-					filter,
-					componentType: ComponentType.Button,
-					time: 35000,
-				});
-
-				const id = (press.component as ButtonComponent).customId;
-				if (id === "prev") {
-					await press.update(render(--page, maxPage, quotes));
-					await awaitPress();
-				} else {
-					await press.update(render(++page, maxPage, quotes));
-					await awaitPress();
-				}
-			} catch {
-				await reply.edit({ components: [] });
-			}
-		};
-		await awaitPress();
+		await interaction.reply(quoteList);
 	},
 };
 

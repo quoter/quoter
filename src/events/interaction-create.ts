@@ -1,11 +1,17 @@
-import { Collection, type Interaction } from "discord.js";
+import { Collection, MessageFlags, type Interaction } from "discord.js";
 import { commands } from "@/commands";
+import { handleListQuoteButtonPress } from "@/commands/list-quotes";
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
 const admins = process.env.DISCORD_ADMIN_ID?.split(" ");
 
 export async function interactionCreate(interaction: Interaction) {
+	if (interaction.isButton()) {
+		await handleListQuoteButtonPress(interaction);
+		return;
+	}
+
 	if (!interaction.isCommand() && !interaction.isContextMenuCommand()) return;
 
 	const { commandName, user } = interaction;
@@ -33,7 +39,7 @@ export async function interactionCreate(interaction: Interaction) {
 				const timeLeft = ((expiresAt - now) / 1000).toFixed(0);
 				interaction.reply({
 					content: `🛑 **|** That command is on cooldown! Wait ${timeLeft} second(s) before using it again.`,
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 				return;
 			}
@@ -58,7 +64,7 @@ export async function interactionCreate(interaction: Interaction) {
 			interaction.reply({
 				content:
 					"❌ **|** Something went wrong while executing that command. Report this with `/bugs`!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 	}

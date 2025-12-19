@@ -1,6 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	InteractionContextType,
+	MessageFlags,
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -43,7 +44,7 @@ const ImportCommand: QuoterCommand = {
 		if (!attachment.contentType?.startsWith("application/json")) {
 			interaction.reply({
 				content: "❌ **|** The file must be a JSON file.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -52,7 +53,7 @@ const ImportCommand: QuoterCommand = {
 			interaction.reply({
 				content:
 					"❌ **|** The file cannot be larger than 2 MB. Please split it into multiple files.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -65,7 +66,7 @@ const ImportCommand: QuoterCommand = {
 			interaction.reply({
 				content:
 					"❌ **|** That file is not a valid quote book. Visit [quoter.cc/format](https://quoter.cc/format) for more information.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -78,7 +79,7 @@ const ImportCommand: QuoterCommand = {
 		if (parsed.data.length > remaining) {
 			interaction.reply({
 				content: `❌ **|** That file contains too many quotes. You can only have ${maxQuotes} quotes in this server.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -88,7 +89,7 @@ const ImportCommand: QuoterCommand = {
 
 		interaction.reply({
 			content: `✅ **|** Imported **${parsed.data.length}** quotes.`,
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };

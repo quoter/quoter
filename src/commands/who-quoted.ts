@@ -3,6 +3,7 @@ import {
 	Colors,
 	EmbedBuilder,
 	InteractionContextType,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
@@ -27,7 +28,7 @@ const WhoQuotedCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -38,7 +39,7 @@ const WhoQuotedCommand: QuoterCommand = {
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}

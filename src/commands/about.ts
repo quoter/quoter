@@ -4,6 +4,7 @@ import {
 	ButtonStyle,
 	Colors,
 	EmbedBuilder,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import ms from "ms";
@@ -120,7 +121,7 @@ const AboutCommand: QuoterCommand = {
 						.setURL("https://github.com/quoter/quoter"),
 				),
 			],
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	},
 };

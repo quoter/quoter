@@ -3,6 +3,7 @@ import {
 	Colors,
 	EmbedBuilder,
 	InteractionContextType,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
@@ -37,7 +38,7 @@ const CreateQuoteCommand: QuoterCommand = {
 			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -54,7 +55,7 @@ const CreateQuoteCommand: QuoterCommand = {
 				content: `❌ **|** Quotes cannot be longer than ${
 					guild.maxQuoteLength || maxQuoteLength
 				} characters.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
