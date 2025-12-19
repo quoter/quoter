@@ -18,15 +18,15 @@ if (process.env.DISCORD_TOKEN === undefined) {
 client
 	.on(Events.ClientReady, events.ready)
 	.on(Events.GuildDelete, events.guildDelete)
-	.on(Events.InteractionCreate, events.interactionCreate)
-	.login(process.env.DISCORD_TOKEN);
+	.on(Events.InteractionCreate, events.interactionCreate);
 
 if (process.env.MONGO_URI === undefined) {
 	throw new Error("MONGO_URI environment variable not set");
 }
+
 mongoose
 	.connect(process.env.MONGO_URI)
-	.then(() => console.log("Connected to mongoDB"));
+	.then(() => client.login(process.env.DISCORD_TOKEN));
 
 process.on("SIGINT", async () => {
 	await mongoose.connection.close();
