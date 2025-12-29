@@ -1,25 +1,7 @@
-import type { Document, Types } from "mongoose";
+import type { InferSchemaType } from "mongoose";
 import { Schema, model } from "mongoose";
 
-interface QuoterQuote extends Types.Subdocument {
-	text: string;
-	author?: string;
-	quoterID?: string;
-	editorID?: string;
-	ogMessageID?: string;
-	ogChannelID?: string;
-	createdTimestamp?: number;
-	editedTimestamp?: number;
-}
-
-interface QuoterGuild extends Document<string> {
-	_id: string;
-	maxGuildQuotes?: number;
-	maxQuoteLength?: number;
-	quotes: Types.DocumentArray<QuoterQuote>;
-}
-
-const QuoteSchema = new Schema<QuoterQuote>({
+const quoteSchema = new Schema({
 	text: { type: String, required: true },
 	author: String,
 	quoterID: String,
@@ -30,14 +12,16 @@ const QuoteSchema = new Schema<QuoterQuote>({
 	editedTimestamp: { type: Number, min: 0 },
 });
 
-const GuildSchema = new Schema<QuoterGuild>({
+const guildSchema = new Schema({
 	_id: { type: String, required: true },
 	maxGuildQuotes: Number,
 	maxQuoteLength: Number,
-	quotes: [QuoteSchema],
+	quotes: [quoteSchema],
 });
 
-const Guild = model<QuoterGuild>("Guild", GuildSchema);
-const Quote = model<QuoterQuote>("Quote", QuoteSchema);
+type Guild = InferSchemaType<typeof guildSchema>;
+type Quote = InferSchemaType<typeof quoteSchema>;
+const Guild = model<Guild>("Guild", guildSchema);
+const Quote = model<Quote>("Quote", quoteSchema);
 
-export { Guild, Quote, type QuoterGuild, type QuoterQuote };
+export { Guild, Quote };

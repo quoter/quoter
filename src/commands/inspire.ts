@@ -9,7 +9,7 @@ import {
 import { inspireImages } from "@/assets/inspire-images";
 import type { QuoterCommand } from "@/commands";
 import { fetchDbGuild } from "@/lib/utils";
-import type { QuoterQuote } from "@/schemas/guild";
+import type { Quote } from "@/schemas/guild";
 
 GlobalFonts.registerFromPath(
 	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
@@ -46,7 +46,7 @@ const InspireCommand: QuoterCommand = {
 		}
 
 		const guild = await fetchDbGuild(interaction);
-		let quotes: QuoterQuote[] = guild.quotes;
+		let quotes: Quote[] = guild.quotes;
 
 		if (author) {
 			quotes = quotes.filter(
