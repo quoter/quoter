@@ -14,8 +14,11 @@ export async function ensureGuild(guildId: string) {
 		return existing;
 	}
 
-	// Create the guild if it doesn't exist
-	await db.insert(guilds).values({ id: guildId, quoteIncr: 1 });
+	// Create the guild if it doesn't exist (ignore if already exists due to race condition)
+	await db
+		.insert(guilds)
+		.values({ id: guildId, quoteIncr: 1 })
+		.onConflictDoNothing();
 
 	return await db.query.guilds.findFirst({
 		where: eq(guilds.id, guildId),
@@ -76,8 +79,8 @@ async function getNextQuoteId(guildId: string): Promise<number> {
 	// Ensure guild exists
 	const guild = await ensureGuild(guildId);
 
-	// Get current quote incrementer
-	const currentIncr = guild.quoteIncr || 1;
+	// Get current quote incrementer (guaranteed to exist with NOT NULL constraint)
+	const currentIncr = guild.quoteIncr;
 
 	// Update the incrementer for next time
 	await db

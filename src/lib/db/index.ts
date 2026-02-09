@@ -45,12 +45,9 @@ function initDb() {
 	`);
 
 	// Create indexes for faster lookups
+	// Note: UNIQUE constraint on (guild_id, quote_id) already creates an index
 	sqlite.exec(`
 		CREATE INDEX IF NOT EXISTS idx_quotes_guild_id ON quotes(guild_id)
-	`);
-
-	sqlite.exec(`
-		CREATE INDEX IF NOT EXISTS idx_quotes_guild_quote ON quotes(guild_id, quote_id)
 	`);
 
 	sqlite.exec(`
