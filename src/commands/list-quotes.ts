@@ -13,8 +13,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
-import { Guild } from "@/schemas/guild";
+import { getQuoteCount, getQuotes } from "@/lib/quotes";
+import { cleanString } from "@/lib/utils";
 
 export async function handleListQuoteButtonPress(
 	interaction: ButtonInteraction,
@@ -57,13 +57,9 @@ export async function renderQuoteList({
 	guildId: string;
 	userId: string;
 }): Promise<InteractionReplyOptions & InteractionUpdateOptions> {
-	const { quotes } = await Guild.findOneAndUpdate(
-		{ _id: guildId },
-		{},
-		{ upsert: true, new: true },
-	);
+	const totalQuotes = await getQuoteCount(guildId);
 
-	if (quotes.length === 0) {
+	if (totalQuotes === 0) {
 		return {
 			content:
 				"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
@@ -71,34 +67,35 @@ export async function renderQuoteList({
 			components: [],
 		};
 	}
-	const maxPage = Math.ceil(quotes.length / 10);
+
+	const maxPage = Math.ceil(totalQuotes / 10);
 	if (page > maxPage) page = maxPage;
 
-	const start = (page - 1) * 10;
-	const end = start + 10;
-	const slicedQuotes = quotes.slice(start, end);
+	const offset = (page - 1) * 10;
+	const quotes = await getQuotes(guildId, 10, offset);
 
 	let quoteList = "";
-	let quoteNumber = 1;
-	slicedQuotes.forEach((quote) => {
-		if (quote.text && quote.text.length > 30) {
-			quote.text = `${quote.text.substring(0, 30)}...`;
+	for (const quote of quotes) {
+		let text = quote.text;
+		let author = quote.author;
+
+		if (text && text.length > 30) {
+			text = `${text.substring(0, 30)}...`;
 		}
-		if (quote.author && quote.author.length > 10) {
-			quote.author = `${quote.author.substring(0, 10)}...`;
+		if (author && author.length > 10) {
+			author = `${author.substring(0, 10)}...`;
 		}
 
-		quoteList += `**${quoteNumber + (page - 1) * 10}**. "${
-			cleanString(quote.text) || "An error occurred"
+		quoteList += `**${quote.quoteId}**. "${
+			cleanString(text) || "An error occurred"
 		}"`;
-		quoteNumber++;
 
-		if (quote.author && quote.author.length > 0) {
-			quoteList += ` - ${cleanString(quote.author)}`;
+		if (author && author.length > 0) {
+			quoteList += ` - ${cleanString(author)}`;
 		}
 
 		quoteList += "\n";
-	});
+	}
 
 	return {
 		embeds: [
@@ -136,8 +133,6 @@ const ListQuotesCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 3,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const { quotes } = await fetchDbGuild(interaction);
-
 		if (!interaction.guild) {
 			await interaction.reply({
 				content: "❌ **|** This command can only be used in a server.",
@@ -146,7 +141,9 @@ const ListQuotesCommand: QuoterCommand = {
 			return;
 		}
 
-		if (!quotes.length) {
+		const totalQuotes = await getQuoteCount(interaction.guild.id);
+
+		if (totalQuotes === 0) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
@@ -156,7 +153,7 @@ const ListQuotesCommand: QuoterCommand = {
 		}
 
 		const page = interaction.options.getInteger("page") || 1;
-		const maxPage = Math.ceil(quotes.length / 10);
+		const maxPage = Math.ceil(totalQuotes / 10);
 		if (page > maxPage) {
 			await interaction.reply({
 				content: `❌ **|** That page is too high! The maximum page is **${maxPage}**.`,

@@ -7,7 +7,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { getQuote, getRandomQuote } from "@/lib/quotes";
+import { cleanString } from "@/lib/utils";
 
 const QuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -26,6 +27,10 @@ const QuoteCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
+
 		const choice = interaction.options.getInteger("id");
 		const author = interaction.options.getString("author");
 
@@ -37,9 +42,20 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const { quotes } = await fetchDbGuild(interaction);
+		let quote: Awaited<ReturnType<typeof getQuote>> | null;
+		let quoteId: number | undefined;
 
-		if (!quotes?.length) {
+		if (choice) {
+			// Get specific quote by ID
+			quote = await getQuote(interaction.guild.id, choice);
+			quoteId = choice;
+		} else {
+			// Get random quote (optionally filtered by author)
+			quote = await getRandomQuote(interaction.guild.id, author);
+			quoteId = quote?.quoteId;
+		}
+
+		if (!quote) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
@@ -48,27 +64,12 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const filteredQuotes = author
-			? quotes.filter(
-					(q) => q.author && q.author.toLowerCase() === author.toLowerCase(),
-				)
-			: quotes;
-
-		const id = choice ?? Math.ceil(Math.random() * filteredQuotes.length);
-
-		const quote = filteredQuotes[id - 1];
-		if (!quote) {
-			await interaction.reply({
-				content: "❌ **|** I couldn't find a quote with that ID.",
-				flags: MessageFlags.Ephemeral,
-			});
-			return;
-		}
-
 		const embed = new EmbedBuilder()
 			.setColor(Colors.Blue)
 			.setDescription(`"${cleanString(quote.text, false)}"`)
-			.setFooter({ text: `Quote #${id}${!choice ? " (random)" : ""}` });
+			.setFooter({
+				text: `Quote #${quoteId}${!choice ? " (random)" : ""}`,
+			});
 
 		if (interaction.guild === null) throw new Error("Guild is null");
 		if (quote.ogMessageID && quote.ogChannelID) {

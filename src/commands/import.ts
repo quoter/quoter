@@ -8,7 +8,7 @@ import {
 import { z } from "zod";
 import type { QuoterCommand } from "@/commands";
 import { maxGuildQuotes } from "@/lib/quote-limits";
-import { fetchDbGuild } from "@/lib/utils";
+import { createQuote, ensureGuild, getQuoteCount } from "@/lib/quotes";
 
 const ImportSchema = z
 	.object({
@@ -38,6 +38,10 @@ const ImportCommand: QuoterCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction: ChatInputCommandInteraction) {
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
+
 		const attachment = interaction.options.getAttachment("file");
 		if (attachment === null) throw new Error("File is null");
 
@@ -71,10 +75,11 @@ const ImportCommand: QuoterCommand = {
 			return;
 		}
 
-		const guild = await fetchDbGuild(interaction);
+		const guild = await ensureGuild(interaction.guild.id);
+		const currentQuoteCount = await getQuoteCount(interaction.guild.id);
 
 		const maxQuotes = guild.maxGuildQuotes ?? maxGuildQuotes;
-		const remaining = maxQuotes - guild.quotes.length;
+		const remaining = maxQuotes - currentQuoteCount;
 
 		if (parsed.data.length > remaining) {
 			interaction.reply({
@@ -84,8 +89,10 @@ const ImportCommand: QuoterCommand = {
 			return;
 		}
 
-		guild.quotes.push(...parsed.data);
-		await guild.save();
+		// Import all quotes
+		for (const quoteData of parsed.data) {
+			await createQuote(interaction.guild.id, quoteData);
+		}
 
 		interaction.reply({
 			content: `✅ **|** Imported **${parsed.data.length}** quotes.`,

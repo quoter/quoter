@@ -6,9 +6,9 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
-import Fuse from "fuse.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { getQuoteCount, searchQuotes } from "@/lib/quotes";
+import { cleanString } from "@/lib/utils";
 
 const SearchCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -23,9 +23,13 @@ const SearchCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const { quotes } = await fetchDbGuild(interaction);
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
 
-		if (!quotes.length) {
+		const quoteCount = await getQuoteCount(interaction.guild.id);
+
+		if (quoteCount === 0) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
@@ -46,11 +50,7 @@ const SearchCommand: QuoterCommand = {
 			return;
 		}
 
-		const fuse = new Fuse(quotes, {
-			keys: ["text", "author"],
-			threshold: 0.4,
-		});
-		const matches = fuse.search(searchTerm);
+		const matches = await searchQuotes(interaction.guild.id, searchTerm, 5);
 
 		if (!matches.length) {
 			await interaction.reply({
@@ -61,25 +61,21 @@ const SearchCommand: QuoterCommand = {
 			return;
 		}
 
-		matches.length = 5;
+		const list = matches.map((quote) => {
+			let text = quote.text;
+			let author = quote.author;
 
-		const list = matches.map((match) => {
-			let result = "";
-
-			const quoteID = match.refIndex + 1;
-			const quote = match.item;
-
-			if (quote.text && quote.text.length > 30) {
-				quote.text = `${quote.text.substr(0, 30)}...`;
+			if (text && text.length > 30) {
+				text = `${text.substring(0, 30)}...`;
 			}
-			if (quote.author && quote.author.length > 10) {
-				quote.author = `${quote.author.substr(0, 10)}...`;
+			if (author && author.length > 10) {
+				author = `${author.substring(0, 10)}...`;
 			}
 
-			result += `**${quoteID}**. "${cleanString(quote.text)}"`;
+			let result = `**${quote.quoteId}**. "${cleanString(text)}"`;
 
-			if (quote.author && quote.author.length > 0) {
-				result += ` - ${cleanString(quote.author)}`;
+			if (author && author.length > 0) {
+				result += ` - ${cleanString(author)}`;
 			}
 
 			return result;

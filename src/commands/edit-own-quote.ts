@@ -8,12 +8,8 @@ import {
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
 import { maxQuoteLength } from "@/lib/quote-limits";
-import {
-	cleanString,
-	fetchDbGuild,
-	mentionParse,
-	trimQuotes,
-} from "@/lib/utils";
+import { getQuote, updateQuote } from "@/lib/quotes";
+import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
 const EditOwnQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -37,13 +33,14 @@ const EditOwnQuoteCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 10,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const id = interaction.options.getInteger("id");
-		if (id === null) throw new Error("ID is null");
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
 
-		const guild = await fetchDbGuild(interaction);
+		const quoteId = interaction.options.getInteger("id");
+		if (quoteId === null) throw new Error("ID is null");
 
-		const { quotes } = guild;
-		const quote = quotes[id - 1];
+		const quote = await getQuote(interaction.guild.id, quoteId);
 
 		if (!quote) {
 			await interaction.reply({
@@ -69,22 +66,20 @@ const EditOwnQuoteCommand: QuoterCommand = {
 		if (textInput === null) throw new Error("Text input is null");
 		const text = trimQuotes(textInput);
 
-		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
+		if (text.length > maxQuoteLength) {
 			await interaction.reply({
-				content: `❌ **|** Quotes cannot be longer than ${
-					guild.maxQuoteLength || maxQuoteLength
-				} characters.`,
+				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 
-		quote.text = text;
-		if (author) quote.author = author;
-		quote.editedTimestamp = Date.now();
-		quote.editorID = interaction.user.id;
-
-		await guild.save();
+		await updateQuote(quote.id, {
+			text,
+			author: author || quote.author,
+			editedTimestamp: Date.now(),
+			editorID: interaction.user.id,
+		});
 
 		await interaction.reply({
 			embeds: [
@@ -96,7 +91,7 @@ const EditOwnQuoteCommand: QuoterCommand = {
 							author ? ` - ${cleanString(author, false)}` : ""
 						}`,
 					)
-					.setFooter({ text: `Quote #${id}` }),
+					.setFooter({ text: `Quote #${quoteId}` }),
 			],
 		});
 	},
