@@ -61,9 +61,12 @@ const SearchCommand: QuoterCommand = {
 			return;
 		}
 
+		// Create a Map for O(1) quote ID lookups
+		const quoteIdMap = new Map(allQuotes.map((q, index) => [q.id, index + 1]));
+
 		const list = matches.map((quote) => {
-			// Find the quote ID by its position in all quotes
-			const quoteID = allQuotes.findIndex((q) => q.id === quote.id) + 1;
+			// Look up the quote ID efficiently
+			const quoteID = quoteIdMap.get(quote.id) || 0;
 
 			let text = quote.text;
 			let author = quote.author;

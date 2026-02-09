@@ -24,16 +24,18 @@ export async function ensureGuild(guildId: string) {
 
 /**
  * Get a specific quote by its ID (1-indexed for user-facing)
+ * This uses a subquery to get the row number within the guild's quotes
  */
 export async function getQuote(guildId: string, quoteNumber: number) {
-	// Get all quotes for the guild, ordered by ID
+	// Get the quote at the specified position (1-indexed)
 	const allQuotes = await db.query.quotes.findMany({
 		where: eq(quotes.guildId, guildId),
 		orderBy: [quotes.id],
+		limit: 1,
+		offset: quoteNumber - 1,
 	});
 
-	// Return the quote at the 1-indexed position
-	return allQuotes[quoteNumber - 1];
+	return allQuotes[0];
 }
 
 /**
@@ -141,28 +143,22 @@ export async function searchQuotes(
 
 /**
  * Get a random quote, optionally filtered by author
+ * Uses SQLite's RANDOM() function for efficiency
  */
 export async function getRandomQuote(guildId: string, author?: string) {
-	let allQuotes: (typeof quotes.$inferSelect)[];
+	const conditions = [eq(quotes.guildId, guildId)];
 
 	if (author) {
 		// Filter by author (case-insensitive)
-		allQuotes = await db.query.quotes.findMany({
-			where: and(
-				eq(quotes.guildId, guildId),
-				sql`lower(${quotes.author}) = lower(${author})`,
-			),
-		});
-	} else {
-		allQuotes = await getAllQuotes(guildId);
+		conditions.push(sql`lower(${quotes.author}) = lower(${author})`);
 	}
 
-	if (allQuotes.length === 0) {
-		return null;
-	}
+	const result = await db.query.quotes.findFirst({
+		where: conditions.length > 1 ? and(...conditions) : conditions[0],
+		orderBy: sql`RANDOM()`,
+	});
 
-	const randomIndex = Math.floor(Math.random() * allQuotes.length);
-	return allQuotes[randomIndex];
+	return result || null;
 }
 
 /**
