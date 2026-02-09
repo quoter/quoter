@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getAllQuotes } from "@/lib/quotes";
+import { getQuote } from "@/lib/quotes";
 
 const WhoQuotedCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -26,20 +26,11 @@ const WhoQuotedCommand: QuoterCommand = {
 			throw new Error("Interaction is not in a guild.");
 		}
 
-		const allQuotes = await getAllQuotes(interaction.guild.id);
+		const quoteId = interaction.options.getInteger("id");
+		if (quoteId === null) throw new Error("ID is null");
 
-		if (!allQuotes.length) {
-			await interaction.reply({
-				content:
-					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
-				flags: MessageFlags.Ephemeral,
-			});
-			return;
-		}
+		const quote = await getQuote(interaction.guild.id, quoteId);
 
-		const id = interaction.options.getInteger("id");
-		if (id === null) throw new Error("ID is null");
-		const quote = allQuotes[id - 1];
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
@@ -52,7 +43,9 @@ const WhoQuotedCommand: QuoterCommand = {
 			embeds: [
 				new EmbedBuilder()
 					.setColor(Colors.Green)
-					.setDescription(`Quote #${id} was created by <@${quote.quoterID}>.`),
+					.setDescription(
+						`Quote #${quoteId} was created by <@${quote.quoterID}>.`,
+					),
 			],
 		});
 	},

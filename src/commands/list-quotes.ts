@@ -75,7 +75,6 @@ export async function renderQuoteList({
 	const quotes = await getQuotes(guildId, 10, offset);
 
 	let quoteList = "";
-	let quoteNumber = offset + 1;
 	for (const quote of quotes) {
 		let text = quote.text;
 		let author = quote.author;
@@ -87,10 +86,9 @@ export async function renderQuoteList({
 			author = `${author.substring(0, 10)}...`;
 		}
 
-		quoteList += `**${quoteNumber}**. "${
+		quoteList += `**${quote.quoteId}**. "${
 			cleanString(text) || "An error occurred"
 		}"`;
-		quoteNumber++;
 
 		if (author && author.length > 0) {
 			quoteList += ` - ${cleanString(author)}`;

@@ -15,7 +15,7 @@ export async function ensureGuild(guildId: string) {
 	}
 
 	// Create the guild if it doesn't exist
-	await db.insert(guilds).values({ id: guildId });
+	await db.insert(guilds).values({ id: guildId, quoteIncr: 1 });
 
 	return await db.query.guilds.findFirst({
 		where: eq(guilds.id, guildId),
@@ -23,23 +23,16 @@ export async function ensureGuild(guildId: string) {
 }
 
 /**
- * Get a specific quote by its ID (1-indexed for user-facing)
- * This uses a subquery to get the row number within the guild's quotes
+ * Get a specific quote by its quote ID (unique within guild)
  */
-export async function getQuote(guildId: string, quoteNumber: number) {
-	// Get the quote at the specified position (1-indexed)
-	const allQuotes = await db.query.quotes.findMany({
-		where: eq(quotes.guildId, guildId),
-		orderBy: [quotes.id],
-		limit: 1,
-		offset: quoteNumber - 1,
+export async function getQuote(guildId: string, quoteId: number) {
+	return await db.query.quotes.findFirst({
+		where: and(eq(quotes.guildId, guildId), eq(quotes.quoteId, quoteId)),
 	});
-
-	return allQuotes[0];
 }
 
 /**
- * Get quotes with pagination
+ * Get quotes with pagination, ordered by quoteId
  */
 export async function getQuotes(
 	guildId: string,
@@ -48,7 +41,7 @@ export async function getQuotes(
 ) {
 	return await db.query.quotes.findMany({
 		where: eq(quotes.guildId, guildId),
-		orderBy: [quotes.id],
+		orderBy: [quotes.quoteId],
 		limit,
 		offset,
 	});
@@ -60,7 +53,7 @@ export async function getQuotes(
 export async function getAllQuotes(guildId: string) {
 	return await db.query.quotes.findMany({
 		where: eq(quotes.guildId, guildId),
-		orderBy: [quotes.id],
+		orderBy: [quotes.quoteId],
 	});
 }
 
@@ -77,14 +70,33 @@ export async function getQuoteCount(guildId: string) {
 }
 
 /**
- * Create a new quote
+ * Get the next available quote ID for a guild
+ */
+async function getNextQuoteId(guildId: string): Promise<number> {
+	// Ensure guild exists
+	const guild = await ensureGuild(guildId);
+
+	// Get current quote incrementer
+	const currentIncr = guild.quoteIncr || 1;
+
+	// Update the incrementer for next time
+	await db
+		.update(guilds)
+		.set({ quoteIncr: currentIncr + 1 })
+		.where(eq(guilds.id, guildId));
+
+	return currentIncr;
+}
+
+/**
+ * Create a new quote with auto-incremented quote ID
  */
 export async function createQuote(
 	guildId: string,
-	quoteData: Omit<NewQuote, "guildId">,
+	quoteData: Omit<NewQuote, "guildId" | "quoteId">,
 ) {
-	// Ensure guild exists
-	await ensureGuild(guildId);
+	// Get the next quote ID for this guild
+	const quoteId = await getNextQuoteId(guildId);
 
 	// Insert the quote
 	const result = await db
@@ -92,6 +104,7 @@ export async function createQuote(
 		.values({
 			...quoteData,
 			guildId,
+			quoteId,
 		})
 		.returning();
 
@@ -99,26 +112,26 @@ export async function createQuote(
 }
 
 /**
- * Update a quote
+ * Update a quote by its internal database ID
  */
 export async function updateQuote(
-	quoteId: number,
-	quoteData: Partial<Omit<NewQuote, "guildId" | "id">>,
+	id: number,
+	quoteData: Partial<Omit<NewQuote, "guildId" | "id" | "quoteId">>,
 ) {
 	const result = await db
 		.update(quotes)
 		.set(quoteData)
-		.where(eq(quotes.id, quoteId))
+		.where(eq(quotes.id, id))
 		.returning();
 
 	return result[0];
 }
 
 /**
- * Delete a quote
+ * Delete a quote by its internal database ID
  */
-export async function deleteQuote(quoteId: number) {
-	await db.delete(quotes).where(eq(quotes.id, quoteId));
+export async function deleteQuote(id: number) {
+	await db.delete(quotes).where(eq(quotes.id, id));
 }
 
 /**
@@ -136,7 +149,7 @@ export async function searchQuotes(
 			eq(quotes.guildId, guildId),
 			or(like(quotes.text, pattern), like(quotes.author, pattern)),
 		),
-		orderBy: [quotes.id],
+		orderBy: [quotes.quoteId],
 		limit,
 	});
 }
@@ -170,6 +183,19 @@ export async function getQuotesByAuthor(guildId: string, author: string) {
 			eq(quotes.guildId, guildId),
 			sql`lower(${quotes.author}) = lower(${author})`,
 		),
-		orderBy: [quotes.id],
+		orderBy: [quotes.quoteId],
 	});
 }
+
+/**
+ * Get the highest quote ID currently in use for a guild
+ */
+export async function getMaxQuoteId(guildId: string): Promise<number> {
+	const result = await db.query.quotes.findFirst({
+		where: eq(quotes.guildId, guildId),
+		orderBy: sql`${quotes.quoteId} DESC`,
+	});
+
+	return result?.quoteId || 0;
+}
+

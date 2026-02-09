@@ -57,15 +57,13 @@ const QuoteThisCommand: QuoterCommand = {
 
 		const author = message.author?.tag;
 
-		await createQuote(interaction.guild.id, {
+		const quote = await createQuote(interaction.guild.id, {
 			text,
 			author,
 			ogMessageID: message.id,
 			ogChannelID: message.channel.id,
 			quoterID: interaction.user.id,
 		});
-
-		const newQuoteCount = await getQuoteCount(interaction.guild.id);
 
 		await interaction.reply({
 			embeds: [
@@ -75,7 +73,7 @@ const QuoteThisCommand: QuoterCommand = {
 					.setDescription(
 						`"${cleanString(text, false)}" - ${cleanString(author)}`,
 					)
-					.setFooter({ text: `Quote #${newQuoteCount}` }),
+					.setFooter({ text: `Quote #${quote.quoteId}` }),
 			],
 		});
 	},

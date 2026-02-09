@@ -58,19 +58,17 @@ const CreateQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const _quote = await createQuote(interaction.guild.id, {
+		const quote = await createQuote(interaction.guild.id, {
 			text,
 			author,
 			quoterID: interaction.user.id,
 		});
 
-		const newQuoteCount = await getQuoteCount(interaction.guild.id);
-
 		const embed = new EmbedBuilder()
 			.setTitle("✅ Created a new quote")
 			.setColor(Colors.Green)
 			.setDescription(`"${cleanString(text, false)}"`)
-			.setFooter({ text: `Quote #${newQuoteCount}` });
+			.setFooter({ text: `Quote #${quote.quoteId}` });
 
 		if (author) {
 			embed.setDescription(

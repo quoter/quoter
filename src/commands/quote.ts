@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getAllQuotes, getQuotesByAuthor } from "@/lib/quotes";
+import { getQuote, getRandomQuote } from "@/lib/quotes";
 import { cleanString } from "@/lib/utils";
 
 const QuoteCommand: QuoterCommand = {
@@ -42,15 +42,20 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		// Get the appropriate quotes
-		let quotes: Awaited<ReturnType<typeof getAllQuotes>>;
-		if (author) {
-			quotes = await getQuotesByAuthor(interaction.guild.id, author);
+		let quote: Awaited<ReturnType<typeof getQuote>> | null;
+		let quoteId: number | undefined;
+
+		if (choice) {
+			// Get specific quote by ID
+			quote = await getQuote(interaction.guild.id, choice);
+			quoteId = choice;
 		} else {
-			quotes = await getAllQuotes(interaction.guild.id);
+			// Get random quote (optionally filtered by author)
+			quote = await getRandomQuote(interaction.guild.id, author);
+			quoteId = quote?.quoteId;
 		}
 
-		if (!quotes?.length) {
+		if (!quote) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
@@ -59,21 +64,12 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const id = choice ?? Math.ceil(Math.random() * quotes.length);
-		const quote = quotes[id - 1];
-
-		if (!quote) {
-			await interaction.reply({
-				content: "❌ **|** I couldn't find a quote with that ID.",
-				flags: MessageFlags.Ephemeral,
-			});
-			return;
-		}
-
 		const embed = new EmbedBuilder()
 			.setColor(Colors.Blue)
 			.setDescription(`"${cleanString(quote.text, false)}"`)
-			.setFooter({ text: `Quote #${id}${!choice ? " (random)" : ""}` });
+			.setFooter({
+				text: `Quote #${quoteId}${!choice ? " (random)" : ""}`,
+			});
 
 		if (interaction.guild === null) throw new Error("Guild is null");
 		if (quote.ogMessageID && quote.ogChannelID) {

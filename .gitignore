@@ -12,8 +12,7 @@ npm-debug.log*
 # Optional npm cache directory
 .npm
 
-# Database
-db/
+# Database files
 *.db
 *.db-shm
 *.db-wal

@@ -5,7 +5,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { deleteQuote, getAllQuotes } from "@/lib/quotes";
+import { deleteQuote, getQuote } from "@/lib/quotes";
 
 const DeleteOwnQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -24,11 +24,10 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
 			throw new Error("Interaction is not in a guild.");
 		}
 
-		const id = interaction.options.getInteger("id");
-		if (id === null) throw new Error("ID is null");
+		const quoteId = interaction.options.getInteger("id");
+		if (quoteId === null) throw new Error("ID is null");
 
-		const allQuotes = await getAllQuotes(interaction.guild.id);
-		const quote = allQuotes[id - 1];
+		const quote = await getQuote(interaction.guild.id, quoteId);
 
 		if (!quote) {
 			await interaction.reply({
@@ -49,7 +48,7 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
 
 		await deleteQuote(quote.id);
 		await interaction.reply({
-			content: `✅ **|** Deleted quote #${id}.`,
+			content: `✅ **|** Deleted quote #${quoteId}.`,
 		});
 	},
 };

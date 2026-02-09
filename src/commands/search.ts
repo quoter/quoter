@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getAllQuotes, searchQuotes } from "@/lib/quotes";
+import { getQuoteCount, searchQuotes } from "@/lib/quotes";
 import { cleanString } from "@/lib/utils";
 
 const SearchCommand: QuoterCommand = {
@@ -27,9 +27,9 @@ const SearchCommand: QuoterCommand = {
 			throw new Error("Interaction is not in a guild.");
 		}
 
-		const allQuotes = await getAllQuotes(interaction.guild.id);
+		const quoteCount = await getQuoteCount(interaction.guild.id);
 
-		if (!allQuotes.length) {
+		if (quoteCount === 0) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
@@ -61,13 +61,7 @@ const SearchCommand: QuoterCommand = {
 			return;
 		}
 
-		// Create a Map for O(1) quote ID lookups
-		const quoteIdMap = new Map(allQuotes.map((q, index) => [q.id, index + 1]));
-
 		const list = matches.map((quote) => {
-			// Look up the quote ID efficiently
-			const quoteID = quoteIdMap.get(quote.id) || 0;
-
 			let text = quote.text;
 			let author = quote.author;
 
@@ -78,7 +72,7 @@ const SearchCommand: QuoterCommand = {
 				author = `${author.substring(0, 10)}...`;
 			}
 
-			let result = `**${quoteID}**. "${cleanString(text)}"`;
+			let result = `**${quote.quoteId}**. "${cleanString(text)}"`;
 
 			if (author && author.length > 0) {
 				result += ` - ${cleanString(author)}`;

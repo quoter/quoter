@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
 import { maxQuoteLength } from "@/lib/quote-limits";
-import { getAllQuotes, updateQuote } from "@/lib/quotes";
+import { getQuote, updateQuote } from "@/lib/quotes";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
 const EditQuoteCommand: QuoterCommand = {
@@ -39,11 +39,10 @@ const EditQuoteCommand: QuoterCommand = {
 			throw new Error("Interaction is not in a guild.");
 		}
 
-		const id = interaction.options.getInteger("id");
-		if (id === null) throw new Error("ID is null");
+		const quoteId = interaction.options.getInteger("id");
+		if (quoteId === null) throw new Error("ID is null");
 
-		const allQuotes = await getAllQuotes(interaction.guild.id);
-		const quote = allQuotes[id - 1];
+		const quote = await getQuote(interaction.guild.id, quoteId);
 
 		if (!quote) {
 			await interaction.reply({
@@ -85,7 +84,7 @@ const EditQuoteCommand: QuoterCommand = {
 							author ? ` - ${cleanString(author, false)}` : ""
 						}`,
 					)
-					.setFooter({ text: `Quote #${id}` }),
+					.setFooter({ text: `Quote #${quoteId}` }),
 			],
 		});
 	},
