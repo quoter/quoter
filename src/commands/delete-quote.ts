@@ -6,7 +6,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { fetchDbGuild } from "@/lib/utils";
+import { deleteQuote, getAllQuotes } from "@/lib/quotes";
 
 const DeleteQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -22,11 +22,16 @@ const DeleteQuoteCommand: QuoterCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
+
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
 
-		const guild = await fetchDbGuild(interaction);
-		const quote = guild.quotes[id - 1];
+		// Get all quotes to find the one at the 1-indexed position
+		const allQuotes = await getAllQuotes(interaction.guild.id);
+		const quote = allQuotes[id - 1];
 
 		if (!quote) {
 			await interaction.reply({
@@ -36,8 +41,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		await quote.deleteOne();
-		await guild.save();
+		await deleteQuote(quote.id);
 		await interaction.reply({
 			content: `✅ **|** Deleted quote #${id}.`,
 		});

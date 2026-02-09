@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
-import mongoose from "mongoose";
 import { events } from "@/events";
+import { sqlite } from "@/lib/db";
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
@@ -20,17 +20,11 @@ client
 	.on(Events.GuildDelete, events.guildDelete)
 	.on(Events.InteractionCreate, events.interactionCreate);
 
-if (process.env.MONGO_URI === undefined) {
-	throw new Error("MONGO_URI environment variable not set");
-}
-
-mongoose
-	.connect(process.env.MONGO_URI)
-	.then(() => client.login(process.env.DISCORD_TOKEN));
+client.login(process.env.DISCORD_TOKEN);
 
 process.on("SIGINT", async () => {
-	await mongoose.connection.close();
-	console.log("Closed mongoDB connection");
+	sqlite.close();
+	console.log("Closed SQLite connection");
 
 	await client.destroy();
 	console.log("Destroyed client");

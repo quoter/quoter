@@ -8,13 +8,8 @@ import {
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
 import { maxGuildQuotes, maxQuoteLength } from "@/lib/quote-limits";
-import {
-	cleanString,
-	fetchDbGuild,
-	mentionParse,
-	trimQuotes,
-} from "@/lib/utils";
-import { Quote } from "@/schemas/guild";
+import { createQuote, ensureGuild, getQuoteCount } from "@/lib/quotes";
+import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
 const CreateQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -32,9 +27,14 @@ const CreateQuoteCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 10,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const guild = await fetchDbGuild(interaction);
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
 
-		if (guild.quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
+		const guild = await ensureGuild(interaction.guild.id);
+		const quoteCount = await getQuoteCount(interaction.guild.id);
+
+		if (quoteCount >= (guild.maxGuildQuotes || maxGuildQuotes)) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
@@ -50,31 +50,27 @@ const CreateQuoteCommand: QuoterCommand = {
 		if (text === null) throw new Error("Text is null or empty");
 		text = trimQuotes(text);
 
-		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
+		if (text.length > maxQuoteLength) {
 			await interaction.reply({
-				content: `❌ **|** Quotes cannot be longer than ${
-					guild.maxQuoteLength || maxQuoteLength
-				} characters.`,
+				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 
-		const quote = new Quote({
+		const _quote = await createQuote(interaction.guild.id, {
 			text,
 			author,
 			quoterID: interaction.user.id,
 		});
 
-		guild.quotes.push(quote);
-
-		await guild.save();
+		const newQuoteCount = await getQuoteCount(interaction.guild.id);
 
 		const embed = new EmbedBuilder()
 			.setTitle("✅ Created a new quote")
 			.setColor(Colors.Green)
 			.setDescription(`"${cleanString(text, false)}"`)
-			.setFooter({ text: `Quote #${guild.quotes.length}` });
+			.setFooter({ text: `Quote #${newQuoteCount}` });
 
 		if (author) {
 			embed.setDescription(

@@ -7,7 +7,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { getAllQuotes, getQuotesByAuthor } from "@/lib/quotes";
+import { cleanString } from "@/lib/utils";
 
 const QuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -26,6 +27,10 @@ const QuoteCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
+
 		const choice = interaction.options.getInteger("id");
 		const author = interaction.options.getString("author");
 
@@ -37,7 +42,13 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const { quotes } = await fetchDbGuild(interaction);
+		// Get the appropriate quotes
+		let quotes: Awaited<ReturnType<typeof getAllQuotes>>;
+		if (author) {
+			quotes = await getQuotesByAuthor(interaction.guild.id, author);
+		} else {
+			quotes = await getAllQuotes(interaction.guild.id);
+		}
 
 		if (!quotes?.length) {
 			await interaction.reply({
@@ -48,15 +59,9 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const filteredQuotes = author
-			? quotes.filter(
-					(q) => q.author && q.author.toLowerCase() === author.toLowerCase(),
-				)
-			: quotes;
+		const id = choice ?? Math.ceil(Math.random() * quotes.length);
+		const quote = quotes[id - 1];
 
-		const id = choice ?? Math.ceil(Math.random() * filteredQuotes.length);
-
-		const quote = filteredQuotes[id - 1];
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",

@@ -6,7 +6,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { fetchDbGuild } from "@/lib/utils";
+import { getAllQuotes } from "@/lib/quotes";
 
 const ExportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -16,7 +16,11 @@ const ExportCommand: QuoterCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction) {
-		const { quotes } = await fetchDbGuild(interaction);
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
+
+		const quotes = await getAllQuotes(interaction.guild.id);
 
 		const json = JSON.stringify(
 			quotes,

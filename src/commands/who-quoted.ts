@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { fetchDbGuild } from "@/lib/utils";
+import { getAllQuotes } from "@/lib/quotes";
 
 const WhoQuotedCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -22,9 +22,13 @@ const WhoQuotedCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const { quotes } = await fetchDbGuild(interaction);
+		if (!interaction.guild) {
+			throw new Error("Interaction is not in a guild.");
+		}
 
-		if (!quotes.length) {
+		const allQuotes = await getAllQuotes(interaction.guild.id);
+
+		if (!allQuotes.length) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
@@ -35,7 +39,7 @@ const WhoQuotedCommand: QuoterCommand = {
 
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
-		const quote = quotes[id - 1];
+		const quote = allQuotes[id - 1];
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",
