@@ -52,10 +52,12 @@ export async function renderQuoteList({
 	page,
 	guildId,
 	userId,
+	quotes: providedQuotes,
 }: {
 	page: number;
 	guildId: string;
 	userId: string;
+	providedQuotes?: (typeof quotes)[number][];
 }): Promise<InteractionReplyOptions & InteractionUpdateOptions> {
 	const { quotes } = await Guild.findOneAndUpdate(
 		{ _id: guildId },
@@ -63,7 +65,9 @@ export async function renderQuoteList({
 		{ upsert: true, new: true },
 	);
 
-	if (quotes.length === 0) {
+	const quotesToUse = providedQuotes ?? quotes;
+
+	if (quotesToUse.length === 0) {
 		return {
 			content:
 				"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
@@ -71,12 +75,12 @@ export async function renderQuoteList({
 			components: [],
 		};
 	}
-	const maxPage = Math.ceil(quotes.length / 10);
+	const maxPage = Math.ceil(quotesToUse.length / 10);
 	if (page > maxPage) page = maxPage;
 
 	const start = (page - 1) * 10;
 	const end = start + 10;
-	const slicedQuotes = quotes.slice(start, end);
+	const slicedQuotes = quotesToUse.slice(start, end);
 
 	let quoteList = "";
 	let quoteNumber = 1;
@@ -133,6 +137,11 @@ const ListQuotesCommand: QuoterCommand = {
 		.addIntegerOption((o) =>
 			o.setName("page").setDescription("The page of the quote book to view"),
 		)
+		.addStringOption((o) =>
+			o
+				.setName("author")
+				.setDescription("Filter quotes by the person who said it"),
+		)
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 3,
 	async execute(interaction: ChatInputCommandInteraction) {
@@ -146,17 +155,26 @@ const ListQuotesCommand: QuoterCommand = {
 			return;
 		}
 
-		if (!quotes.length) {
+		const author = interaction.options.getString("author");
+		const normalizedAuthor = author?.replace(/^@/, "").toLowerCase();
+		const filteredQuotes = normalizedAuthor
+			? quotes.filter((q) =>
+					q.author?.replace(/^@/, "").toLowerCase().includes(normalizedAuthor),
+				)
+			: quotes;
+
+		if (!filteredQuotes.length) {
 			await interaction.reply({
-				content:
-					"❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
+				content: normalizedAuthor
+					? `❌ **|** No quotes found from "${normalizedAuthor}".`
+					: "❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!",
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 
 		const page = interaction.options.getInteger("page") || 1;
-		const maxPage = Math.ceil(quotes.length / 10);
+		const maxPage = Math.ceil(filteredQuotes.length / 10);
 		if (page > maxPage) {
 			await interaction.reply({
 				content: `❌ **|** That page is too high! The maximum page is **${maxPage}**.`,
@@ -169,6 +187,7 @@ const ListQuotesCommand: QuoterCommand = {
 			page,
 			guildId: interaction.guild.id,
 			userId: interaction.user.id,
+			quotes: filteredQuotes,
 		});
 
 		await interaction.reply(quoteList);
