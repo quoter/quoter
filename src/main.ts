@@ -6,8 +6,15 @@ const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
 	allowedMentions: { parse: [] },
 	makeCache: Options.cacheWithLimits({
+		...Options.DefaultMakeCacheSettings,
 		MessageManager: 0,
 		ThreadManager: 0,
+		UserManager: 0,
+		GuildMemberManager: 0,
+		ReactionManager: 0,
+		PresenceManager: 0,
+		VoiceStateManager: 0,
+		GuildInviteManager: 0,
 	}),
 	shards: "auto",
 });
