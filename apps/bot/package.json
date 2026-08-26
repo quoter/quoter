@@ -13,6 +13,7 @@
 		"typecheck": "tsc --noEmit",
 		"test": "bun test",
 		"build": "bun build src/main.ts --outdir dist --target bun",
+		"build:release": "bun run scripts/build.ts",
 		"db:generate": "drizzle-kit generate --config drizzle.config.ts",
 		"migrate:mongo": "bun run src/migration/mongo-to-sqlite.ts"
 	},

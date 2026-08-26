@@ -24,7 +24,9 @@ type QuoterDatabase = BunSQLiteDatabase<{
 	quotes: typeof quotes;
 }>;
 
-const migrationsFolder = `${import.meta.dir}/../../drizzle`;
+const migrationsFolder = Bun.isStandaloneExecutable
+	? `${import.meta.dir}/drizzle`
+	: `${import.meta.dir}/../../drizzle`;
 
 export class QuoteStore {
 	readonly database: Database;

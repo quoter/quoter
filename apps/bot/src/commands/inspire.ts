@@ -12,8 +12,12 @@ import { getStore } from "@/db";
 import type { Quote } from "@/domain/quote";
 import { getGuildId } from "@/lib/guild";
 
+const assetsDirectory = Bun.isStandaloneExecutable
+	? path.resolve(import.meta.dir, "src/assets")
+	: path.resolve(import.meta.dir, "../assets");
+
 GlobalFonts.registerFromPath(
-	path.resolve(import.meta.dir, "../assets/ScheherazadeNew-Regular.ttf"),
+	path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf"),
 	"Regular",
 );
 
@@ -62,7 +66,7 @@ const InspireCommand: QuoterCommand = {
 		const index = Math.floor(Math.random() * inspireImages.length);
 
 		const background = await loadImage(
-			`${import.meta.dir}/../assets/${index}.jpg`,
+			path.resolve(assetsDirectory, `${index}.jpg`),
 		);
 		const imageData = inspireImages[index];
 

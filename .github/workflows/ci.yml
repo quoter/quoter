@@ -27,10 +27,27 @@ jobs:
       - name: Check repository
         run: bun run check
 
+      - name: Build Linux executable
+        env:
+          BUILD_SHA: ${{ github.sha }}
+        run: bun run build:release
+
+      - name: Check Linux executable
+        env:
+          DISCORD_TOKEN: smoke-test
+          DATABASE_PATH: ${{ runner.temp }}/quoter-smoke.sqlite
+        run: apps/bot/dist/quoter-linux-x64 --check
+
+      - name: Create checksum
+        working-directory: apps/bot/dist
+        run: sha256sum quoter-linux-x64 > quoter-linux-x64.sha256
+
       - name: Upload main snapshot
         if: github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
           name: quoter-${{ github.sha }}
-          path: apps/bot/dist
+          path: |
+            apps/bot/dist/quoter-linux-x64
+            apps/bot/dist/quoter-linux-x64.sha256
           retention-days: 7

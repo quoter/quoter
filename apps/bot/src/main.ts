@@ -14,6 +14,13 @@ console.log(
 	`Starting Quoter v${config.version} (${config.buildSha.slice(0, 7)}), schema ${store.getSchemaVersion()}`,
 );
 
+if (process.argv.includes("--check")) {
+	if (!store.checkIntegrity()) throw new Error("SQLite integrity check failed");
+	console.log("Quoter executable check passed");
+	closeStore();
+	process.exit(0);
+}
+
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
 	allowedMentions: { parse: [] },
