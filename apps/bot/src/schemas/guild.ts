@@ -1,5 +1,5 @@
 import type { InferSchemaType } from "mongoose";
-import { Schema, model } from "mongoose";
+import { model, Schema } from "mongoose";
 
 const quoteSchema = new Schema({
 	text: { type: String, required: true },

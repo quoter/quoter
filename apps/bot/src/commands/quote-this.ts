@@ -4,8 +4,8 @@ import {
 	ContextMenuCommandBuilder,
 	EmbedBuilder,
 	InteractionContextType,
-	MessageFlags,
 	type MessageContextMenuCommandInteraction,
+	MessageFlags,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
 import { maxGuildQuotes, maxQuoteLength } from "@/lib/quote-limits";

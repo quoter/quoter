@@ -1,4 +1,4 @@
-import { Collection, MessageFlags, type Interaction } from "discord.js";
+import { Collection, type Interaction, MessageFlags } from "discord.js";
 import { commands } from "@/commands";
 import { handleListQuoteButtonPress } from "@/commands/list-quotes";
 
