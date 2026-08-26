@@ -1,0 +1,9 @@
+[Unit]
+Description=Install the latest stable Quoter release
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/quoter/updater.env
+ExecStart=/usr/local/libexec/quoter/update-quoter.sh

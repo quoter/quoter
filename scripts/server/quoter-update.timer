@@ -1,0 +1,11 @@
+[Unit]
+Description=Check for a stable Quoter release
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+RandomizedDelaySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

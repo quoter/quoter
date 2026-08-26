@@ -1,0 +1,36 @@
+[Unit]
+Description=Quoter Discord bot
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60s
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=quoter
+Group=quoter
+WorkingDirectory=/var/lib/quoter
+EnvironmentFile=/etc/quoter/quoter.env
+ExecStart=/opt/quoter/current/quoter-linux-x64
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=30s
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/quoter
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

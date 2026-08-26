@@ -1,111 +1,63 @@
 <div align="center">
-	<h1>
-		<a href="https://quoter.cc">
-			<sub>
-				<img
-					src="https://github.com/quoter/quoter/assets/58091943/8a14590e-3f58-4cda-9553-d54c28f94ace"
-					height="38"
-				/>
-			</sub>
-			Quoter
-		</a>
-	</h1>
-	Quoter is a Discord bot that allows you to save messages into a quote book,
-	and share them with your friends. Add, edit, and delete quotes, then view
-	them from a list, get one randomly, or even turn them into images.
-    <br /><br />
-	<a href="https://quoter.cc"
-		><img
-			src="https://github.com/quoter/quoter/assets/58091943/ae28168a-a967-4442-a878-5e26a8ab606c"
-			alt="Website"
-			height="36"
-	/></a>
-	&ensp;
-	<a href="https://quoter.cc/invite"
-		><img
-			src="https://github.com/quoter/quoter/assets/58091943/b9af1f68-6279-44cb-8d4f-9f7ee85e74f6"
-			alt="Add to Discord"
-			height="36"
-	/></a>
-	&ensp;
+	<h1><a href="https://quoter.cc">Quoter</a></h1>
+	Quoter is a Discord quote book. Save messages, manage quotes, search the
+	collection, get a random quote, or turn one into an image.
 </div>
 
-## 🚀 Getting Started
+## Repository
 
-The easiest way to use Quoter is with the official hosted version. You can add it to your server at [quoter.cc/invite](https://quoter.cc/invite).
+Quoter is a Bun workspace monorepo. The Discord bot is in `apps/bot`. A website
+can be added later as `apps/web` without changing the bot workspace.
 
-If you want to host your own version, you can follow the instructions below.
+The bot uses TypeScript, discord.js, Drizzle ORM, and a local SQLite database.
+Quote numbers are stable within each guild. Deleting a quote never renumbers the
+remaining quotes.
 
-## 🛠️ Self-Hosting (advanced)
+## Development
 
-While we support self-hosting, we do not provide any support for it. If you are not familiar with the technologies used, we recommend using the hosted version above.
-
-To run Quoter, you will need the following:
-
--   [Bun](https://bun.sh) (we target the latest 1.x release)
--   [MongoDB](https://www.mongodb.com) (we target the latest 7.x release)
-
-You'll also need to create a Discord bot and invite it to your server. Head to [Discord's developer portal](https://discord.com/developers/applications) and create a new application. Create a bot user, and get the token. You'll need to invite the bot to your server using the following link, replacing `REPLACE_ME` with your bot's client ID:
-
-```
-https://discord.com/oauth2/authorize?scope=bot&client_id=REPLACE_ME
-```
-
-Start off by cloning the repository and installing the dependencies:
+Install Bun 1.4, then install dependencies and run the checks:
 
 ```bash
-git clone https://github.com/quoter/quoter.git
-cd quoter
-bun install
+bun install --frozen-lockfile
+bun run check
 ```
 
-Then, copy `.env.EXAMPLE` to `.env` and fill in the values:
-
--   `DISCORD_TOKEN` is the token of your Discord bot.
--   `MONGO_URI` is the URI to your MongoDB database.
-
-You can also adjust the default `MAX_GUILD_QUOTES` and `MAX_QUOTE_LENGTH`.
-
-Run the below command to deploy Slash Commands to Discord.
-
-```bash
-bun run deploy
-```
-
-Finally, run the bot:
+Copy `apps/bot/.env.EXAMPLE` to `apps/bot/.env` and add a Discord bot token.
+Start the bot from the repository root:
 
 ```bash
 bun run start
 ```
 
-### Running with PM2
+Deploy commands to a test guild with `DISCORD_GUILD_ID` set:
 
-If you want to run Quoter in the background, we recommend using [PM2](https://pm2.keymetrics.io). Quoter includes an `ecosystem.config.js` file, which allows using PM2 without any additional configuration.
+```bash
+bun run deploy-commands --guild
+```
 
-Install PM2 with `bun install -g pm2`, then `cd` into the Quoter directory and run `pm2 start`. You can then manage Quoter with `pm2` commands, such as `pm2 restart quoter` to restart the bot.
+See [development.md](docs/development.md) for the full local workflow.
 
-## 🤝 Contributing
+## Production
 
-Thank you for your interest in contributing to Quoter! Before you get started, please read our [Code of Conduct](CODE_OF_CONDUCT.md). If you're developing a new feature, or making significant changes, please open an issue first to discuss it with us.
+Production runs a compiled Linux amd64 executable under systemd. The server
+polls stable GitHub Releases and installs them after checksum and health checks.
+See [deployment.md](docs/deployment.md) and [vps-setup.md](docs/vps-setup.md).
 
-Quoter is written in [TypeScript](https://www.typescriptlang.org) and uses [Bun](https://bun.sh) as a runtime and package manager. MongoDB is used for data storage. We use [ESLint](https://eslint.org) and [Prettier](https://prettier.io) to enforce code style.
+Existing MongoDB data can be converted with the offline migration tool. Follow
+[migration.md](docs/migration.md) before the first SQLite deployment.
 
-To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. You'll also want to configure the `DISCORD_GUILD_ID` environment variable to point to your test server, which is where Slash Commands will be deployed in development. Use `bun run deploy --guild` to deploy with guild-specific commands, instead of global commands.
+## Initial validation boundary
 
-Before submitting a pull request, please run `bun run lint` to ensure your code is formatted correctly.
+The repository tests run without Discord, MongoDB, Backblaze B2, or production
+credentials. Live Discord checks, the production migration, and the VPS rollout
+must be completed with the production credentials and systems. The runbooks list
+those steps.
 
-## 📜 License
+## Contributing
 
-    Copyright (C) 2020-2025 Nick Oates
+Read the [Code of Conduct](CODE_OF_CONDUCT.md) before contributing. Run
+`bun run check` before opening a pull request.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published by
-    the Free Software Foundation, version 3.
+## License
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+Quoter is licensed under the [GNU Affero General Public License v3.0](LICENSE).

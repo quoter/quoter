@@ -1,0 +1,15 @@
+[Unit]
+Description=Back up the Quoter SQLite database to Backblaze B2
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/quoter/backup.env
+ExecStart=/usr/local/libexec/quoter/backup-quoter.sh
+User=quoter-backup
+Group=quoter-backup
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+NoNewPrivileges=true
+ReadWritePaths=/var/backups/quoter
+ReadOnlyPaths=/var/lib/quoter
