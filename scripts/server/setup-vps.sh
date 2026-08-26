@@ -63,7 +63,20 @@ ufw allow OpenSSH
 ufw --force enable
 
 dpkg-reconfigure --frontend=noninteractive unattended-upgrades
+cat >/etc/apt/apt.conf.d/52quoter-unattended-upgrades-local <<'EOF'
+Unattended-Upgrade::Automatic-Reboot "false";
+EOF
 systemctl enable --now systemd-timesyncd.service
+
+install --directory --owner=root --group=root --mode=0755 \
+  /etc/systemd/journald.conf.d
+cat >/etc/systemd/journald.conf.d/50-quoter-limits.conf <<'EOF'
+[Journal]
+SystemMaxUse=500M
+RuntimeMaxUse=100M
+MaxRetentionSec=1month
+EOF
+systemctl restart systemd-journald.service
 
 cat <<EOF
 Base setup is complete.

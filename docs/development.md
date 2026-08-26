@@ -16,15 +16,34 @@ The workspace contains only `apps/bot` today. Add a future website as
 
 ## Configuration
 
-Copy `apps/bot/.env.EXAMPLE` to `apps/bot/.env`. The bot reads these values:
+Copy `apps/bot/.env.EXAMPLE` to `apps/bot/.env`. Every change needs a process
+restart. Integer values must be positive whole numbers.
 
-- `DISCORD_TOKEN`: required bot token.
-- `DISCORD_ADMIN_ID`: optional space-separated Discord user IDs.
-- `DISCORD_GUILD_ID`: optional development guild for command deployment.
-- `DATABASE_PATH`: SQLite path. The default is `./db/quoter.sqlite`.
-- `MAX_GUILD_QUOTES`: default quote limit for a guild.
-- `MAX_QUOTE_LENGTH`: default quote text limit.
-- `GUILD_RETENTION_DAYS`: days to retain a guild after it was last seen.
+| Variable | Type and default | Sensitive | Purpose |
+| --- | --- | --- | --- |
+| `DISCORD_TOKEN` | Required string | Yes | Discord bot token |
+| `DISCORD_ADMIN_ID` | String, empty | No | Space-separated administrator user IDs |
+| `DISCORD_GUILD_ID` | Optional string | No | Development command guild |
+| `DATABASE_PATH` | Path, `./db/quoter.sqlite` | No | SQLite database file |
+| `MAX_GUILD_QUOTES` | Integer, `500` | No | Default quote limit per guild |
+| `MAX_QUOTE_LENGTH` | Integer, `250` | No | Default quote text limit |
+| `GUILD_RETENTION_DAYS` | Integer, `30` | No | Guild inactivity retention |
+| `BUILD_SHA` | String, `development` | No | Source revision shown in logs and `/about` |
+
+Production also uses updater and backup variables. Changes take effect on the
+next timer run, or after the related oneshot service is started manually.
+
+| Variable | Type and default | Sensitive | Purpose |
+| --- | --- | --- | --- |
+| `B2_APPLICATION_KEY_ID` | Required string | Yes | Backblaze application key ID |
+| `B2_APPLICATION_KEY` | Required string | Yes | Backblaze application key |
+| `B2_BUCKET` | Required string | No | Private backup bucket |
+| `B2_PREFIX` | String, `quoter` | No | Backup object prefix |
+| `QUOTER_DATABASE_PATH` | Path, `/var/lib/quoter/quoter.sqlite` | No | Backup and restore database |
+| `QUOTER_BACKUP_ROOT` | Path, `/var/backups/quoter` | No | Local backup directory |
+| `QUOTER_GITHUB_REPOSITORY` | String, `quoter/quoter` | No | Public release repository |
+| `QUOTER_INSTALL_ROOT` | Path, `/opt/quoter` | No | Versioned release root |
+| `QUOTER_SERVICE_NAME` | String, `quoter.service` | No | Managed systemd unit |
 
 ## Commands
 

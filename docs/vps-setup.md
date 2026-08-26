@@ -60,6 +60,11 @@ systemctl status quoter.service quoter-update.timer quoter-backup.timer
 Check B2 for the test backup. Run a restore drill. Confirm unattended upgrades,
 time synchronization, disk capacity, and access through the recovery console.
 
+Automatic security updates do not reboot the VPS. Check for
+`/var/run/reboot-required` after updates and schedule a reboot when it exists.
+Confirm Quoter and its timers after the host returns. journald keeps at most
+500 MB of persistent logs, 100 MB of runtime logs, and one month of history.
+
 The repository cannot apply these steps to production without VPS, Discord,
 GitHub, MongoDB, and Backblaze access.
 

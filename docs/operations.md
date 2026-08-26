@@ -62,3 +62,23 @@ df -h /var/lib/quoter
 Restore the previous release by changing `/opt/quoter/current` to a retained
 release directory, then restart the service. Use the database restore procedure
 only when the database itself needs recovery.
+
+## Credentialed smoke test
+
+Run this checklist in a test guild before the first production rollout and after
+a major release:
+
+- Register guild commands and confirm every command appears.
+- Create, view, edit, and delete both owned and moderator-managed quotes.
+- Delete an early quote and confirm later stable numbers still select the same
+  quotes.
+- Check random selection, author filtering, typo-tolerant search, list paging,
+  import, and export.
+- Generate an inspire image and confirm its font and background assets load.
+- Check cooldowns, ephemeral errors, administrator access, and Discord
+  permission checks.
+- Join a test guild, leave it, simulate an unavailable guild event where
+  practical, and inspect the stored lifecycle timestamps.
+- Confirm `/about` shows the release version and seven-character build SHA.
+
+These checks need a Discord token and a test guild. They remain outside CI.
