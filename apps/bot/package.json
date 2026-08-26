@@ -12,7 +12,9 @@
 		"deploy-commands": "bun run src/lib/deploy-commands.ts",
 		"typecheck": "tsc --noEmit",
 		"test": "bun test",
-		"build": "bun build src/main.ts --outdir dist --target bun"
+		"build": "bun build src/main.ts --outdir dist --target bun",
+		"db:generate": "drizzle-kit generate --config drizzle.config.ts",
+		"migrate:mongo": "bun run src/migration/mongo-to-sqlite.ts"
 	},
 	"bugs": {
 		"url": "https://github.com/quoter/quoter/issues"
@@ -26,8 +28,9 @@
 		"bufferutil": "^4.1.0",
 		"canvas-multiline-text": "1.0.3",
 		"discord.js": "^14.25.1",
+		"drizzle-orm": "^0.45.2",
 		"fuse.js": "^7.1.0",
-		"mongoose": "^9.2.3",
+		"mongodb": "^7.5.0",
 		"ms": "^2.1.3",
 		"utf-8-validate": "^6.0.6",
 		"zod": "^4.3.6"
@@ -36,6 +39,7 @@
 		"@types/bun": "catalog:",
 		"@types/canvas-multiline-text": "^1.0.2",
 		"@types/ms": "^2.1.0",
+		"drizzle-kit": "^0.31.10",
 		"typescript": "catalog:"
 	}
 }

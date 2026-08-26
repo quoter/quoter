@@ -1,12 +1,14 @@
 import { Collection, type Interaction, MessageFlags } from "discord.js";
 import { commands } from "@/commands";
 import { handleListQuoteButtonPress } from "@/commands/list-quotes";
+import { getConfig } from "@/config";
+import { getStore } from "@/db";
 
 const cooldowns = new Collection<string, Collection<string, number>>();
 
-const admins = process.env.DISCORD_ADMIN_ID?.split(" ");
-
 export async function interactionCreate(interaction: Interaction) {
+	if (interaction.guildId) getStore().ensureGuild(interaction.guildId);
+
 	if (interaction.isButton()) {
 		await handleListQuoteButtonPress(interaction);
 		return;
@@ -19,7 +21,7 @@ export async function interactionCreate(interaction: Interaction) {
 	const command = commands[commandName];
 	if (!command) return;
 
-	const isAdmin = admins?.includes(user.id);
+	const isAdmin = getConfig().discordAdminIds.has(user.id);
 
 	if (command.cooldown && !isAdmin) {
 		if (!cooldowns.has(commandName)) {
@@ -37,7 +39,7 @@ export async function interactionCreate(interaction: Interaction) {
 
 			if (now < expiresAt) {
 				const timeLeft = ((expiresAt - now) / 1000).toFixed(0);
-				interaction.reply({
+				await interaction.reply({
 					content: `🛑 **|** That command is on cooldown! Wait ${timeLeft} second(s) before using it again.`,
 					flags: MessageFlags.Ephemeral,
 				});
@@ -56,12 +58,12 @@ export async function interactionCreate(interaction: Interaction) {
 * ${error}`);
 
 		if (interaction.deferred || interaction.replied) {
-			interaction.editReply({
+			await interaction.editReply({
 				content:
 					"❌ **|** Something went wrong while executing that command. Report this with `/bugs`!",
 			});
 		} else {
-			interaction.reply({
+			await interaction.reply({
 				content:
 					"❌ **|** Something went wrong while executing that command. Report this with `/bugs`!",
 				flags: MessageFlags.Ephemeral,

@@ -1,23 +1,23 @@
 import { ActivityType, type Client } from "discord.js";
-import { Guild } from "@/schemas/guild";
+import { getConfig } from "@/config";
+import { getStore } from "@/db";
+import { setManagedInterval } from "@/lib/timers";
 
 export async function ready(client: Client) {
 	if (!client.user) throw new Error("Client user is not available");
 	console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 
 	const currentGuilds = client.guilds.cache.map((g) => g.id);
+	getStore().touchGuilds(currentGuilds);
 
-	if (currentGuilds.length <= 0) {
-		return console.warn(
-			"An error occurred while retrieving guild cache, or this bot isn't in any guilds. Data deletion will be skipped.",
-		);
-	}
-
-	// Delete guilds if their ID is not in the current guild cache
-	const response = await Guild.deleteMany({
-		_id: { $nin: currentGuilds },
-	});
-	console.log(`Deleted ${response.deletedCount} guilds from mongoDB`);
+	const cleanup = () => {
+		const cutoff =
+			Date.now() - getConfig().guildRetentionDays * 24 * 60 * 60 * 1000;
+		const deleted = getStore().deleteGuildsNotSeenSince(cutoff);
+		if (deleted > 0) console.log(`Deleted ${deleted} expired guilds`);
+	};
+	cleanup();
+	setManagedInterval(cleanup, 24 * 60 * 60 * 1000);
 
 	const update = () => {
 		const formattedServerCount = Intl.NumberFormat("en-US", {
@@ -33,5 +33,5 @@ export async function ready(client: Client) {
 		);
 	};
 	update();
-	setInterval(update, 600000);
+	setManagedInterval(update, 600_000);
 }

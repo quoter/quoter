@@ -1,9 +1,9 @@
 import type { Guild as DiscordGuild } from "discord.js";
-import { Guild } from "@/schemas/guild";
+import { getStore } from "@/db";
 
 export async function guildDelete(guild: DiscordGuild) {
 	if (!guild.available) return; // Server outage
 
-	await Guild.deleteOne({ _id: guild.id });
-	console.log(`Deleted data for guild ${guild.name} (${guild.id})`);
+	getStore().markGuildLeft(guild.id);
+	console.log(`Marked guild ${guild.name} (${guild.id}) as left`);
 }

@@ -8,13 +8,9 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { maxQuoteLength } from "@/lib/quote-limits";
-import {
-	cleanString,
-	fetchDbGuild,
-	mentionParse,
-	trimQuotes,
-} from "@/lib/utils";
+import { getStore } from "@/db";
+import { getGuildId, getGuildLimits } from "@/lib/guild";
+import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
 const EditQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -42,10 +38,8 @@ const EditQuoteCommand: QuoterCommand = {
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
 
-		const guild = await fetchDbGuild(interaction);
-
-		const { quotes } = guild;
-		const quote = quotes[id - 1];
+		const guildId = getGuildId(interaction);
+		const quote = getStore().getQuote(guildId, id);
 
 		if (!quote) {
 			await interaction.reply({
@@ -62,22 +56,20 @@ const EditQuoteCommand: QuoterCommand = {
 		if (textInput === null) throw new Error("Text input is null");
 		const text = trimQuotes(textInput);
 
-		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
+		const { maxQuoteLength } = getGuildLimits(guildId);
+		if (text.length > maxQuoteLength) {
 			await interaction.reply({
-				content: `❌ **|** Quotes cannot be longer than ${
-					guild.maxQuoteLength || maxQuoteLength
-				} characters.`,
+				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
 
-		quote.text = text;
-		if (author) quote.author = author;
-		quote.editedTimestamp = Date.now();
-		quote.editorID = interaction.user.id;
-
-		await guild.save();
+		getStore().updateQuote(guildId, id, {
+			text,
+			author: author ?? undefined,
+			editorId: interaction.user.id,
+		});
 
 		await interaction.reply({
 			embeds: [

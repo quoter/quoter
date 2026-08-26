@@ -1,5 +1,4 @@
-import type { BaseInteraction, Client } from "discord.js";
-import { Guild } from "@/schemas/guild";
+import type { Client } from "discord.js";
 
 /**
  * Removes hyperlinks & (optionally) newlines from a string
@@ -18,18 +17,6 @@ export function cleanString(
 	if (replaceNewlines) string = string.replaceAll("\n", " ");
 
 	return string;
-}
-
-export async function fetchDbGuild(interaction: BaseInteraction) {
-	if (!interaction.guild) {
-		throw new Error("Interaction is not in a guild.");
-	}
-
-	return await Guild.findOneAndUpdate(
-		{ _id: interaction.guild.id },
-		{},
-		{ upsert: true, new: true },
-	);
 }
 
 /**

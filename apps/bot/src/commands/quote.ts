@@ -7,7 +7,9 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { getStore } from "@/db";
+import { getGuildId } from "@/lib/guild";
+import { cleanString } from "@/lib/utils";
 
 const QuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -37,9 +39,12 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const { quotes } = await fetchDbGuild(interaction);
+		const guildId = getGuildId(interaction);
+		const quote = choice
+			? getStore().getQuote(guildId, choice)
+			: getStore().getRandomQuote(guildId, author);
 
-		if (!quotes?.length) {
+		if (!quote) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
@@ -48,39 +53,21 @@ const QuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		const filteredQuotes = author
-			? quotes.filter(
-					(q) => q.author && q.author.toLowerCase() === author.toLowerCase(),
-				)
-			: quotes;
-
-		const id = choice ?? Math.ceil(Math.random() * filteredQuotes.length);
-
-		const quote = filteredQuotes[id - 1];
-		if (!quote) {
-			await interaction.reply({
-				content: "❌ **|** I couldn't find a quote with that ID.",
-				flags: MessageFlags.Ephemeral,
-			});
-			return;
-		}
-
 		const embed = new EmbedBuilder()
 			.setColor(Colors.Blue)
 			.setDescription(`"${cleanString(quote.text, false)}"`)
-			.setFooter({ text: `Quote #${id}${!choice ? " (random)" : ""}` });
+			.setFooter({
+				text: `Quote #${quote.quoteNumber}${!choice ? " (random)" : ""}`,
+			});
 
-		if (interaction.guild === null) throw new Error("Guild is null");
-		if (quote.ogMessageID && quote.ogChannelID) {
+		if (quote.originalMessageId && quote.originalChannelId) {
 			embed.setDescription(
 				embed.data.description +
-					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`,
+					`\n> [Original Message](https://discord.com/channels/${guildId}/${quote.originalChannelId}/${quote.originalMessageId})`,
 			);
 		}
 
-		if (quote.createdTimestamp) {
-			embed.setTimestamp(quote.editedTimestamp || quote.createdTimestamp);
-		}
+		embed.setTimestamp(quote.editedAt ?? quote.createdAt);
 
 		if (quote.author) embed.setAuthor({ name: quote.author });
 

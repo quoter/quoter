@@ -8,11 +8,12 @@ import {
 } from "discord.js";
 import { inspireImages } from "@/assets/inspire-images";
 import type { QuoterCommand } from "@/commands";
-import { fetchDbGuild } from "@/lib/utils";
-import type { Quote } from "@/schemas/guild";
+import { getStore } from "@/db";
+import type { Quote } from "@/domain/quote";
+import { getGuildId } from "@/lib/guild";
 
 GlobalFonts.registerFromPath(
-	path.resolve(__dirname, "../../assets/ScheherazadeNew-Regular.ttf"),
+	path.resolve(import.meta.dir, "../assets/ScheherazadeNew-Regular.ttf"),
 	"Regular",
 );
 
@@ -45,29 +46,15 @@ const InspireCommand: QuoterCommand = {
 			return;
 		}
 
-		const guild = await fetchDbGuild(interaction);
-		let quotes: Quote[] = guild.quotes;
+		const guildId = getGuildId(interaction);
+		const quote: Quote | null = choice
+			? getStore().getQuote(guildId, choice)
+			: getStore().getRandomQuote(guildId, author);
 
-		if (author) {
-			quotes = quotes.filter(
-				(q) => q.author && q.author.toLowerCase() === author.toLowerCase(),
-			);
-		}
-
-		if (!quotes.length) {
+		if (!quote) {
 			await interaction.editReply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
-			});
-			return;
-		}
-
-		const id = choice ?? Math.ceil(Math.random() * quotes.length);
-
-		const quote = quotes[id - 1];
-		if (!quote) {
-			await interaction.editReply({
-				content: "❌ **|** I couldn't find a quote with that ID.",
 			});
 			return;
 		}

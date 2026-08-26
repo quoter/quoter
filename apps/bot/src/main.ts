@@ -1,6 +1,18 @@
+import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
-import mongoose from "mongoose";
+import { initializeConfig } from "@/config";
+import { closeStore, initializeStore } from "@/db";
 import { events } from "@/events";
+import { clearManagedTimers } from "@/lib/timers";
+
+const config = initializeConfig();
+mkdirSync(dirname(config.databasePath), { recursive: true });
+const store = initializeStore(config.databasePath);
+
+console.log(
+	`Starting Quoter v${config.version} (${config.buildSha.slice(0, 7)}), schema ${store.getSchemaVersion()}`,
+);
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
@@ -19,28 +31,37 @@ const client = new Client({
 	shards: "auto",
 });
 
-if (process.env.DISCORD_TOKEN === undefined) {
-	throw new Error("DISCORD_TOKEN environment variable not set");
-}
 client
 	.on(Events.ClientReady, events.ready)
+	.on(Events.GuildCreate, events.guildCreate)
 	.on(Events.GuildDelete, events.guildDelete)
 	.on(Events.InteractionCreate, events.interactionCreate);
 
-if (process.env.MONGO_URI === undefined) {
-	throw new Error("MONGO_URI environment variable not set");
+let shuttingDown = false;
+
+async function shutdown(exitCode: number): Promise<void> {
+	if (shuttingDown) return;
+	shuttingDown = true;
+	clearManagedTimers();
+	client.destroy();
+	closeStore();
+	process.exitCode = exitCode;
 }
 
-mongoose
-	.connect(process.env.MONGO_URI)
-	.then(() => client.login(process.env.DISCORD_TOKEN));
-
-process.on("SIGINT", async () => {
-	await mongoose.connection.close();
-	console.log("Closed mongoDB connection");
-
-	await client.destroy();
-	console.log("Destroyed client");
-
-	process.exit(0);
+process.once("SIGINT", () => void shutdown(0));
+process.once("SIGTERM", () => void shutdown(0));
+process.on("unhandledRejection", (error) => {
+	console.error("Unhandled promise rejection", error);
+	void shutdown(1);
 });
+process.on("uncaughtException", (error) => {
+	console.error("Uncaught exception", error);
+	void shutdown(1);
+});
+
+try {
+	await client.login(config.discordToken);
+} catch (error) {
+	console.error("Discord login failed", error);
+	await shutdown(1);
+}

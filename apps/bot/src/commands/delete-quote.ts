@@ -6,7 +6,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { fetchDbGuild } from "@/lib/utils";
+import { getStore } from "@/db";
+import { getGuildId } from "@/lib/guild";
 
 const DeleteQuoteCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -25,8 +26,8 @@ const DeleteQuoteCommand: QuoterCommand = {
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
 
-		const guild = await fetchDbGuild(interaction);
-		const quote = guild.quotes[id - 1];
+		const guildId = getGuildId(interaction);
+		const quote = getStore().getQuote(guildId, id);
 
 		if (!quote) {
 			await interaction.reply({
@@ -36,8 +37,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		await quote.deleteOne();
-		await guild.save();
+		getStore().deleteQuote(guildId, id);
 		await interaction.reply({
 			content: `✅ **|** Deleted quote #${id}.`,
 		});

@@ -6,9 +6,11 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
-import Fuse from "fuse.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { getStore } from "@/db";
+import { getGuildId } from "@/lib/guild";
+import { searchQuotes } from "@/lib/search-quotes";
+import { cleanString } from "@/lib/utils";
 
 const SearchCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -23,7 +25,7 @@ const SearchCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const { quotes } = await fetchDbGuild(interaction);
+		const quotes = getStore().getSearchCandidates(getGuildId(interaction));
 
 		if (!quotes.length) {
 			await interaction.reply({
@@ -46,11 +48,7 @@ const SearchCommand: QuoterCommand = {
 			return;
 		}
 
-		const fuse = new Fuse(quotes, {
-			keys: ["text", "author"],
-			threshold: 0.4,
-		});
-		const matches = fuse.search(searchTerm);
+		const matches = searchQuotes(quotes, searchTerm);
 
 		if (!matches.length) {
 			await interaction.reply({
@@ -61,28 +59,18 @@ const SearchCommand: QuoterCommand = {
 			return;
 		}
 
-		matches.length = 5;
-
-		const list = matches.map((match) => {
-			let result = "";
-
-			const quoteID = match.refIndex + 1;
-			const quote = match.item;
-
-			if (quote.text && quote.text.length > 30) {
-				quote.text = `${quote.text.substr(0, 30)}...`;
-			}
-			if (quote.author && quote.author.length > 10) {
-				quote.author = `${quote.author.substr(0, 10)}...`;
-			}
-
-			result += `**${quoteID}**. "${cleanString(quote.text)}"`;
-
-			if (quote.author && quote.author.length > 0) {
-				result += ` - ${cleanString(quote.author)}`;
-			}
-
-			return result;
+		const list = matches.map((quote) => {
+			const text =
+				quote.text.length > 30
+					? `${quote.text.substring(0, 30)}...`
+					: quote.text;
+			const author =
+				quote.author && quote.author.length > 10
+					? `${quote.author.substring(0, 10)}...`
+					: quote.author;
+			return `**${quote.quoteNumber}**. "${cleanString(text)}"${
+				author ? ` - ${cleanString(author)}` : ""
+			}`;
 		});
 
 		await interaction.reply({

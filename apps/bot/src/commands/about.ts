@@ -9,8 +9,8 @@ import {
 } from "discord.js";
 import ms from "ms";
 import type { QuoterCommand } from "@/commands";
-import { Guild } from "@/schemas/guild";
-import quoterPackage from "../../package.json";
+import { getConfig } from "@/config";
+import { getStore } from "@/db";
 
 let totalQuotes = "0";
 let totalQuotesLastUpdated = 0;
@@ -38,12 +38,7 @@ const AboutCommand: QuoterCommand = {
 		// Cache the total number of quotes in the database for 10 minutes
 		const timeSinceLastUpdated = Date.now() - totalQuotesLastUpdated;
 		if (timeSinceLastUpdated > 600 * 1000) {
-			const result = await Guild.aggregate([
-				{ $unwind: "$quotes" },
-				{ $group: { _id: null, total: { $sum: 1 } } },
-			]);
-
-			totalQuotes = result[0]?.total.toLocaleString() || 0;
+			totalQuotes = getStore().countAllQuotes().toLocaleString();
 			totalQuotesLastUpdated = Date.now();
 		}
 
@@ -81,7 +76,9 @@ const AboutCommand: QuoterCommand = {
 							inline: true,
 						},
 					])
-					.setFooter({ text: `Quoter v${quoterPackage.version}` }),
+					.setFooter({
+						text: `Quoter v${getConfig().version} • Build ${getConfig().buildSha.slice(0, 7)}`,
+					}),
 			],
 			components: [
 				new ActionRowBuilder<ButtonBuilder>().addComponents(

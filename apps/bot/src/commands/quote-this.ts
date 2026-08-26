@@ -8,9 +8,10 @@ import {
 	MessageFlags,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { maxGuildQuotes, maxQuoteLength } from "@/lib/quote-limits";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
-import { Quote } from "@/schemas/guild";
+import { GuildQuoteLimitError, getStore } from "@/db";
+import type { Quote } from "@/domain/quote";
+import { getGuildId, getGuildLimits } from "@/lib/guild";
+import { cleanString } from "@/lib/utils";
 
 const QuoteThisCommand: QuoterCommand = {
 	data: new ContextMenuCommandBuilder()
@@ -19,16 +20,8 @@ const QuoteThisCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 10,
 	async execute(interaction: MessageContextMenuCommandInteraction) {
-		const guild = await fetchDbGuild(interaction);
-
-		if (guild.quotes.length >= (guild.maxGuildQuotes || maxGuildQuotes)) {
-			await interaction.reply({
-				content:
-					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
-				flags: MessageFlags.Ephemeral,
-			});
-			return;
-		}
+		const guildId = getGuildId(interaction);
+		const limits = getGuildLimits(guildId);
 
 		const message = interaction.options.getMessage("message");
 		if (!message) throw new Error("No message found");
@@ -42,9 +35,9 @@ const QuoteThisCommand: QuoterCommand = {
 			return;
 		}
 
-		if (text.length > (guild.maxQuoteLength || maxQuoteLength)) {
+		if (text.length > limits.maxQuoteLength) {
 			await interaction.reply({
-				content: `❌ **|** Quotes cannot be longer than ${maxQuoteLength} characters.`,
+				content: `❌ **|** Quotes cannot be longer than ${limits.maxQuoteLength} characters.`,
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
@@ -52,16 +45,28 @@ const QuoteThisCommand: QuoterCommand = {
 
 		const author = message.author?.tag;
 
-		const quote = new Quote({
-			text,
-			author,
-			ogMessageID: message.id,
-			ogChannelID: message.channel.id,
-			quoterID: interaction.user.id,
-		});
-
-		guild.quotes.push(quote);
-		await guild.save();
+		let quote: Quote;
+		try {
+			quote = getStore().createQuote(
+				guildId,
+				{
+					text,
+					author,
+					originalMessageId: message.id,
+					originalChannelId: message.channel.id,
+					quoterId: interaction.user.id,
+				},
+				limits.maxQuotes,
+			);
+		} catch (error) {
+			if (!(error instanceof GuildQuoteLimitError)) throw error;
+			await interaction.reply({
+				content:
+					"❌ **|** This server has too many quotes! Ask for this limit to be raised in the [Quoter support server](https://discord.gg/QzXTgS2CNk), or use `/delete-quote` before creating more.",
+				flags: MessageFlags.Ephemeral,
+			});
+			return;
+		}
 
 		await interaction.reply({
 			embeds: [
@@ -71,7 +76,7 @@ const QuoteThisCommand: QuoterCommand = {
 					.setDescription(
 						`"${cleanString(text, false)}" - ${cleanString(author)}`,
 					)
-					.setFooter({ text: `Quote #${guild.quotes.length}` }),
+					.setFooter({ text: `Quote #${quote.quoteNumber}` }),
 			],
 		});
 	},

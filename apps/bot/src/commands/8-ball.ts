@@ -7,7 +7,9 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { cleanString, fetchDbGuild } from "@/lib/utils";
+import { getStore } from "@/db";
+import { getGuildId } from "@/lib/guild";
+import { cleanString } from "@/lib/utils";
 
 const EightBallCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -34,8 +36,9 @@ const EightBallCommand: QuoterCommand = {
 				`You ask the magic 8-ball a question...\n\n> ${question}\n\n...and it responds with a quote:`,
 			);
 
-		const { quotes } = await fetchDbGuild(interaction);
-		if (!quotes?.length) {
+		const guildId = getGuildId(interaction);
+		const quote = getStore().getRandomQuote(guildId);
+		if (!quote) {
 			await interaction.reply({
 				content:
 					"❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
@@ -44,25 +47,19 @@ const EightBallCommand: QuoterCommand = {
 			return;
 		}
 
-		const id = Math.ceil(Math.random() * quotes.length);
-		const quote = quotes[id - 1];
-
 		const quoteEmbed = new EmbedBuilder()
 			.setColor(Colors.Blue)
 			.setDescription(`"${cleanString(quote.text, false)}"`)
-			.setFooter({ text: `Quote #${id}` });
+			.setFooter({ text: `Quote #${quote.quoteNumber}` });
 
-		if (interaction.guild === null) throw new Error("Guild is null");
-		if (quote.ogMessageID && quote.ogChannelID) {
+		if (quote.originalMessageId && quote.originalChannelId) {
 			quoteEmbed.setDescription(
 				quoteEmbed.data.description +
-					`\n> [Original Message](https://discord.com/channels/${interaction.guild.id}/${quote.ogChannelID}/${quote.ogMessageID})`,
+					`\n> [Original Message](https://discord.com/channels/${guildId}/${quote.originalChannelId}/${quote.originalMessageId})`,
 			);
 		}
 
-		if (quote.createdTimestamp) {
-			quoteEmbed.setTimestamp(quote.editedTimestamp || quote.createdTimestamp);
-		}
+		quoteEmbed.setTimestamp(quote.editedAt ?? quote.createdAt);
 
 		if (quote.author) quoteEmbed.setAuthor({ name: quote.author });
 

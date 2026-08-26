@@ -1,12 +1,16 @@
 import { Database } from "bun:sqlite";
+import { and, asc, count, eq, lt, sql } from "drizzle-orm";
+import { type BunSQLiteDatabase, drizzle } from "drizzle-orm/bun-sqlite";
+import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import { guilds, quotes } from "@/db/schema";
 import type {
 	GuildSettings,
+	LegacyGuild,
 	NewQuote,
 	Quote,
 	QuotePage,
 	QuoteUpdate,
 } from "@/domain/quote";
-import { getSchemaVersion, migrateDatabase } from "@/db/migrations";
 
 export class GuildQuoteLimitError extends Error {
 	constructor(readonly limit: number) {
@@ -15,32 +19,24 @@ export class GuildQuoteLimitError extends Error {
 	}
 }
 
-type QuoteRow = Omit<Quote, "author"> & { author: string | null };
+type QuoterDatabase = BunSQLiteDatabase<{
+	guilds: typeof guilds;
+	quotes: typeof quotes;
+}>;
 
-const quoteColumns = `
-	guild_id AS guildId,
-	quote_number AS quoteNumber,
-	text,
-	author,
-	quoter_id AS quoterId,
-	editor_id AS editorId,
-	original_message_id AS originalMessageId,
-	original_channel_id AS originalChannelId,
-	created_at AS createdAt,
-	edited_at AS editedAt
-`;
+const migrationsFolder = `${import.meta.dir}/../../drizzle`;
 
 export class QuoteStore {
 	readonly database: Database;
+	readonly db: QuoterDatabase;
 
 	constructor(path: string = ":memory:") {
 		this.database = new Database(path, { create: true, strict: true });
 		this.database.exec("PRAGMA foreign_keys = ON");
 		this.database.exec("PRAGMA busy_timeout = 5000");
-		if (path !== ":memory:") {
-			this.database.exec("PRAGMA journal_mode = WAL");
-		}
-		migrateDatabase(this.database);
+		if (path !== ":memory:") this.database.exec("PRAGMA journal_mode = WAL");
+		this.db = drizzle({ client: this.database, schema: { guilds, quotes } });
+		migrate(this.db, { migrationsFolder });
 	}
 
 	close(): void {
@@ -48,63 +44,56 @@ export class QuoteStore {
 	}
 
 	getSchemaVersion(): number {
-		return getSchemaVersion(this.database);
+		const result = this.database
+			.query<{ count: number }, []>(
+				"SELECT COUNT(*) AS count FROM __drizzle_migrations",
+			)
+			.get();
+		return result?.count ?? 0;
 	}
 
 	ensureGuild(guildId: string, now: number = Date.now()): void {
-		this.database
-			.query(
-				`INSERT INTO guilds (guild_id, last_seen_at, created_at)
-				 VALUES (?, ?, ?)
-				 ON CONFLICT (guild_id) DO UPDATE SET
-				   last_seen_at = excluded.last_seen_at,
-				   left_at = NULL`,
-			)
-			.run(guildId, now, now);
+		this.db
+			.insert(guilds)
+			.values({ guildId, lastSeenAt: now, createdAt: now })
+			.onConflictDoUpdate({
+				target: guilds.guildId,
+				set: { lastSeenAt: now, leftAt: null },
+			})
+			.run();
 	}
 
 	touchGuilds(guildIds: string[], now: number = Date.now()): void {
-		const touch = this.database.transaction((ids: string[]) => {
-			for (const guildId of ids) this.ensureGuild(guildId, now);
-		});
-		touch(guildIds);
+		this.database.transaction(() => {
+			for (const guildId of guildIds) this.ensureGuild(guildId, now);
+		})();
 	}
 
 	markGuildLeft(guildId: string, now: number = Date.now()): void {
-		this.database
-			.query("UPDATE guilds SET left_at = ? WHERE guild_id = ?")
-			.run(now, guildId);
+		this.db
+			.update(guilds)
+			.set({ leftAt: now })
+			.where(eq(guilds.guildId, guildId))
+			.run();
 	}
 
 	deleteGuildsNotSeenSince(cutoff: number): number {
-		const remove = this.database.transaction(() => {
-			const count =
-				this.database
-					.query<{ count: number }, [number]>(
-						"SELECT COUNT(*) AS count FROM guilds WHERE last_seen_at < ?",
-					)
-					.get(cutoff)?.count ?? 0;
-			this.database
-				.query("DELETE FROM guilds WHERE last_seen_at < ?")
-				.run(cutoff);
-			return count;
-		});
-		return remove();
+		return this.database.transaction(() => {
+			const [result] = this.db
+				.select({ count: count() })
+				.from(guilds)
+				.where(lt(guilds.lastSeenAt, cutoff))
+				.all();
+			this.db.delete(guilds).where(lt(guilds.lastSeenAt, cutoff)).run();
+			return result?.count ?? 0;
+		})();
 	}
 
 	getGuildSettings(guildId: string): GuildSettings | null {
-		return this.database
-			.query<GuildSettings, [string]>(
-				`SELECT
-					guild_id AS guildId,
-					next_quote_number AS nextQuoteNumber,
-					max_quotes AS maxQuotes,
-					max_quote_length AS maxQuoteLength,
-					last_seen_at AS lastSeenAt,
-					left_at AS leftAt
-				 FROM guilds WHERE guild_id = ?`,
-			)
-			.get(guildId);
+		return (
+			this.db.select().from(guilds).where(eq(guilds.guildId, guildId)).get() ??
+			null
+		);
 	}
 
 	setGuildLimits(
@@ -112,16 +101,7 @@ export class QuoteStore {
 		limits: { maxQuotes?: number | null; maxQuoteLength?: number | null },
 	): void {
 		this.ensureGuild(guildId);
-		if (limits.maxQuotes !== undefined) {
-			this.database
-				.query("UPDATE guilds SET max_quotes = ? WHERE guild_id = ?")
-				.run(limits.maxQuotes, guildId);
-		}
-		if (limits.maxQuoteLength !== undefined) {
-			this.database
-				.query("UPDATE guilds SET max_quote_length = ? WHERE guild_id = ?")
-				.run(limits.maxQuoteLength, guildId);
-		}
+		this.db.update(guilds).set(limits).where(eq(guilds.guildId, guildId)).run();
 	}
 
 	createQuote(
@@ -129,163 +109,101 @@ export class QuoteStore {
 		quote: NewQuote,
 		defaultMaxQuotes: number,
 	): Quote {
-		const create = this.database.transaction(() => {
+		return this.database.transaction(() => {
 			this.ensureGuild(guildId);
-			const settings = this.getGuildSettings(guildId);
-			if (!settings) throw new Error("Guild was not created");
-
-			const quoteCount = this.countGuildQuotes(guildId);
-			const limit = settings.maxQuotes ?? defaultMaxQuotes;
-			if (quoteCount >= limit) throw new GuildQuoteLimitError(limit);
-
-			const allocation = this.database
-				.query<{ quoteNumber: number }, [string]>(
-					`UPDATE guilds
-					 SET next_quote_number = next_quote_number + 1
-					 WHERE guild_id = ?
-					 RETURNING next_quote_number - 1 AS quoteNumber`,
-				)
-				.get(guildId);
-			if (!allocation) throw new Error("Quote number allocation failed");
-
-			const createdAt = quote.createdAt ?? Date.now();
-			this.database
-				.query(
-					`INSERT INTO quotes (
-						guild_id, quote_number, text, author, quoter_id,
-						original_message_id, original_channel_id, created_at, edited_at
-					) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-				)
-				.run(
-					guildId,
-					allocation.quoteNumber,
-					quote.text,
-					quote.author ?? null,
-					quote.quoterId ?? null,
-					quote.originalMessageId ?? null,
-					quote.originalChannelId ?? null,
-					createdAt,
-					quote.editedAt ?? null,
-				);
-
-			const created = this.getQuote(guildId, allocation.quoteNumber);
-			if (!created) throw new Error("Created quote was not found");
+			this.assertQuoteCapacity(guildId, 1, defaultMaxQuotes);
+			const quoteNumber = this.allocateQuoteNumber(guildId);
+			const [created] = this.db
+				.insert(quotes)
+				.values(this.toInsert(guildId, quoteNumber, quote))
+				.returning()
+				.all();
+			if (!created) throw new Error("Created quote was not returned");
 			return created;
-		});
-
-		return create();
+		})();
 	}
 
 	importQuotes(
 		guildId: string,
-		quotes: NewQuote[],
+		newQuotes: NewQuote[],
 		defaultMaxQuotes: number,
 	): Quote[] {
-		const runImport = this.database.transaction(() => {
+		return this.database.transaction(() => {
 			this.ensureGuild(guildId);
-			const settings = this.getGuildSettings(guildId);
-			if (!settings) throw new Error("Guild was not created");
-			const limit = settings.maxQuotes ?? defaultMaxQuotes;
-			if (this.countGuildQuotes(guildId) + quotes.length > limit) {
-				throw new GuildQuoteLimitError(limit);
-			}
-
+			this.assertQuoteCapacity(guildId, newQuotes.length, defaultMaxQuotes);
 			const imported: Quote[] = [];
-			for (const quote of quotes) {
-				const allocation = this.database
-					.query<{ quoteNumber: number }, [string]>(
-						`UPDATE guilds
-						 SET next_quote_number = next_quote_number + 1
-						 WHERE guild_id = ?
-						 RETURNING next_quote_number - 1 AS quoteNumber`,
-					)
-					.get(guildId);
-				if (!allocation) throw new Error("Quote number allocation failed");
-
-				const createdAt = quote.createdAt ?? Date.now();
-				this.database
-					.query(
-						`INSERT INTO quotes (
-							guild_id, quote_number, text, author, quoter_id,
-							original_message_id, original_channel_id, created_at, edited_at
-						) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-					)
-					.run(
-						guildId,
-						allocation.quoteNumber,
-						quote.text,
-						quote.author ?? null,
-						quote.quoterId ?? null,
-						quote.originalMessageId ?? null,
-						quote.originalChannelId ?? null,
-						createdAt,
-						quote.editedAt ?? null,
-					);
-				const created = this.getQuote(guildId, allocation.quoteNumber);
-				if (!created) throw new Error("Imported quote was not found");
+			for (const quote of newQuotes) {
+				const quoteNumber = this.allocateQuoteNumber(guildId);
+				const [created] = this.db
+					.insert(quotes)
+					.values(this.toInsert(guildId, quoteNumber, quote))
+					.returning()
+					.all();
+				if (!created) throw new Error("Imported quote was not returned");
 				imported.push(created);
 			}
 			return imported;
-		});
-
-		return runImport();
+		})();
 	}
 
 	getQuote(guildId: string, quoteNumber: number): Quote | null {
-		return this.database
-			.query<QuoteRow, [string, number]>(
-				`SELECT ${quoteColumns}
-				 FROM quotes WHERE guild_id = ? AND quote_number = ?`,
-			)
-			.get(guildId, quoteNumber);
+		return (
+			this.db
+				.select()
+				.from(quotes)
+				.where(
+					and(eq(quotes.guildId, guildId), eq(quotes.quoteNumber, quoteNumber)),
+				)
+				.get() ?? null
+		);
 	}
 
 	getRandomQuote(guildId: string, author?: string | null): Quote | null {
-		if (author) {
-			return this.database
-				.query<QuoteRow, [string, string]>(
-					`SELECT ${quoteColumns}
-					 FROM quotes
-					 WHERE guild_id = ? AND author = ? COLLATE NOCASE
-					 ORDER BY random() LIMIT 1`,
+		const condition = author
+			? and(
+					eq(quotes.guildId, guildId),
+					sql`${quotes.author} = ${author} COLLATE NOCASE`,
 				)
-				.get(guildId, author);
-		}
-
-		return this.database
-			.query<QuoteRow, [string]>(
-				`SELECT ${quoteColumns}
-				 FROM quotes WHERE guild_id = ? ORDER BY random() LIMIT 1`,
-			)
-			.get(guildId);
+			: eq(quotes.guildId, guildId);
+		return (
+			this.db
+				.select()
+				.from(quotes)
+				.where(condition)
+				.orderBy(sql`random()`)
+				.limit(1)
+				.get() ?? null
+		);
 	}
 
 	listQuotes(guildId: string, page: number, pageSize: number = 10): QuotePage {
 		const total = this.countGuildQuotes(guildId);
 		const totalPages = Math.max(1, Math.ceil(total / pageSize));
 		const safePage = Math.min(Math.max(1, page), totalPages);
-		const quotes = this.database
-			.query<QuoteRow, [string, number, number]>(
-				`SELECT ${quoteColumns}
-				 FROM quotes WHERE guild_id = ?
-				 ORDER BY quote_number LIMIT ? OFFSET ?`,
-			)
-			.all(guildId, pageSize, (safePage - 1) * pageSize);
-		return { quotes, total, page: safePage, pageSize, totalPages };
+		const rows = this.db
+			.select()
+			.from(quotes)
+			.where(eq(quotes.guildId, guildId))
+			.orderBy(asc(quotes.quoteNumber))
+			.limit(pageSize)
+			.offset((safePage - 1) * pageSize)
+			.all();
+		return { quotes: rows, total, page: safePage, pageSize, totalPages };
 	}
 
 	getSearchCandidates(
 		guildId: string,
 	): Pick<Quote, "quoteNumber" | "text" | "author">[] {
-		return this.database
-			.query<
-				Pick<Quote, "quoteNumber" | "text" | "author">,
-				[string]
-			>(
-				`SELECT quote_number AS quoteNumber, text, author
-				 FROM quotes WHERE guild_id = ? ORDER BY quote_number`,
-			)
-			.all(guildId);
+		return this.db
+			.select({
+				quoteNumber: quotes.quoteNumber,
+				text: quotes.text,
+				author: quotes.author,
+			})
+			.from(quotes)
+			.where(eq(quotes.guildId, guildId))
+			.orderBy(asc(quotes.quoteNumber))
+			.all();
 	}
 
 	updateQuote(
@@ -295,56 +213,133 @@ export class QuoteStore {
 	): Quote | null {
 		const existing = this.getQuote(guildId, quoteNumber);
 		if (!existing) return null;
-
-		this.database
-			.query(
-				`UPDATE quotes SET
-					text = ?, author = ?, editor_id = ?, edited_at = ?
-				 WHERE guild_id = ? AND quote_number = ?`,
+		const [updated] = this.db
+			.update(quotes)
+			.set({
+				text: update.text,
+				author: update.author === undefined ? existing.author : update.author,
+				editorId: update.editorId,
+				editedAt: update.editedAt ?? Date.now(),
+			})
+			.where(
+				and(eq(quotes.guildId, guildId), eq(quotes.quoteNumber, quoteNumber)),
 			)
-			.run(
-				update.text,
-				update.author === undefined ? existing.author : update.author,
-				update.editorId,
-				update.editedAt ?? Date.now(),
-				guildId,
-				quoteNumber,
-			);
-		return this.getQuote(guildId, quoteNumber);
+			.returning()
+			.all();
+		return updated ?? null;
 	}
 
 	deleteQuote(guildId: string, quoteNumber: number): boolean {
 		return (
-			this.database
-				.query("DELETE FROM quotes WHERE guild_id = ? AND quote_number = ?")
-				.run(guildId, quoteNumber).changes === 1
+			this.db
+				.delete(quotes)
+				.where(
+					and(eq(quotes.guildId, guildId), eq(quotes.quoteNumber, quoteNumber)),
+				)
+				.returning({ quoteNumber: quotes.quoteNumber })
+				.all().length === 1
 		);
 	}
 
 	countGuildQuotes(guildId: string): number {
 		return (
-			this.database
-				.query<{ count: number }, [string]>(
-					"SELECT COUNT(*) AS count FROM quotes WHERE guild_id = ?",
-				)
-				.get(guildId)?.count ?? 0
-		);
-	}
-
-	countAllQuotes(): number {
-		return (
-			this.database
-				.query<{ count: number }, []>("SELECT COUNT(*) AS count FROM quotes")
+			this.db
+				.select({ count: count() })
+				.from(quotes)
+				.where(eq(quotes.guildId, guildId))
 				.get()?.count ?? 0
 		);
 	}
 
+	countAllQuotes(): number {
+		return this.db.select({ count: count() }).from(quotes).get()?.count ?? 0;
+	}
+
 	exportQuotes(guildId: string): Quote[] {
-		return this.database
-			.query<QuoteRow, [string]>(
-				`SELECT ${quoteColumns}
-				 FROM quotes WHERE guild_id = ? ORDER BY quote_number`,
-			)
-			.all(guildId);
+		return this.db
+			.select()
+			.from(quotes)
+			.where(eq(quotes.guildId, guildId))
+			.orderBy(asc(quotes.quoteNumber))
+			.all();
+	}
+
+	migrateLegacyGuild(guild: LegacyGuild, now: number = Date.now()): void {
+		this.database.transaction(() => {
+			this.db
+				.insert(guilds)
+				.values({
+					guildId: guild.guildId,
+					nextQuoteNumber: guild.quotes.length + 1,
+					maxQuotes: guild.maxQuotes,
+					maxQuoteLength: guild.maxQuoteLength,
+					lastSeenAt: now,
+					createdAt: now,
+				})
+				.run();
+
+			if (guild.quotes.length === 0) return;
+			this.db
+				.insert(quotes)
+				.values(
+					guild.quotes.map((quote, index) =>
+						this.toInsert(guild.guildId, index + 1, quote),
+					),
+				)
+				.run();
+		})();
+	}
+
+	checkIntegrity(): boolean {
+		return (
+			this.database
+				.query<{ integrity_check: string }, []>("PRAGMA integrity_check")
+				.get()?.integrity_check === "ok"
+		);
+	}
+
+	private allocateQuoteNumber(guildId: string): number {
+		const [allocation] = this.db
+			.update(guilds)
+			.set({ nextQuoteNumber: sql`${guilds.nextQuoteNumber} + 1` })
+			.where(eq(guilds.guildId, guildId))
+			.returning({
+				quoteNumber: sql<number>`${guilds.nextQuoteNumber} - 1`,
+			})
+			.all();
+		if (!allocation) throw new Error("Quote number allocation failed");
+		return allocation.quoteNumber;
+	}
+
+	private assertQuoteCapacity(
+		guildId: string,
+		newQuoteCount: number,
+		defaultMaxQuotes: number,
+	): void {
+		const settings = this.getGuildSettings(guildId);
+		if (!settings) throw new Error("Guild was not created");
+		const limit = settings.maxQuotes ?? defaultMaxQuotes;
+		if (this.countGuildQuotes(guildId) + newQuoteCount > limit) {
+			throw new GuildQuoteLimitError(limit);
+		}
+	}
+
+	private toInsert(
+		guildId: string,
+		quoteNumber: number,
+		quote: NewQuote,
+	): typeof quotes.$inferInsert {
+		return {
+			guildId,
+			quoteNumber,
+			text: quote.text,
+			author: quote.author ?? null,
+			quoterId: quote.quoterId ?? null,
+			editorId: quote.editorId ?? null,
+			originalMessageId: quote.originalMessageId ?? null,
+			originalChannelId: quote.originalChannelId ?? null,
+			createdAt: quote.createdAt ?? Date.now(),
+			editedAt: quote.editedAt ?? null,
+		};
 	}
 }

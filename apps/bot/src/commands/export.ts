@@ -6,7 +6,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { fetchDbGuild } from "@/lib/utils";
+import { getStore } from "@/db";
+import { getGuildId } from "@/lib/guild";
 
 const ExportCommand: QuoterCommand = {
 	data: new SlashCommandBuilder()
@@ -16,12 +17,18 @@ const ExportCommand: QuoterCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction) {
-		const { quotes } = await fetchDbGuild(interaction);
+		const quotes = getStore().exportQuotes(getGuildId(interaction));
 
 		const json = JSON.stringify(
-			quotes,
-			["text", "author", "createdTimestamp", "editedTimestamp"],
-			" ",
+			quotes.map((quote) => ({
+				quoteNumber: quote.quoteNumber,
+				text: quote.text,
+				author: quote.author,
+				createdTimestamp: quote.createdAt,
+				editedTimestamp: quote.editedAt,
+			})),
+			null,
+			2,
 		);
 		const buffer = Buffer.from(json);
 		const attachment = new AttachmentBuilder(buffer, {
