@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { getQuote } from "@/db";
 import { getGuildId } from "@/lib/guild";
 
 const WhoQuotedCommand: QuoterCommand = {
@@ -25,7 +25,7 @@ const WhoQuotedCommand: QuoterCommand = {
 	async execute(interaction: ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger("id");
 		if (id === null) throw new Error("ID is null");
-		const quote = getStore().getQuote(getGuildId(interaction), id);
+		const quote = getQuote(getGuildId(interaction), id);
 		if (!quote) {
 			await interaction.reply({
 				content: "❌ **|** I couldn't find a quote with that ID.",

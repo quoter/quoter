@@ -1,8 +1,15 @@
 import { existsSync, unlinkSync } from "node:fs";
 import { MongoClient } from "mongodb";
 import { z } from "zod";
-import { QuoteStore } from "@/db";
-import type { LegacyGuild } from "@/domain/quote";
+import {
+	checkIntegrity,
+	closeDatabase,
+	getDatabase,
+	getSchemaVersion,
+	initializeDatabase,
+	type LegacyGuild,
+	migrateLegacyGuild,
+} from "@/db";
 
 const legacyQuoteSchema = z.object({
 	text: z.string().min(1),
@@ -51,15 +58,14 @@ export function parseLegacyGuild(document: unknown): LegacyGuild {
 
 export function migrateLegacyDocuments(
 	documents: unknown[],
-	store: QuoteStore,
 	now: number = Date.now(),
 ): MigrationReport {
 	const parsed = documents.map(parseLegacyGuild);
-	store.database.transaction(() => {
-		for (const guild of parsed) store.migrateLegacyGuild(guild, now);
-	})();
+	getDatabase().transaction(() => {
+		for (const guild of parsed) migrateLegacyGuild(guild, now);
+	});
 
-	if (!store.checkIntegrity()) throw new Error("SQLite integrity check failed");
+	if (!checkIntegrity()) throw new Error("SQLite integrity check failed");
 	return {
 		guildCount: parsed.length,
 		quoteCount: parsed.reduce((total, guild) => total + guild.quotes.length, 0),
@@ -67,7 +73,7 @@ export function migrateLegacyDocuments(
 			guildId: guild.guildId,
 			quoteCount: guild.quotes.length,
 		})),
-		schemaVersion: store.getSchemaVersion(),
+		schemaVersion: getSchemaVersion(),
 		integrityCheck: "ok",
 	};
 }
@@ -103,18 +109,16 @@ export async function runMigrationCli(arguments_: string[]): Promise<void> {
 	}
 
 	const client = new MongoClient(options.mongoUri);
-	const store = new QuoteStore(
-		options.dryRun ? ":memory:" : options.sqlitePath,
-	);
+	initializeDatabase(options.dryRun ? ":memory:" : options.sqlitePath);
 	try {
 		await client.connect();
 		const documents = await client.db().collection("guilds").find({}).toArray();
-		const report = migrateLegacyDocuments(documents, store);
+		const report = migrateLegacyDocuments(documents);
 		const reportJson = JSON.stringify(report, null, 2);
 		if (options.reportPath) await Bun.write(options.reportPath, reportJson);
 		console.log(reportJson);
 	} catch (error) {
-		store.close();
+		closeDatabase();
 		if (!options.dryRun && existsSync(options.sqlitePath)) {
 			unlinkSync(options.sqlitePath);
 		}
@@ -122,7 +126,7 @@ export async function runMigrationCli(arguments_: string[]): Promise<void> {
 	} finally {
 		await client.close();
 	}
-	store.close();
+	closeDatabase();
 }
 
 if (import.meta.main) {

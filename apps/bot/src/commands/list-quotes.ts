@@ -13,7 +13,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { countGuildQuotes, listQuotes } from "@/db";
 import { cleanString } from "@/lib/utils";
 
 export async function handleListQuoteButtonPress(
@@ -57,7 +57,7 @@ export async function renderQuoteList({
 	guildId: string;
 	userId: string;
 }): Promise<InteractionReplyOptions & InteractionUpdateOptions> {
-	const quotePage = getStore().listQuotes(guildId, page);
+	const quotePage = listQuotes(guildId, page);
 	const { quotes } = quotePage;
 
 	if (quotes.length === 0) {
@@ -130,7 +130,7 @@ const ListQuotesCommand: QuoterCommand = {
 			return;
 		}
 
-		const quoteCount = getStore().countGuildQuotes(interaction.guild.id);
+		const quoteCount = countGuildQuotes(interaction.guild.id);
 		if (quoteCount === 0) {
 			await interaction.reply({
 				content:

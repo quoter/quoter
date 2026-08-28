@@ -10,7 +10,7 @@ import {
 import ms from "ms";
 import type { QuoterCommand } from "@/commands";
 import { getConfig } from "@/config";
-import { getStore } from "@/db";
+import { countAllQuotes } from "@/db";
 
 let totalQuotes = "0";
 let totalQuotesLastUpdated = 0;
@@ -38,7 +38,7 @@ const AboutCommand: QuoterCommand = {
 		// Cache the total number of quotes in the database for 10 minutes
 		const timeSinceLastUpdated = Date.now() - totalQuotesLastUpdated;
 		if (timeSinceLastUpdated > 600 * 1000) {
-			totalQuotes = getStore().countAllQuotes().toLocaleString();
+			totalQuotes = countAllQuotes().toLocaleString();
 			totalQuotesLastUpdated = Date.now();
 		}
 

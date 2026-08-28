@@ -8,8 +8,8 @@ import {
 	MessageFlags,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { GuildQuoteLimitError, getStore } from "@/db";
-import type { Quote } from "@/domain/quote";
+import type { Quote } from "@/db";
+import { createQuote, GuildQuoteLimitError } from "@/db";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
@@ -47,7 +47,7 @@ const QuoteThisCommand: QuoterCommand = {
 
 		let quote: Quote;
 		try {
-			quote = getStore().createQuote(
+			quote = createQuote(
 				guildId,
 				{
 					text,

@@ -1,18 +1,22 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { QuoteStore } from "@/db";
+import {
+	closeDatabase,
+	countAllQuotes,
+	getGuildSettings,
+	getQuote,
+	initializeDatabase,
+} from "@/db";
 import {
 	migrateLegacyDocuments,
 	parseLegacyGuild,
 } from "@/migration/mongo-to-sqlite";
 
-let store: QuoteStore;
-
 beforeEach(() => {
-	store = new QuoteStore();
+	initializeDatabase();
 });
 
 afterEach(() => {
-	store.close();
+	closeDatabase();
 });
 
 describe("MongoDB migration", () => {
@@ -38,24 +42,23 @@ describe("MongoDB migration", () => {
 					],
 				},
 			],
-			store,
 			1_000,
 		);
 
 		expect(report).toMatchObject({ guildCount: 1, quoteCount: 2 });
-		expect(store.getQuote("guild", 1)).toMatchObject({
+		expect(getQuote("guild", 1)).toMatchObject({
 			quoteNumber: 1,
 			text: "first",
 			quoterId: "user-1",
 			createdAt: 100,
 		});
-		expect(store.getQuote("guild", 2)).toMatchObject({
+		expect(getQuote("guild", 2)).toMatchObject({
 			quoteNumber: 2,
 			text: "second",
 			editorId: "user-2",
 			editedAt: 200,
 		});
-		expect(store.getGuildSettings("guild")).toMatchObject({
+		expect(getGuildSettings("guild")).toMatchObject({
 			nextQuoteNumber: 3,
 			maxQuotes: 10,
 			maxQuoteLength: 300,
@@ -64,21 +67,18 @@ describe("MongoDB migration", () => {
 	});
 
 	test("supports empty guilds and Unicode", () => {
-		migrateLegacyDocuments(
-			[
-				{ _id: "empty", quotes: [] },
-				{ _id: "unicode", quotes: [{ text: "こんにちは 👋" }] },
-			],
-			store,
-		);
-		expect(store.getGuildSettings("empty")?.nextQuoteNumber).toBe(1);
-		expect(store.getQuote("unicode", 1)?.text).toBe("こんにちは 👋");
+		migrateLegacyDocuments([
+			{ _id: "empty", quotes: [] },
+			{ _id: "unicode", quotes: [{ text: "こんにちは 👋" }] },
+		]);
+		expect(getGuildSettings("empty")?.nextQuoteNumber).toBe(1);
+		expect(getQuote("unicode", 1)?.text).toBe("こんにちは 👋");
 	});
 
 	test("rejects malformed source records before writing", () => {
 		expect(() =>
 			parseLegacyGuild({ _id: "guild", quotes: [{ author: "missing text" }] }),
 		).toThrow();
-		expect(store.countAllQuotes()).toBe(0);
+		expect(countAllQuotes()).toBe(0);
 	});
 });

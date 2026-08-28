@@ -2,22 +2,27 @@ import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 import { initializeConfig } from "@/config";
-import { closeStore, initializeStore } from "@/db";
+import {
+	checkIntegrity,
+	closeDatabase,
+	getSchemaVersion,
+	initializeDatabase,
+} from "@/db";
 import { events } from "@/events";
 import { clearManagedTimers } from "@/lib/timers";
 
 const config = initializeConfig();
 mkdirSync(dirname(config.databasePath), { recursive: true });
-const store = initializeStore(config.databasePath);
+initializeDatabase(config.databasePath);
 
 console.log(
-	`Starting Quoter v${config.version} (${config.buildSha.slice(0, 7)}), schema ${store.getSchemaVersion()}`,
+	`Starting Quoter v${config.version} (${config.buildSha.slice(0, 7)}), schema ${getSchemaVersion()}`,
 );
 
 if (process.argv.includes("--check")) {
-	if (!store.checkIntegrity()) throw new Error("SQLite integrity check failed");
+	if (!checkIntegrity()) throw new Error("SQLite integrity check failed");
 	console.log("Quoter executable check passed");
-	closeStore();
+	closeDatabase();
 	process.exit(0);
 }
 
@@ -51,7 +56,7 @@ async function shutdown(exitCode: number): Promise<void> {
 	shuttingDown = true;
 	clearManagedTimers();
 	client.destroy();
-	closeStore();
+	closeDatabase();
 	process.exitCode = exitCode;
 }
 

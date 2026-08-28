@@ -6,7 +6,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { deleteQuote, getQuote } from "@/db";
 import { getGuildId } from "@/lib/guild";
 
 const DeleteQuoteCommand: QuoterCommand = {
@@ -27,7 +27,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 		if (id === null) throw new Error("ID is null");
 
 		const guildId = getGuildId(interaction);
-		const quote = getStore().getQuote(guildId, id);
+		const quote = getQuote(guildId, id);
 
 		if (!quote) {
 			await interaction.reply({
@@ -37,7 +37,7 @@ const DeleteQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		getStore().deleteQuote(guildId, id);
+		deleteQuote(guildId, id);
 		await interaction.reply({
 			content: `✅ **|** Deleted quote #${id}.`,
 		});

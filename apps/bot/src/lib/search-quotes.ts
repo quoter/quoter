@@ -1,5 +1,5 @@
 import Fuse from "fuse.js";
-import type { Quote } from "@/domain/quote";
+import type { Quote } from "@/db";
 
 export type SearchCandidate = Pick<Quote, "quoteNumber" | "text" | "author">;
 

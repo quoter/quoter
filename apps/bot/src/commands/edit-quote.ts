@@ -8,7 +8,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { getQuote, updateQuote } from "@/db";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
@@ -39,7 +39,7 @@ const EditQuoteCommand: QuoterCommand = {
 		if (id === null) throw new Error("ID is null");
 
 		const guildId = getGuildId(interaction);
-		const quote = getStore().getQuote(guildId, id);
+		const quote = getQuote(guildId, id);
 
 		if (!quote) {
 			await interaction.reply({
@@ -65,7 +65,7 @@ const EditQuoteCommand: QuoterCommand = {
 			return;
 		}
 
-		getStore().updateQuote(guildId, id, {
+		updateQuote(guildId, id, {
 			text,
 			author: author ?? undefined,
 			editorId: interaction.user.id,

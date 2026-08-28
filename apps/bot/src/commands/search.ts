@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { getSearchCandidates } from "@/db";
 import { getGuildId } from "@/lib/guild";
 import { searchQuotes } from "@/lib/search-quotes";
 import { cleanString } from "@/lib/utils";
@@ -25,7 +25,7 @@ const SearchCommand: QuoterCommand = {
 		.setContexts(InteractionContextType.Guild),
 	cooldown: 5,
 	async execute(interaction: ChatInputCommandInteraction) {
-		const quotes = getStore().getSearchCandidates(getGuildId(interaction));
+		const quotes = getSearchCandidates(getGuildId(interaction));
 
 		if (!quotes.length) {
 			await interaction.reply({

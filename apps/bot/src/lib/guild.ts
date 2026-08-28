@@ -1,6 +1,6 @@
 import type { BaseInteraction } from "discord.js";
 import { getConfig } from "@/config";
-import { getStore } from "@/db";
+import { ensureGuild, getGuildSettings } from "@/db";
 
 export function getGuildId(interaction: BaseInteraction): string {
 	if (!interaction.guildId) throw new Error("Interaction is not in a guild");
@@ -11,9 +11,8 @@ export function getGuildLimits(guildId: string): {
 	maxQuotes: number;
 	maxQuoteLength: number;
 } {
-	const store = getStore();
-	store.ensureGuild(guildId);
-	const settings = store.getGuildSettings(guildId);
+	ensureGuild(guildId);
+	const settings = getGuildSettings(guildId);
 	if (!settings) throw new Error("Guild was not initialized");
 	const config = getConfig();
 	return {

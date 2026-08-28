@@ -6,7 +6,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { exportQuotes } from "@/db";
 import { getGuildId } from "@/lib/guild";
 
 const ExportCommand: QuoterCommand = {
@@ -17,7 +17,7 @@ const ExportCommand: QuoterCommand = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 	cooldown: 60,
 	async execute(interaction) {
-		const quotes = getStore().exportQuotes(getGuildId(interaction));
+		const quotes = exportQuotes(getGuildId(interaction));
 
 		const json = JSON.stringify(
 			quotes.map((quote) => ({

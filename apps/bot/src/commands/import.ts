@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import { z } from "zod";
 import type { QuoterCommand } from "@/commands";
-import { GuildQuoteLimitError, getStore } from "@/db";
+import { GuildQuoteLimitError, importQuotes } from "@/db";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 
 const createImportSchema = (maxQuoteLength: number) =>
@@ -74,7 +74,7 @@ const ImportCommand: QuoterCommand = {
 		}
 
 		try {
-			getStore().importQuotes(
+			importQuotes(
 				guildId,
 				parsed.data.map((quote) => ({
 					text: quote.text,

@@ -1,6 +1,6 @@
 import { ActivityType, type Client } from "discord.js";
 import { getConfig } from "@/config";
-import { getStore } from "@/db";
+import { deleteGuildsNotSeenSince, touchGuilds } from "@/db";
 import { setManagedInterval } from "@/lib/timers";
 
 export async function ready(client: Client) {
@@ -8,12 +8,12 @@ export async function ready(client: Client) {
 	console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 
 	const currentGuilds = client.guilds.cache.map((g) => g.id);
-	getStore().touchGuilds(currentGuilds);
+	touchGuilds(currentGuilds);
 
 	const cleanup = () => {
 		const cutoff =
 			Date.now() - getConfig().guildRetentionDays * 24 * 60 * 60 * 1000;
-		const deleted = getStore().deleteGuildsNotSeenSince(cutoff);
+		const deleted = deleteGuildsNotSeenSince(cutoff);
 		if (deleted > 0) console.log(`Deleted ${deleted} expired guilds`);
 	};
 	cleanup();

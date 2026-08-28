@@ -7,7 +7,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
+import { getRandomQuote } from "@/db";
 import { getGuildId } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ const EightBallCommand: QuoterCommand = {
 			);
 
 		const guildId = getGuildId(interaction);
-		const quote = getStore().getRandomQuote(guildId);
+		const quote = getRandomQuote(guildId);
 		if (!quote) {
 			await interaction.reply({
 				content:

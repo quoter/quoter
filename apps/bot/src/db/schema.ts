@@ -73,3 +73,10 @@ export const quotes = sqliteTable(
 		),
 	],
 );
+
+export type Quote = typeof quotes.$inferSelect;
+export type GuildSettings = typeof guilds.$inferSelect;
+export type NewQuote = Omit<
+	typeof quotes.$inferInsert,
+	"guildId" | "quoteNumber" | "createdAt"
+> & { createdAt?: number };

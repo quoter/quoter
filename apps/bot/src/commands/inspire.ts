@@ -8,8 +8,8 @@ import {
 } from "discord.js";
 import { inspireImages } from "@/assets/inspire-images";
 import type { QuoterCommand } from "@/commands";
-import { getStore } from "@/db";
-import type { Quote } from "@/domain/quote";
+import type { Quote } from "@/db";
+import { getQuote, getRandomQuote } from "@/db";
 import { getGuildId } from "@/lib/guild";
 
 const assetsDirectory = Bun.isStandaloneExecutable
@@ -52,8 +52,8 @@ const InspireCommand: QuoterCommand = {
 
 		const guildId = getGuildId(interaction);
 		const quote: Quote | null = choice
-			? getStore().getQuote(guildId, choice)
-			: getStore().getRandomQuote(guildId, author);
+			? getQuote(guildId, choice)
+			: getRandomQuote(guildId, author);
 
 		if (!quote) {
 			await interaction.editReply({
