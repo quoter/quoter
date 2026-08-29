@@ -90,7 +90,8 @@ function parseCliOptions(arguments_: string[]): CliOptions {
 		const index = arguments_.indexOf(name);
 		return index >= 0 ? arguments_[index + 1] : undefined;
 	};
-	const mongoUri = valueAfter("--mongo-uri") ?? process.env.MONGO_URI;
+	// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
+	const mongoUri = valueAfter("--mongo-uri") ?? process.env["MONGO_URI"];
 	const sqlitePath = valueAfter("--sqlite");
 	if (!mongoUri) throw new Error("Provide --mongo-uri or MONGO_URI");
 	if (!sqlitePath) throw new Error("Provide --sqlite");

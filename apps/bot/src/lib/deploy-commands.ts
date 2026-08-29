@@ -5,14 +5,15 @@ import {
 } from "discord.js";
 import { commands } from "@/commands";
 
-if (process.env.DISCORD_TOKEN === undefined) {
+// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
+const token = process.env["DISCORD_TOKEN"];
+if (!token) {
 	throw new Error("DISCORD_TOKEN environment variable not set");
 }
 
-const clientId = Buffer.from(
-	process.env.DISCORD_TOKEN.split(".")[0],
-	"base64",
-).toString();
+const tokenId = token.split(".")[0];
+if (!tokenId) throw new Error("DISCORD_TOKEN has an invalid format");
+const clientId = Buffer.from(tokenId, "base64").toString();
 const isUndeploy = process.argv.some((x) => x === "--undeploy");
 const isGuild = process.argv.some((x) => x === "--guild");
 
@@ -25,26 +26,25 @@ if (!isUndeploy) {
 		commandsToDeploy.push(command.data.toJSON());
 	});
 }
-const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+const rest = new REST().setToken(token);
 
 try {
 	if (isGuild) {
-		if (process.env.DISCORD_GUILD_ID === undefined) {
+		// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
+		const guildId = process.env["DISCORD_GUILD_ID"];
+		if (!guildId) {
 			throw new Error("DISCORD_GUILD_ID environment variable not set");
 		}
 
 		console.log(
 			isUndeploy ? "Undeploying" : "Deploying",
 			"commands to guild",
-			process.env.DISCORD_GUILD_ID,
+			guildId,
 		);
 
-		await rest.put(
-			Routes.applicationGuildCommands(clientId, process.env.DISCORD_GUILD_ID),
-			{
-				body: commandsToDeploy,
-			},
-		);
+		await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+			body: commandsToDeploy,
+		});
 	} else {
 		console.log(isUndeploy ? "Undeploying" : "Deploying", "commands globally");
 

@@ -19,6 +19,12 @@ describe("configuration", () => {
 		expect(() =>
 			loadConfig({ DISCORD_TOKEN: "token", MAX_GUILD_QUOTES: "0" }),
 		).toThrow();
+		expect(() =>
+			loadConfig({ DISCORD_TOKEN: "token", MAX_GUILD_QUOTES: "1.5" }),
+		).toThrow();
+		expect(() =>
+			loadConfig({ DISCORD_TOKEN: "token", MAX_GUILD_QUOTES: "10 quotes" }),
+		).toThrow();
 	});
 
 	test("requires a Discord token", () => {

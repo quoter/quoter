@@ -5,6 +5,7 @@ export default defineConfig({
 	schema: "./src/db/schema.ts",
 	out: "./drizzle",
 	dbCredentials: {
-		url: process.env.DATABASE_PATH ?? "./db/quoter.sqlite",
+		// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
+		url: process.env["DATABASE_PATH"] ?? "./db/quoter.sqlite",
 	},
 });

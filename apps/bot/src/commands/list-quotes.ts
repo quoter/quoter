@@ -21,8 +21,9 @@ export async function handleListQuoteButtonPress(
 ) {
 	const match = interaction.customId.match(/listquotes_u(\d+)p(\d+)/);
 	if (!match) return;
-	const userId = match[1];
-	const page = Number.parseInt(match[2], 10);
+	const [, userId, pageValue] = match;
+	if (!userId || !pageValue) return;
+	const page = Number.parseInt(pageValue, 10);
 
 	if (interaction.user.id !== userId) {
 		await interaction.reply({

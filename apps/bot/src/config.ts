@@ -1,31 +1,14 @@
 import { z } from "zod";
 import quoterPackage from "../package.json";
 
-const positiveInteger = (name: string, fallback: number) =>
-	z
-		.string()
-		.optional()
-		.transform((value, context) => {
-			if (value === undefined || value === "") return fallback;
-			const parsed = Number.parseInt(value, 10);
-			if (!Number.isSafeInteger(parsed) || parsed < 1) {
-				context.addIssue({
-					code: "custom",
-					message: `${name} must be a positive integer`,
-				});
-				return z.NEVER;
-			}
-			return parsed;
-		});
-
 const environmentSchema = z.object({
 	DISCORD_TOKEN: z.string().min(1, "DISCORD_TOKEN is required"),
 	DISCORD_ADMIN_ID: z.string().optional().default(""),
 	DISCORD_GUILD_ID: z.string().optional(),
 	DATABASE_PATH: z.string().min(1).default("./db/quoter.sqlite"),
-	MAX_GUILD_QUOTES: positiveInteger("MAX_GUILD_QUOTES", 500),
-	MAX_QUOTE_LENGTH: positiveInteger("MAX_QUOTE_LENGTH", 250),
-	GUILD_RETENTION_DAYS: positiveInteger("GUILD_RETENTION_DAYS", 30),
+	MAX_GUILD_QUOTES: z.coerce.number().int().positive().default(500),
+	MAX_QUOTE_LENGTH: z.coerce.number().int().positive().default(250),
+	GUILD_RETENTION_DAYS: z.coerce.number().int().positive().default(30),
 	BUILD_SHA: z.string().min(1).default("development"),
 });
 

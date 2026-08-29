@@ -1,19 +1,25 @@
 {
 	"compilerOptions": {
-		"lib": ["esnext"],
-		"module": "esnext",
-		"target": "esnext",
+		"lib": ["ESNext"],
+		"module": "Preserve",
+		"target": "ESNext",
 		"moduleResolution": "bundler",
 		"noEmit": true,
 		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true,
 		"moduleDetection": "force",
 		"jsx": "react-jsx",
 		"allowJs": true,
-		"esModuleInterop": true,
+		"types": ["bun"],
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
-		"baseUrl": ".",
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": true,
 		"paths": {
 			"@/*": ["./src/*"]
 		}

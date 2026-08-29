@@ -1,9 +1,11 @@
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
-const target = (process.env.BUILD_TARGET ??
+// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
+const target = (process.env["BUILD_TARGET"] ??
 	"bun-linux-x64") as Bun.Build.CompileTarget;
-const buildSha = process.env.BUILD_SHA ?? "development";
+// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
+const buildSha = process.env["BUILD_SHA"] ?? "development";
 const outputDirectory = resolve("dist");
 const outputPath = resolve(outputDirectory, "quoter-linux-x64");
 

@@ -69,6 +69,8 @@ const InspireCommand: QuoterCommand = {
 			path.resolve(assetsDirectory, `${index}.jpg`),
 		);
 		const imageData = inspireImages[index];
+		if (!imageData)
+			throw new Error(`Missing inspire image data at index ${index}`);
 
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext("2d");
