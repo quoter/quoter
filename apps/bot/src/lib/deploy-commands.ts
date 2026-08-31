@@ -5,8 +5,7 @@ import {
 } from "discord.js";
 import { commands } from "@/commands";
 
-// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
-const token = process.env["DISCORD_TOKEN"];
+const token = process.env.DISCORD_TOKEN;
 if (!token) {
 	throw new Error("DISCORD_TOKEN environment variable not set");
 }
@@ -30,8 +29,7 @@ const rest = new REST().setToken(token);
 
 try {
 	if (isGuild) {
-		// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
-		const guildId = process.env["DISCORD_GUILD_ID"];
+		const guildId = process.env.DISCORD_GUILD_ID;
 		if (!guildId) {
 			throw new Error("DISCORD_GUILD_ID environment variable not set");
 		}

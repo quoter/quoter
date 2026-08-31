@@ -1,13 +1,13 @@
 import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
-// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
-const target = (process.env["BUILD_TARGET"] ??
+const target = (process.env.BUILD_TARGET ??
 	"bun-linux-x64") as Bun.Build.CompileTarget;
-// biome-ignore lint/complexity/useLiteralKeys: TypeScript requires indexed environment access.
-const buildSha = process.env["BUILD_SHA"] ?? "development";
+const buildSha = process.env.BUILD_SHA ?? "development";
 const outputDirectory = resolve("dist");
 const outputPath = resolve(outputDirectory, "quoter-linux-x64");
+const assetsDirectory = resolve("src/assets");
+const migrationsDirectory = resolve("drizzle");
 
 await mkdir(outputDirectory, { recursive: true });
 
@@ -16,9 +16,7 @@ const result = await Bun.build({
 	compile: {
 		target,
 		outfile: outputPath,
-		assets: [resolve("src/assets"), resolve("drizzle")],
-		autoloadDotenv: false,
-		autoloadBunfig: false,
+		assets: [assetsDirectory, migrationsDirectory],
 	},
 	define: {
 		"process.env.BUILD_SHA": JSON.stringify(buildSha),
