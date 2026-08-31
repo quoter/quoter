@@ -17,6 +17,6 @@ export function getGuildLimits(guildId: string): {
 	const config = getConfig();
 	return {
 		maxQuotes: settings.maxQuotes ?? config.maxGuildQuotes,
-		maxQuoteLength: settings.maxQuoteLength ?? config.maxQuoteLength,
+		maxQuoteLength: config.maxQuoteLength,
 	};
 }

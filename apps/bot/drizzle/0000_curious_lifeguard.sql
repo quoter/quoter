@@ -2,13 +2,11 @@ CREATE TABLE `guilds` (
 	`guild_id` text PRIMARY KEY NOT NULL,
 	`next_quote_number` integer DEFAULT 1 NOT NULL,
 	`max_quotes` integer,
-	`max_quote_length` integer,
 	`last_seen_at` integer NOT NULL,
 	`left_at` integer,
 	`created_at` integer NOT NULL,
 	CONSTRAINT "guilds_next_quote_number_positive" CHECK("guilds"."next_quote_number" >= 1),
 	CONSTRAINT "guilds_max_quotes_nonnegative" CHECK("guilds"."max_quotes" IS NULL OR "guilds"."max_quotes" >= 0),
-	CONSTRAINT "guilds_max_quote_length_nonnegative" CHECK("guilds"."max_quote_length" IS NULL OR "guilds"."max_quote_length" >= 0),
 	CONSTRAINT "guilds_last_seen_nonnegative" CHECK("guilds"."last_seen_at" >= 0),
 	CONSTRAINT "guilds_left_at_nonnegative" CHECK("guilds"."left_at" IS NULL OR "guilds"."left_at" >= 0),
 	CONSTRAINT "guilds_created_at_nonnegative" CHECK("guilds"."created_at" >= 0)

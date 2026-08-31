@@ -29,13 +29,6 @@
 					"notNull": false,
 					"autoincrement": false
 				},
-				"max_quote_length": {
-					"name": "max_quote_length",
-					"type": "integer",
-					"primaryKey": false,
-					"notNull": false,
-					"autoincrement": false
-				},
 				"last_seen_at": {
 					"name": "last_seen_at",
 					"type": "integer",
@@ -76,10 +69,6 @@
 				"guilds_max_quotes_nonnegative": {
 					"name": "guilds_max_quotes_nonnegative",
 					"value": "\"guilds\".\"max_quotes\" IS NULL OR \"guilds\".\"max_quotes\" >= 0"
-				},
-				"guilds_max_quote_length_nonnegative": {
-					"name": "guilds_max_quote_length_nonnegative",
-					"value": "\"guilds\".\"max_quote_length\" IS NULL OR \"guilds\".\"max_quote_length\" >= 0"
 				},
 				"guilds_last_seen_nonnegative": {
 					"name": "guilds_last_seen_nonnegative",

@@ -26,7 +26,6 @@ export interface QuotePage {
 export interface LegacyGuild {
 	guildId: string;
 	maxQuotes: number | null;
-	maxQuoteLength: number | null;
 	quotes: NewQuote[];
 }
 
@@ -108,7 +107,7 @@ export function getGuildSettings(guildId: string): GuildSettings | null {
 
 export function setGuildLimits(
 	guildId: string,
-	limits: { maxQuotes?: number | null; maxQuoteLength?: number | null },
+	limits: { maxQuotes?: number | null },
 ): void {
 	ensureGuild(guildId);
 	getDatabase()
@@ -295,7 +294,6 @@ export function migrateLegacyGuild(
 				guildId: guild.guildId,
 				nextQuoteNumber: guild.quotes.length + 1,
 				maxQuotes: guild.maxQuotes,
-				maxQuoteLength: guild.maxQuoteLength,
 				lastSeenAt: now,
 				createdAt: now,
 			})

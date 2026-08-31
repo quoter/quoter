@@ -25,7 +25,6 @@ const legacyQuoteSchema = z.object({
 const legacyGuildSchema = z.object({
 	_id: z.string().min(1),
 	maxGuildQuotes: z.number().int().nonnegative().nullish(),
-	maxQuoteLength: z.number().int().nonnegative().nullish(),
 	quotes: z.array(legacyQuoteSchema).default([]),
 });
 
@@ -42,7 +41,6 @@ export function parseLegacyGuild(document: unknown): LegacyGuild {
 	return {
 		guildId: guild._id,
 		maxQuotes: guild.maxGuildQuotes ?? null,
-		maxQuoteLength: guild.maxQuoteLength ?? null,
 		quotes: guild.quotes.map((quote) => ({
 			text: quote.text,
 			author: quote.author ?? null,

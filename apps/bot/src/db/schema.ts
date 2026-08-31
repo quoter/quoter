@@ -14,7 +14,6 @@ export const guilds = sqliteTable(
 		guildId: text("guild_id").primaryKey(),
 		nextQuoteNumber: integer("next_quote_number").notNull().default(1),
 		maxQuotes: integer("max_quotes"),
-		maxQuoteLength: integer("max_quote_length"),
 		lastSeenAt: integer("last_seen_at").notNull(),
 		leftAt: integer("left_at"),
 		createdAt: integer("created_at").notNull(),
@@ -28,10 +27,6 @@ export const guilds = sqliteTable(
 		check(
 			"guilds_max_quotes_nonnegative",
 			sql`${table.maxQuotes} IS NULL OR ${table.maxQuotes} >= 0`,
-		),
-		check(
-			"guilds_max_quote_length_nonnegative",
-			sql`${table.maxQuoteLength} IS NULL OR ${table.maxQuoteLength} >= 0`,
 		),
 		check("guilds_last_seen_nonnegative", sql`${table.lastSeenAt} >= 0`),
 		check(

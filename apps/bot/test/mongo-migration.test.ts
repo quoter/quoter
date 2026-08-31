@@ -26,7 +26,6 @@ describe("MongoDB migration", () => {
 				{
 					_id: "guild",
 					maxGuildQuotes: 10,
-					maxQuoteLength: 300,
 					quotes: [
 						{
 							text: "first",
@@ -61,7 +60,6 @@ describe("MongoDB migration", () => {
 		expect(getGuildSettings("guild")).toMatchObject({
 			nextQuoteNumber: 3,
 			maxQuotes: 10,
-			maxQuoteLength: 300,
 			lastSeenAt: 1_000,
 		});
 	});
