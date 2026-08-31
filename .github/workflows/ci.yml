@@ -7,15 +7,15 @@ on:
       - main
 
 permissions:
-	contents: read
+  contents: read
 
 concurrency:
-	group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-	cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-	check:
-		runs-on: ubuntu-latest
+  check:
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
