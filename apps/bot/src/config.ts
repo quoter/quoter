@@ -1,52 +1,46 @@
 import { z } from "zod";
 import quoterPackage from "../package.json";
 
-const environmentSchema = z.object({
-	DISCORD_TOKEN: z.string().min(1, "DISCORD_TOKEN is required"),
-	DISCORD_ADMIN_ID: z.string().optional().default(""),
-	DISCORD_GUILD_ID: z.string().optional(),
-	DATABASE_PATH: z.string().min(1).default("./db/quoter.sqlite"),
-	MAX_GUILD_QUOTES: z.coerce.number().int().positive().default(500),
-	MAX_QUOTE_LENGTH: z.coerce.number().int().positive().default(250),
-	GUILD_RETENTION_DAYS: z.coerce.number().int().positive().default(30),
-	BUILD_SHA: z.string().min(1).default("development"),
-});
+type Environment = Record<string, string | undefined>;
 
-export interface AppConfig {
-	discordToken: string;
-	discordAdminIds: Set<string>;
-	discordGuildId?: string;
-	databasePath: string;
-	maxGuildQuotes: number;
-	maxQuoteLength: number;
-	guildRetentionDays: number;
-	version: string;
-	buildSha: string;
-}
+const configSchema = z.preprocess(
+	(environment: Environment) => ({
+		discordToken: environment["DISCORD_TOKEN"],
+		discordAdminIds: environment["DISCORD_ADMIN_ID"],
+		discordGuildId: environment["DISCORD_GUILD_ID"],
+		databasePath: environment["DATABASE_PATH"],
+		maxGuildQuotes: environment["MAX_GUILD_QUOTES"],
+		maxQuoteLength: environment["MAX_QUOTE_LENGTH"],
+		guildRetentionDays: environment["GUILD_RETENTION_DAYS"],
+		buildSha: environment["BUILD_SHA"],
+	}),
+	z.object({
+		discordToken: z.string().min(1, "DISCORD_TOKEN is required"),
+		discordAdminIds: z
+			.string()
+			.optional()
+			.default("")
+			.transform((value) => new Set(value.split(/\s+/).filter(Boolean))),
+		discordGuildId: z.string().optional(),
+		databasePath: z.string().min(1).default("./db/quoter.sqlite"),
+		maxGuildQuotes: z.coerce.number().int().positive().default(500),
+		maxQuoteLength: z.coerce.number().int().positive().default(250),
+		guildRetentionDays: z.coerce.number().int().positive().default(30),
+		version: z.string().default(quoterPackage.version),
+		buildSha: z.string().min(1).default("development"),
+	}),
+);
 
-export function loadConfig(
-	environment: Record<string, string | undefined> = process.env,
-): AppConfig {
-	const parsed = environmentSchema.parse(environment);
-	return {
-		discordToken: parsed.DISCORD_TOKEN,
-		discordAdminIds: new Set(
-			parsed.DISCORD_ADMIN_ID.split(/\s+/).filter(Boolean),
-		),
-		discordGuildId: parsed.DISCORD_GUILD_ID,
-		databasePath: parsed.DATABASE_PATH,
-		maxGuildQuotes: parsed.MAX_GUILD_QUOTES,
-		maxQuoteLength: parsed.MAX_QUOTE_LENGTH,
-		guildRetentionDays: parsed.GUILD_RETENTION_DAYS,
-		version: quoterPackage.version,
-		buildSha: parsed.BUILD_SHA,
-	};
+export type AppConfig = z.output<typeof configSchema>;
+
+export function loadConfig(environment: Environment = process.env): AppConfig {
+	return configSchema.parse(environment);
 }
 
 let config: AppConfig | undefined;
 
 export function initializeConfig(
-	environment: Record<string, string | undefined> = process.env,
+	environment: Environment = process.env,
 ): AppConfig {
 	if (config) throw new Error("Configuration is already initialized");
 	config = loadConfig(environment);
