@@ -33,25 +33,17 @@ const configSchema = z.preprocess(
 
 export type AppConfig = z.output<typeof configSchema>;
 
-export function loadConfig(environment: Environment = process.env): AppConfig {
-	return configSchema.parse(environment);
-}
-
 let config: AppConfig | undefined;
 
-export function initializeConfig(
+export function loadConfig(
 	environment: Environment = process.env,
 ): AppConfig {
-	if (config) throw new Error("Configuration is already initialized");
-	config = loadConfig(environment);
+	if (config) throw new Error("Configuration is already loaded");
+	config = configSchema.parse(environment);
 	return config;
 }
 
 export function getConfig(): AppConfig {
-	if (!config) throw new Error("Configuration is not initialized");
+	if (!config) throw new Error("Configuration is not loaded");
 	return config;
-}
-
-export function resetConfigForTests(): void {
-	config = undefined;
 }
