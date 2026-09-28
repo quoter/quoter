@@ -66,8 +66,8 @@ async function shutdown(exitCode: number): Promise<void> {
   process.exitCode = exitCode;
 }
 
-process.once("SIGINT", () => void shutdown(0));
-process.once("SIGTERM", () => void shutdown(0));
+process.once("SIGINT", () => shutdown(0));
+process.once("SIGTERM", () => shutdown(0));
 process.on("unhandledRejection", (error) => {
   console.error("Unhandled promise rejection", error);
   void shutdown(1);
