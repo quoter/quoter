@@ -4,8 +4,8 @@ import { interactionCreate } from "@/events/interaction-create";
 import { ready } from "@/events/ready";
 
 export const events = {
-	guildCreate,
-	guildDelete,
-	interactionCreate,
-	ready,
+  guildCreate,
+  guildDelete,
+  interactionCreate,
+  ready,
 };
