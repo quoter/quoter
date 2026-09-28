@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 
-import { initializeConfig } from "@/config";
+import { loadConfig } from "@/config";
 import {
   checkIntegrity,
   closeDatabase,
@@ -13,7 +13,7 @@ import {
 import { events } from "@/events";
 import { clearManagedTimers } from "@/lib/timers";
 
-const config = initializeConfig();
+const config = loadConfig();
 mkdirSync(path.dirname(config.databasePath), { recursive: true });
 initializeDatabase(config.databasePath);
 
