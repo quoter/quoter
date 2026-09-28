@@ -28,7 +28,7 @@ export interface QuoterCommand {
     | ContextMenuCommandBuilder
     | SlashCommandOptionsOnlyBuilder;
   cooldown?: number;
-  execute(interaction: CommandInteraction): Promise<void>;
+  execute: (interaction: CommandInteraction) => Promise<void>;
 }
 
 export const commands = {

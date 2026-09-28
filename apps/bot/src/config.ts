@@ -22,7 +22,7 @@ const configSchema = z.preprocess(
       .string()
       .optional()
       .default("")
-      .transform((value) => new Set(value.split(/\s+/).filter(Boolean))),
+      .transform((value) => new Set(value.split(/\s+/u).filter(Boolean))),
     discordGuildId: z.string().optional(),
     discordToken: z.string().min(1, "DISCORD_TOKEN is required"),
     guildRetentionDays: z.coerce.number().int().positive().default(30),

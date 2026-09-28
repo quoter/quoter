@@ -26,8 +26,11 @@ export interface LegacyGuild {
 }
 
 export class GuildQuoteLimitError extends Error {
-  constructor(readonly limit: number) {
+  readonly limit: number;
+
+  constructor(limit: number) {
     super(`Guild quote limit of ${limit} reached`);
+    this.limit = limit;
     this.name = "GuildQuoteLimitError";
   }
 }
@@ -115,48 +118,6 @@ export function setGuildLimits(
     .run();
 }
 
-export function createQuote(
-  guildId: string,
-  quote: NewQuote,
-  defaultMaxQuotes: number
-): Quote {
-  return getDatabase().transaction(() => {
-    ensureGuild(guildId);
-    assertQuoteCapacity(guildId, 1, defaultMaxQuotes);
-    const created = getDatabase()
-      .insert(quotes)
-      .values(toInsert(guildId, allocateQuoteNumber(guildId), quote))
-      .returning()
-      .get();
-    if (!created) {
-      throw new Error("Created quote was not returned");
-    }
-    return created;
-  });
-}
-
-export function importQuotes(
-  guildId: string,
-  newQuotes: NewQuote[],
-  defaultMaxQuotes: number
-): Quote[] {
-  return getDatabase().transaction(() => {
-    ensureGuild(guildId);
-    assertQuoteCapacity(guildId, newQuotes.length, defaultMaxQuotes);
-    return newQuotes.map((quote) => {
-      const created = getDatabase()
-        .insert(quotes)
-        .values(toInsert(guildId, allocateQuoteNumber(guildId), quote))
-        .returning()
-        .get();
-      if (!created) {
-        throw new Error("Imported quote was not returned");
-      }
-      return created;
-    });
-  });
-}
-
 export function getQuote(guildId: string, quoteNumber: number): Quote | null {
   return (
     getDatabase()
@@ -190,10 +151,20 @@ export function getRandomQuote(
   );
 }
 
+export function countGuildQuotes(guildId: string): number {
+  return (
+    getDatabase()
+      .select({ count: count() })
+      .from(quotes)
+      .where(eq(quotes.guildId, guildId))
+      .get()?.count ?? 0
+  );
+}
+
 export function listQuotes(
   guildId: string,
   page: number,
-  pageSize: number = 10
+  pageSize = 10
 ): QuotePage {
   const total = countGuildQuotes(guildId);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -262,16 +233,6 @@ export function deleteQuote(guildId: string, quoteNumber: number): boolean {
   );
 }
 
-export function countGuildQuotes(guildId: string): number {
-  return (
-    getDatabase()
-      .select({ count: count() })
-      .from(quotes)
-      .where(eq(quotes.guildId, guildId))
-      .get()?.count ?? 0
-  );
-}
-
 export function countAllQuotes(): number {
   return (
     getDatabase().select({ count: count() }).from(quotes).get()?.count ?? 0
@@ -285,34 +246,6 @@ export function exportQuotes(guildId: string): Quote[] {
     .where(eq(quotes.guildId, guildId))
     .orderBy(asc(quotes.quoteNumber))
     .all();
-}
-
-export function migrateLegacyGuild(
-  guild: LegacyGuild,
-  now: number = Date.now()
-): void {
-  getDatabase().transaction(() => {
-    getDatabase()
-      .insert(guilds)
-      .values({
-        createdAt: now,
-        guildId: guild.guildId,
-        lastSeenAt: now,
-        maxQuotes: guild.maxQuotes,
-        nextQuoteNumber: guild.quotes.length + 1,
-      })
-      .run();
-    if (guild.quotes.length > 0) {
-      getDatabase()
-        .insert(quotes)
-        .values(
-          guild.quotes.map((quote, index) =>
-            toInsert(guild.guildId, index + 1, quote)
-          )
-        )
-        .run();
-    }
-  });
 }
 
 function allocateQuoteNumber(guildId: string): number {
@@ -360,4 +293,74 @@ function toInsert(
     quoterId: quote.quoterId ?? null,
     text: quote.text,
   };
+}
+
+export function createQuote(
+  guildId: string,
+  quote: NewQuote,
+  defaultMaxQuotes: number
+): Quote {
+  return getDatabase().transaction(() => {
+    ensureGuild(guildId);
+    assertQuoteCapacity(guildId, 1, defaultMaxQuotes);
+    const created = getDatabase()
+      .insert(quotes)
+      .values(toInsert(guildId, allocateQuoteNumber(guildId), quote))
+      .returning()
+      .get();
+    if (!created) {
+      throw new Error("Created quote was not returned");
+    }
+    return created;
+  });
+}
+
+export function importQuotes(
+  guildId: string,
+  newQuotes: NewQuote[],
+  defaultMaxQuotes: number
+): Quote[] {
+  return getDatabase().transaction(() => {
+    ensureGuild(guildId);
+    assertQuoteCapacity(guildId, newQuotes.length, defaultMaxQuotes);
+    return newQuotes.map((quote) => {
+      const created = getDatabase()
+        .insert(quotes)
+        .values(toInsert(guildId, allocateQuoteNumber(guildId), quote))
+        .returning()
+        .get();
+      if (!created) {
+        throw new Error("Imported quote was not returned");
+      }
+      return created;
+    });
+  });
+}
+
+export function migrateLegacyGuild(
+  guild: LegacyGuild,
+  now: number = Date.now()
+): void {
+  getDatabase().transaction(() => {
+    getDatabase()
+      .insert(guilds)
+      .values({
+        createdAt: now,
+        guildId: guild.guildId,
+        lastSeenAt: now,
+        maxQuotes: guild.maxQuotes,
+        nextQuoteNumber: guild.quotes.length + 1,
+      })
+      .run();
+    if (guild.quotes.length > 0) {
+      getDatabase()
+        .insert(quotes)
+        .values(
+          guild.quotes.map((quote, index) =>
+            toInsert(guild.guildId, index + 1, quote)
+          )
+        )
+        .run();
+    }
+  });
 }

@@ -1,5 +1,5 @@
 import { mkdirSync } from "node:fs";
-import { dirname } from "node:path";
+import path from "node:path";
 
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 
@@ -14,7 +14,7 @@ import { events } from "@/events";
 import { clearManagedTimers } from "@/lib/timers";
 
 const config = initializeConfig();
-mkdirSync(dirname(config.databasePath), { recursive: true });
+mkdirSync(path.dirname(config.databasePath), { recursive: true });
 initializeDatabase(config.databasePath);
 
 console.log(
@@ -55,7 +55,7 @@ client
 
 let shuttingDown = false;
 
-async function shutdown(exitCode: number): Promise<void> {
+function shutdown(exitCode: number): void {
   if (shuttingDown) {
     return;
   }
@@ -81,5 +81,5 @@ try {
   await client.login(config.discordToken);
 } catch (error) {
   console.error("Discord login failed", error);
-  await shutdown(1);
+  shutdown(1);
 }

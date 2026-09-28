@@ -82,7 +82,7 @@ describe("limits and transactions", () => {
 
 describe("queries", () => {
   test("paginates across gaps without changing numbers", () => {
-    for (let index = 0; index < 12; index++) {
+    for (let index = 0; index < 12; index += 1) {
       createQuote("guild", { text: `quote ${index + 1}` }, 100);
     }
     deleteQuote("guild", 2);

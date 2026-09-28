@@ -6,10 +6,7 @@ import type { Client } from "discord.js";
  * @param replaceNewlines Whether to replace newlines with spaces
  * @returns The cleaned string
  */
-export function cleanString(
-  string: string,
-  replaceNewlines = true
-): string {
+export function cleanString(string: string, replaceNewlines = true): string {
   let cleaned = string;
 
   cleaned = cleaned.replaceAll("\\", "\\\\");

@@ -1,14 +1,18 @@
 const timers = new Set<Timer>();
 
 export function setManagedInterval(
-  callback: () => void | Promise<void>,
+  operation: () => void | Promise<void>,
   delay: number
 ): Timer {
-  const timer = setInterval(() => {
-    Promise.resolve(callback()).catch((error) => {
+  async function runOperation(): Promise<void> {
+    try {
+      await operation();
+    } catch (error) {
       console.error("Managed interval failed", error);
-    });
-  }, delay);
+    }
+  }
+
+  const timer = setInterval(runOperation, delay);
   timers.add(timer);
   return timer;
 }

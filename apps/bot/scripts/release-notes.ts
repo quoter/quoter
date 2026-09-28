@@ -9,14 +9,14 @@ const changelog = await readFile("../../CHANGELOG.md", "utf-8");
 const escapedVersion = version.replaceAll(".", "\\.");
 const heading = new RegExp(
   `^## \\[?${escapedVersion}\\]?(?: - [^\\n]+)?$`,
-  "m"
+  "mu"
 );
 const headingMatch = heading.exec(changelog);
 const sectionStart = headingMatch
   ? headingMatch.index + headingMatch[0].length
   : -1;
 const nextHeading =
-  sectionStart >= 0 ? changelog.slice(sectionStart).search(/^## /m) : -1;
+  sectionStart >= 0 ? changelog.slice(sectionStart).search(/^## /mu) : -1;
 const section =
   sectionStart >= 0
     ? changelog.slice(

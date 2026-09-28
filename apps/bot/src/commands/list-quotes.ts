@@ -39,7 +39,7 @@ export function renderQuoteList({
       embeds: [],
     };
   }
-  page = quotePage.page;
+  const { page: resolvedPage } = quotePage;
   const maxPage = quotePage.totalPages;
   const quoteList = quotes
     .map((quote) => {
@@ -59,12 +59,12 @@ export function renderQuoteList({
     components: [
       new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
-          .setCustomId(`listquotes_u${userId}p${page - 1}`)
+          .setCustomId(`listquotes_u${userId}p${resolvedPage - 1}`)
           .setLabel("⬅️ Prev")
           .setStyle(ButtonStyle.Primary)
-          .setDisabled(page === 1),
+          .setDisabled(resolvedPage === 1),
         new ButtonBuilder()
-          .setCustomId(`listquotes_u${userId}p${page + 1}`)
+          .setCustomId(`listquotes_u${userId}p${resolvedPage + 1}`)
           .setLabel("Next ➡️")
           .setStyle(ButtonStyle.Primary)
           .setDisabled(page === maxPage)
@@ -72,7 +72,7 @@ export function renderQuoteList({
     ],
     embeds: [
       new EmbedBuilder()
-        .setTitle(`📜 Server Quotes • Page #${page} of ${maxPage}`)
+        .setTitle(`📜 Server Quotes • Page #${resolvedPage} of ${maxPage}`)
         .setColor(Colors.Blue)
         .setDescription(`Use \`/quote\` to view a specific quote.
 
@@ -84,11 +84,13 @@ ${quoteList}`),
 export async function handleListQuoteButtonPress(
   interaction: ButtonInteraction
 ) {
-  const match = interaction.customId.match(/listquotes_u(\d+)p(\d+)/);
+  const match = interaction.customId.match(
+    /listquotes_u(?<userId>\d+)p(?<page>\d+)/u
+  );
   if (!match) {
     return;
   }
-  const [, userId, pageValue] = match;
+  const { page: pageValue, userId } = match.groups ?? {};
   if (!userId || !pageValue) {
     return;
   }

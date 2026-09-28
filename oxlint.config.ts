@@ -6,5 +6,5 @@ export default defineConfig({
   ignorePatterns: core.ignorePatterns,
   rules: {
     "eslint/func-style": ["error", "declaration"],
-  }
+  },
 });
