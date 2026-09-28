@@ -1,0 +1,224 @@
+{
+	"version": "6",
+	"dialect": "sqlite",
+	"id": "7b542888-e52f-4170-b5bd-027c0493c709",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"tables": {
+		"guilds": {
+			"name": "guilds",
+			"columns": {
+				"guild_id": {
+					"name": "guild_id",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"next_quote_number": {
+					"name": "next_quote_number",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 1
+				},
+				"max_quotes": {
+					"name": "max_quotes",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"last_seen_at": {
+					"name": "last_seen_at",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"left_at": {
+					"name": "left_at",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {
+				"guilds_last_seen": {
+					"name": "guilds_last_seen",
+					"columns": ["last_seen_at"],
+					"isUnique": false
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"checkConstraints": {
+				"guilds_next_quote_number_positive": {
+					"name": "guilds_next_quote_number_positive",
+					"value": "\"guilds\".\"next_quote_number\" >= 1"
+				},
+				"guilds_max_quotes_nonnegative": {
+					"name": "guilds_max_quotes_nonnegative",
+					"value": "\"guilds\".\"max_quotes\" IS NULL OR \"guilds\".\"max_quotes\" >= 0"
+				},
+				"guilds_last_seen_nonnegative": {
+					"name": "guilds_last_seen_nonnegative",
+					"value": "\"guilds\".\"last_seen_at\" >= 0"
+				},
+				"guilds_left_at_nonnegative": {
+					"name": "guilds_left_at_nonnegative",
+					"value": "\"guilds\".\"left_at\" IS NULL OR \"guilds\".\"left_at\" >= 0"
+				},
+				"guilds_created_at_nonnegative": {
+					"name": "guilds_created_at_nonnegative",
+					"value": "\"guilds\".\"created_at\" >= 0"
+				}
+			}
+		},
+		"quotes": {
+			"name": "quotes",
+			"columns": {
+				"guild_id": {
+					"name": "guild_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"quote_number": {
+					"name": "quote_number",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"text": {
+					"name": "text",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"author": {
+					"name": "author",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"quoter_id": {
+					"name": "quoter_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"editor_id": {
+					"name": "editor_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"original_message_id": {
+					"name": "original_message_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"original_channel_id": {
+					"name": "original_channel_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"edited_at": {
+					"name": "edited_at",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {
+				"quotes_guild_author": {
+					"name": "quotes_guild_author",
+					"columns": ["guild_id", "\"author\" COLLATE NOCASE"],
+					"isUnique": false
+				}
+			},
+			"foreignKeys": {
+				"quotes_guild_id_guilds_guild_id_fk": {
+					"name": "quotes_guild_id_guilds_guild_id_fk",
+					"tableFrom": "quotes",
+					"tableTo": "guilds",
+					"columnsFrom": ["guild_id"],
+					"columnsTo": ["guild_id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"quotes_guild_id_quote_number_pk": {
+					"columns": ["guild_id", "quote_number"],
+					"name": "quotes_guild_id_quote_number_pk"
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraints": {
+				"quotes_number_positive": {
+					"name": "quotes_number_positive",
+					"value": "\"quotes\".\"quote_number\" >= 1"
+				},
+				"quotes_text_present": {
+					"name": "quotes_text_present",
+					"value": "length(\"quotes\".\"text\") > 0"
+				},
+				"quotes_created_at_nonnegative": {
+					"name": "quotes_created_at_nonnegative",
+					"value": "\"quotes\".\"created_at\" >= 0"
+				},
+				"quotes_edited_at_nonnegative": {
+					"name": "quotes_edited_at_nonnegative",
+					"value": "\"quotes\".\"edited_at\" IS NULL OR \"quotes\".\"edited_at\" >= 0"
+				}
+			}
+		}
+	},
+	"views": {},
+	"enums": {},
+	"_meta": {
+		"schemas": {},
+		"tables": {},
+		"columns": {}
+	},
+	"internal": {
+		"indexes": {
+			"quotes_guild_author": {
+				"columns": {
+					"\"author\" COLLATE NOCASE": {
+						"isExpression": true
+					}
+				}
+			}
+		}
+	}
+}
