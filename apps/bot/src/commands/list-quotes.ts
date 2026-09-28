@@ -27,7 +27,7 @@ export function renderQuoteList({
   page: number;
   guildId: string;
   userId: string;
-}): Promise<InteractionReplyOptions & InteractionUpdateOptions> {
+}): InteractionReplyOptions & InteractionUpdateOptions {
   const quotePage = listQuotes(guildId, page);
   const { quotes } = quotePage;
 

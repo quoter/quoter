@@ -28,7 +28,8 @@ export interface QuoterCommand {
     | ContextMenuCommandBuilder
     | SlashCommandOptionsOnlyBuilder;
   cooldown?: number;
-  execute: (interaction: CommandInteraction) => Promise<void>;
+  // oxlint-disable-next-line typescript/method-signature-style -- Command handlers intentionally accept specialized interaction subtypes.
+  execute(interaction: CommandInteraction): Promise<void>;
 }
 
 export const commands = {
