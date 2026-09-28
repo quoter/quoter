@@ -18,8 +18,9 @@
     "test": "bun test apps/bot/test",
     "build": "bun run --cwd apps/bot build",
     "build:release": "bun run --cwd apps/bot build:release",
-    "check": "ultracite check",
-    "fix": "ultracite fix",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run build",
+    "lint": "ultracite check",
+    "lint:fix": "ultracite fix",
     "prepare": "lefthook install"
   },
   "devDependencies": {
