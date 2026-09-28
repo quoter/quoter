@@ -14,8 +14,6 @@
 	"scripts": {
 		"start": "bun run --cwd apps/bot start",
 		"deploy-commands": "bun run --cwd apps/bot deploy-commands",
-		"lint": "biome check .",
-		"fix": "biome check --write .",
 		"typecheck": "bun run --cwd apps/bot typecheck",
 		"test": "bun test apps/bot/test",
 		"build": "bun run --cwd apps/bot build",
@@ -23,7 +21,6 @@
 		"check": "bun run lint && bun run typecheck && bun run test && bun run build"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.5",
 		"@types/bun": "1.4.0",
 		"typescript": "catalog:"
 	}
