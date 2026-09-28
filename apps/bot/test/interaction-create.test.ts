@@ -20,8 +20,8 @@ test("reports errors thrown while handling a button", async () => {
     isCommand: () => false,
     isContextMenuCommand: () => false,
     replied: false,
-    reply: async (options: unknown) => replies.push(options),
-    update: async () => {
+    reply: (options: unknown) => replies.push(options),
+    update: () => {
       throw new Error("button update failed");
     },
     user: { id: "1" },

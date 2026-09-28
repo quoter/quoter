@@ -90,10 +90,10 @@ interface CliOptions {
 }
 
 function parseCliOptions(arguments_: string[]): CliOptions {
-  const valueAfter = (name: string): string | undefined => {
+  function valueAfter(name: string): string | undefined {
     const index = arguments_.indexOf(name);
     return index === -1 ? undefined : arguments_[index + 1];
-  };
+  }
   const mongoUri = valueAfter("--mongo-uri") ?? process.env["MONGO_URI"];
   const sqlitePath = valueAfter("--sqlite");
   if (!mongoUri) {

@@ -11,8 +11,8 @@ import type { QuoterCommand } from "@/commands";
 import { GuildQuoteLimitError, importQuotes } from "@/db";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 
-const createImportSchema = (maxQuoteLength: number) =>
-  z
+function createImportSchema(maxQuoteLength: number) {
+  return z
     .object({
       author: z.string().trim().nullish(),
       createdTimestamp: z.int().nonnegative().optional(),
@@ -21,6 +21,7 @@ const createImportSchema = (maxQuoteLength: number) =>
     })
     .array()
     .nonempty();
+}
 
 const ImportCommand: QuoterCommand = {
   cooldown: 60,

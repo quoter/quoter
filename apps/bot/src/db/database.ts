@@ -8,13 +8,15 @@ import { guilds, quotes } from "@/db/schema";
 const migrationsFolder = Bun.isStandaloneExecutable
   ? `${import.meta.dir}/drizzle`
   : `${import.meta.dir}/../../drizzle`;
-const createClient = (sqlite: Database) =>
-  drizzle({ client: sqlite, schema: { guilds, quotes } });
+
+function createClient(sqlite: Database) {
+  return drizzle({ client: sqlite, schema: { guilds, quotes } });
+}
 
 let sqlite: Database | undefined;
 let db: ReturnType<typeof createClient> | undefined;
 
-export function initializeDatabase(path: string = ":memory:") {
+export function initializeDatabase(path = ":memory:") {
   if (db) {
     throw new Error("Database is already initialized");
   }

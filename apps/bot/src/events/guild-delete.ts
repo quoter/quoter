@@ -2,10 +2,11 @@ import type { Guild as DiscordGuild } from "discord.js";
 
 import { markGuildLeft } from "@/db";
 
-export async function guildDelete(guild: DiscordGuild) {
+export function guildDelete(guild: DiscordGuild) {
   if (!guild.available) {
+    // Server outage, ignore
     return;
-  } // Server outage
+  }
 
   markGuildLeft(guild.id);
   console.log(`Marked guild ${guild.name} (${guild.id}) as left`);

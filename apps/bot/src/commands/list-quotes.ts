@@ -19,44 +19,7 @@ import type { QuoterCommand } from "@/commands";
 import { countGuildQuotes, listQuotes } from "@/db";
 import { cleanString } from "@/lib/utils";
 
-export async function handleListQuoteButtonPress(
-  interaction: ButtonInteraction
-) {
-  const match = interaction.customId.match(/listquotes_u(\d+)p(\d+)/);
-  if (!match) {
-    return;
-  }
-  const [, userId, pageValue] = match;
-  if (!userId || !pageValue) {
-    return;
-  }
-  const page = Number.parseInt(pageValue, 10);
-
-  if (interaction.user.id !== userId) {
-    await interaction.reply({
-      content: "❌ **|** These buttons are not for you!",
-      flags: MessageFlags.Ephemeral,
-    });
-    return;
-  }
-
-  if (!interaction.guild) {
-    await interaction.reply({
-      content: "❌ **|** This command can only be used in a server.",
-      flags: MessageFlags.Ephemeral,
-    });
-    return;
-  }
-
-  const quoteList = await renderQuoteList({
-    guildId: interaction.guild.id,
-    page,
-    userId,
-  });
-  await interaction.update(quoteList);
-}
-
-export async function renderQuoteList({
+export function renderQuoteList({
   page,
   guildId,
   userId,
@@ -116,6 +79,43 @@ export async function renderQuoteList({
 ${quoteList}`),
     ],
   };
+}
+
+export async function handleListQuoteButtonPress(
+  interaction: ButtonInteraction
+) {
+  const match = interaction.customId.match(/listquotes_u(\d+)p(\d+)/);
+  if (!match) {
+    return;
+  }
+  const [, userId, pageValue] = match;
+  if (!userId || !pageValue) {
+    return;
+  }
+  const page = Math.trunc(Number(pageValue));
+
+  if (interaction.user.id !== userId) {
+    await interaction.reply({
+      content: "❌ **|** These buttons are not for you!",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  if (!interaction.guild) {
+    await interaction.reply({
+      content: "❌ **|** This command can only be used in a server.",
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  const quoteList = await renderQuoteList({
+    guildId: interaction.guild.id,
+    page,
+    userId,
+  });
+  await interaction.update(quoteList);
 }
 
 const ListQuotesCommand: QuoterCommand = {

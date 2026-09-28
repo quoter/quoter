@@ -8,7 +8,7 @@ if (!token) {
   throw new Error("DISCORD_TOKEN environment variable not set");
 }
 
-const tokenId = token.split(".")[0];
+const [tokenId] = token.split(".");
 if (!tokenId) {
   throw new Error("DISCORD_TOKEN has an invalid format");
 }
@@ -20,9 +20,9 @@ const commandsToDeploy: (RESTPostAPIApplicationCommandsJSONBody | undefined)[] =
   [];
 
 if (!isUndeploy) {
-  Object.values(commands).forEach((command) => {
+  for (const command of Object.values(commands)) {
     commandsToDeploy.push(command.data.toJSON());
-  });
+  }
 }
 const rest = new REST().setToken(token);
 

@@ -8,19 +8,17 @@ import type { Client } from "discord.js";
  */
 export function cleanString(
   string: string,
-  replaceNewlines: boolean = true
+  replaceNewlines = true
 ): string {
-  if (!string) {
-    return string;
-  }
+  let cleaned = string;
 
-  string = string.replaceAll("\\", "\\\\");
-  string = string.replaceAll("[", "\\[");
+  cleaned = cleaned.replaceAll("\\", "\\\\");
+  cleaned = cleaned.replaceAll("[", "\\[");
   if (replaceNewlines) {
-    string = string.replaceAll("\n", " ");
+    cleaned = cleaned.replaceAll("\n", " ");
   }
 
-  return string;
+  return cleaned;
 }
 
 /**
@@ -30,21 +28,21 @@ export function cleanString(
  * @returns A promise that resolves to the user's tag (if the ID was valid), or a shortened version of the original string.
  */
 export async function mentionParse(mention: string, client: Client) {
-  mention = mention.trim();
+  let cleanedMention = mention.trim();
 
   // Remove mention ID formatting
   if (mention.startsWith("<@") && mention.endsWith(">")) {
-    mention = mention.slice(2, -1);
+    cleanedMention = mention.slice(2, -1);
   }
 
   // Remove deprecated nickname prefix
   // https://discord.com/developers/docs/reference#message-formatting-formats
   if (mention.startsWith("!")) {
-    mention = mention.slice(1);
+    cleanedMention = cleanedMention.slice(1);
   }
 
   try {
-    const result = await client.users.fetch(mention);
+    const result = await client.users.fetch(cleanedMention);
     return result.tag;
   } catch {
     return mention.slice(0, 32);
@@ -58,7 +56,7 @@ export async function mentionParse(mention: string, client: Client) {
  */
 export function trimQuotes(string: string) {
   if (string.startsWith('"') && string.endsWith('"')) {
-    string = string.slice(1, -1);
+    return string.slice(1, -1);
   }
 
   return string;
