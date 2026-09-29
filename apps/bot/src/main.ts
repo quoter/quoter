@@ -70,11 +70,11 @@ process.once("SIGINT", () => shutdown(0));
 process.once("SIGTERM", () => shutdown(0));
 process.on("unhandledRejection", (error) => {
   console.error("Unhandled promise rejection", error);
-  void shutdown(1);
+  shutdown(1);
 });
 process.on("uncaughtException", (error) => {
   console.error("Uncaught exception", error);
-  void shutdown(1);
+  shutdown(1);
 });
 
 try {
