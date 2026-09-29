@@ -1,6 +1,17 @@
 {
   "name": "quoter",
   "private": true,
+  "description": "The Quote Book for Discord.",
+  "homepage": "https://quoter.cc",
+  "bugs": {
+    "url": "https://github.com/quoter/quoter/issues"
+  },
+  "license": "AGPL-3.0-only",
+  "author": "Nick Oates <nick@nickoates.com> (https://nickoates.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quoter/quoter.git"
+  },
   "workspaces": {
     "packages": [
       "apps/*"
