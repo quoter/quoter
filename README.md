@@ -42,8 +42,8 @@ While we support self-hosting, we do not provide any support for it. If you are 
 
 To run Quoter, you will need the following:
 
--   [Bun](https://bun.sh) (we target the latest 1.x release)
--   [MongoDB](https://www.mongodb.com) (we target the latest 7.x release)
+- [Bun](https://bun.sh) (we target the latest 1.x release)
+- [MongoDB](https://www.mongodb.com) (we target the latest 7.x release)
 
 You'll also need to create a Discord bot and invite it to your server. Head to [Discord's developer portal](https://discord.com/developers/applications) and create a new application. Create a bot user, and get the token. You'll need to invite the bot to your server using the following link, replacing `REPLACE_ME` with your bot's client ID:
 
@@ -61,8 +61,8 @@ bun install
 
 Then, copy `.env.EXAMPLE` to `.env` and fill in the values:
 
--   `DISCORD_TOKEN` is the token of your Discord bot.
--   `MONGO_URI` is the URI to your MongoDB database.
+- `DISCORD_TOKEN` is the token of your Discord bot.
+- `MONGO_URI` is the URI to your MongoDB database.
 
 You can also adjust the default `MAX_GUILD_QUOTES` and `MAX_QUOTE_LENGTH`.
 

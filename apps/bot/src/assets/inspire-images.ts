@@ -1,131 +1,131 @@
 import type { CanvasTextAlign } from "@napi-rs/canvas";
 
 interface InspireImage {
-	multiline: {
-		rect: {
-			xFactor: number;
-			y: number;
-			widthPadding: number;
-			height: number;
-		};
-		font: string;
-		textAlign: CanvasTextAlign;
-		minFontSize: number;
-		maxFontSize: number;
-	};
-	author: {
-		textAlign: CanvasTextAlign;
-		font: string;
-		color: string;
-		widthPadding: number;
-		heightPadding: number;
-	};
+  multiline: {
+    rect: {
+      xFactor: number;
+      y: number;
+      widthPadding: number;
+      height: number;
+    };
+    font: string;
+    textAlign: CanvasTextAlign;
+    minFontSize: number;
+    maxFontSize: number;
+  };
+  author: {
+    textAlign: CanvasTextAlign;
+    font: string;
+    color: string;
+    widthPadding: number;
+    heightPadding: number;
+  };
 }
 
 export const inspireImages: InspireImage[] = [
-	{
-		multiline: {
-			rect: {
-				xFactor: 0.5,
-				y: 40,
-				widthPadding: 250,
-				height: 1000,
-			},
-			font: "regular",
-			textAlign: "center",
-			minFontSize: 170,
-			maxFontSize: 250,
-		},
-		author: {
-			textAlign: "right",
-			font: '200px "regular"',
-			color: "#ffffff",
-			widthPadding: 60,
-			heightPadding: 80,
-		},
-	},
-	{
-		multiline: {
-			rect: {
-				xFactor: 0.06,
-				y: 30,
-				widthPadding: 250,
-				height: 680,
-			},
-			font: "regular",
-			textAlign: "left",
-			minFontSize: 150,
-			maxFontSize: 240,
-		},
-		author: {
-			textAlign: "right",
-			font: '200px "regular"',
-			color: "#ffffff",
-			widthPadding: 100,
-			heightPadding: 100,
-		},
-	},
-	{
-		multiline: {
-			rect: {
-				xFactor: 0.5,
-				y: 40,
-				widthPadding: 250,
-				height: 1000,
-			},
-			font: "regular",
-			textAlign: "center",
-			minFontSize: 150,
-			maxFontSize: 190,
-		},
-		author: {
-			textAlign: "right",
-			font: '150px "regular"',
-			color: "#ffffff",
-			widthPadding: 60,
-			heightPadding: 80,
-		},
-	},
-	{
-		multiline: {
-			rect: {
-				xFactor: 0.5,
-				y: 40,
-				widthPadding: 210,
-				height: 1000,
-			},
-			font: "regular",
-			textAlign: "center",
-			minFontSize: 150,
-			maxFontSize: 190,
-		},
-		author: {
-			textAlign: "right",
-			font: '150px "regular"',
-			color: "#ffffff",
-			widthPadding: 60,
-			heightPadding: 80,
-		},
-	},
-	{
-		multiline: {
-			rect: {
-				xFactor: 0.98,
-				y: 40,
-				widthPadding: 400,
-				height: 1000,
-			},
-			font: "regular",
-			textAlign: "right",
-			minFontSize: 190,
-			maxFontSize: 260,
-		},
-		author: {
-			textAlign: "right",
-			font: '250px "regular"',
-			color: "#ffffff",
-			widthPadding: 60,
-			heightPadding: 80,
-		},
-	},
+  {
+    author: {
+      color: "#ffffff",
+      font: '200px "regular"',
+      heightPadding: 80,
+      textAlign: "right",
+      widthPadding: 60,
+    },
+    multiline: {
+      font: "regular",
+      maxFontSize: 250,
+      minFontSize: 170,
+      rect: {
+        height: 1000,
+        widthPadding: 250,
+        xFactor: 0.5,
+        y: 40,
+      },
+      textAlign: "center",
+    },
+  },
+  {
+    author: {
+      color: "#ffffff",
+      font: '200px "regular"',
+      heightPadding: 100,
+      textAlign: "right",
+      widthPadding: 100,
+    },
+    multiline: {
+      font: "regular",
+      maxFontSize: 240,
+      minFontSize: 150,
+      rect: {
+        height: 680,
+        widthPadding: 250,
+        xFactor: 0.06,
+        y: 30,
+      },
+      textAlign: "left",
+    },
+  },
+  {
+    author: {
+      color: "#ffffff",
+      font: '150px "regular"',
+      heightPadding: 80,
+      textAlign: "right",
+      widthPadding: 60,
+    },
+    multiline: {
+      font: "regular",
+      maxFontSize: 190,
+      minFontSize: 150,
+      rect: {
+        height: 1000,
+        widthPadding: 250,
+        xFactor: 0.5,
+        y: 40,
+      },
+      textAlign: "center",
+    },
+  },
+  {
+    author: {
+      color: "#ffffff",
+      font: '150px "regular"',
+      heightPadding: 80,
+      textAlign: "right",
+      widthPadding: 60,
+    },
+    multiline: {
+      font: "regular",
+      maxFontSize: 190,
+      minFontSize: 150,
+      rect: {
+        height: 1000,
+        widthPadding: 210,
+        xFactor: 0.5,
+        y: 40,
+      },
+      textAlign: "center",
+    },
+  },
+  {
+    author: {
+      color: "#ffffff",
+      font: '250px "regular"',
+      heightPadding: 80,
+      textAlign: "right",
+      widthPadding: 60,
+    },
+    multiline: {
+      font: "regular",
+      maxFontSize: 260,
+      minFontSize: 190,
+      rect: {
+        height: 1000,
+        widthPadding: 400,
+        xFactor: 0.98,
+        y: 40,
+      },
+      textAlign: "right",
+    },
+  },
 ];

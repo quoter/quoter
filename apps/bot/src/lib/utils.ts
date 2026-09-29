@@ -6,17 +6,16 @@ import type { Client } from "discord.js";
  * @param replaceNewlines Whether to replace newlines with spaces
  * @returns The cleaned string
  */
-export function cleanString(
-	string: string,
-	replaceNewlines: boolean = true,
-): string {
-	if (!string) return string;
+export function cleanString(string: string, replaceNewlines = true): string {
+  let cleaned = string;
 
-	string = string.replaceAll("\\", "\\\\");
-	string = string.replaceAll("[", "\\[");
-	if (replaceNewlines) string = string.replaceAll("\n", " ");
+  cleaned = cleaned.replaceAll("\\", "\\\\");
+  cleaned = cleaned.replaceAll("[", "\\[");
+  if (replaceNewlines) {
+    cleaned = cleaned.replaceAll("\n", " ");
+  }
 
-	return string;
+  return cleaned;
 }
 
 /**
@@ -26,23 +25,25 @@ export function cleanString(
  * @returns A promise that resolves to the user's tag (if the ID was valid), or a shortened version of the original string.
  */
 export async function mentionParse(mention: string, client: Client) {
-	mention = mention.trim();
+  let cleanedMention = mention.trim();
 
-	// Remove mention ID formatting
-	if (mention.startsWith("<@") && mention.endsWith(">")) {
-		mention = mention.slice(2, -1);
-	}
+  // Remove mention ID formatting
+  if (mention.startsWith("<@") && mention.endsWith(">")) {
+    cleanedMention = mention.slice(2, -1);
+  }
 
-	// Remove deprecated nickname prefix
-	// https://discord.com/developers/docs/reference#message-formatting-formats
-	if (mention.startsWith("!")) mention = mention.slice(1);
+  // Remove deprecated nickname prefix
+  // https://discord.com/developers/docs/reference#message-formatting-formats
+  if (mention.startsWith("!")) {
+    cleanedMention = cleanedMention.slice(1);
+  }
 
-	try {
-		const result = await client.users.fetch(mention);
-		return result.tag;
-	} catch {
-		return mention.substring(0, 32);
-	}
+  try {
+    const result = await client.users.fetch(cleanedMention);
+    return result.tag;
+  } catch {
+    return mention.slice(0, 32);
+  }
 }
 
 /**
@@ -51,9 +52,9 @@ export async function mentionParse(mention: string, client: Client) {
  * @returns The trimmed string
  */
 export function trimQuotes(string: string) {
-	if (string.startsWith('"') && string.endsWith('"')) {
-		string = string.slice(1, -1);
-	}
+  if (string.startsWith('"') && string.endsWith('"')) {
+    return string.slice(1, -1);
+  }
 
-	return string;
+  return string;
 }
