@@ -91,14 +91,14 @@ const ImportCommand: QuoterCommand = {
         limits.maxQuotes
       );
     } catch (error) {
-      if (!(error instanceof GuildQuoteLimitError)) {
-        throw error;
+      if (error instanceof GuildQuoteLimitError) {
+        await interaction.reply({
+          content: `❌ **|** That file contains too many quotes. You can only have ${error.limit} quotes in this server.`,
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
       }
-      await interaction.reply({
-        content: `❌ **|** That file contains too many quotes. You can only have ${error.limit} quotes in this server.`,
-        flags: MessageFlags.Ephemeral,
-      });
-      return;
+      throw error;
     }
 
     await interaction.reply({
