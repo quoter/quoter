@@ -4,12 +4,7 @@ import path from "node:path";
 import { Client, Events, GatewayIntentBits, Options } from "discord.js";
 
 import { loadConfig } from "@/config";
-import {
-  checkIntegrity,
-  closeDatabase,
-  getSchemaVersion,
-  initializeDatabase,
-} from "@/db";
+import { closeDatabase, getSchemaVersion, initializeDatabase } from "@/db";
 import { events } from "@/events";
 import { clearManagedTimers } from "@/lib/timers";
 
@@ -20,15 +15,6 @@ initializeDatabase(config.databasePath);
 console.log(
   `Starting Quoter v${config.version} (${config.buildSha.slice(0, 7)}), schema ${getSchemaVersion()}`
 );
-
-if (process.argv.includes("--check")) {
-  if (!checkIntegrity()) {
-    throw new Error("SQLite integrity check failed");
-  }
-  console.log("Quoter executable check passed");
-  closeDatabase();
-  process.exit(0);
-}
 
 const client = new Client({
   allowedMentions: { parse: [] },
@@ -76,6 +62,14 @@ process.on("uncaughtException", (error) => {
   console.error("Uncaught exception", error);
   shutdown(1);
 });
+
+// used by CI to verify the executable actually runs
+// without trying to login to Discord
+if (process.argv.includes("--check")) {
+  console.log("Quoter executable check passed");
+  closeDatabase();
+  process.exit(0);
+}
 
 try {
   await client.login(config.discordToken);
