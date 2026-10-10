@@ -34,7 +34,7 @@ jobs:
       - name: Build Linux executable
         env:
           BUILD_SHA: ${{ github.sha }}
-        run: bun run build:release
+        run: bun run build
 
       - name: Check Linux executable
         env:
