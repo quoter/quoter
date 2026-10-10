@@ -6,7 +6,6 @@ export {
 } from "@/db/database";
 export {
   GuildQuoteLimitError,
-  checkIntegrity,
   countAllQuotes,
   countGuildQuotes,
   createQuote,
@@ -22,10 +21,9 @@ export {
   importQuotes,
   listQuotes,
   markGuildLeft,
-  migrateLegacyGuild,
   setGuildLimits,
   touchGuilds,
   updateQuote,
 } from "@/db/queries";
-export type { LegacyGuild, QuotePage, QuoteUpdate } from "@/db/queries";
+export type { QuotePage, QuoteUpdate } from "@/db/queries";
 export type { GuildSettings, NewQuote, Quote } from "@/db/schema";

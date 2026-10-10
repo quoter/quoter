@@ -19,12 +19,6 @@ export interface QuotePage {
   totalPages: number;
 }
 
-export interface LegacyGuild {
-  guildId: string;
-  maxQuotes: number | null;
-  quotes: NewQuote[];
-}
-
 export class GuildQuoteLimitError extends Error {
   readonly limit: number;
 
@@ -42,14 +36,6 @@ export function getSchemaVersion(): number {
         "SELECT COUNT(*) AS count FROM __drizzle_migrations"
       )
       .get()?.count ?? 0
-  );
-}
-
-export function checkIntegrity(): boolean {
-  return (
-    getSqlite()
-      .query<{ integrity_check: string }, []>("PRAGMA integrity_check")
-      .get()?.integrity_check === "ok"
   );
 }
 
@@ -334,33 +320,5 @@ export function importQuotes(
       }
       return created;
     });
-  });
-}
-
-export function migrateLegacyGuild(
-  guild: LegacyGuild,
-  now: number = Date.now()
-): void {
-  getDatabase().transaction(() => {
-    getDatabase()
-      .insert(guilds)
-      .values({
-        createdAt: now,
-        guildId: guild.guildId,
-        lastSeenAt: now,
-        maxQuotes: guild.maxQuotes,
-        nextQuoteNumber: guild.quotes.length + 1,
-      })
-      .run();
-    if (guild.quotes.length > 0) {
-      getDatabase()
-        .insert(quotes)
-        .values(
-          guild.quotes.map((quote, index) =>
-            toInsert(guild.guildId, index + 1, quote)
-          )
-        )
-        .run();
-    }
   });
 }
