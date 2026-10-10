@@ -7,7 +7,6 @@
     "start": "bun run src/main.ts",
     "deploy-commands": "bun run src/lib/deploy-commands.ts",
     "typecheck": "tsc --noEmit",
-    "test": "bun test",
     "build": "bun run scripts/build.ts",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "migrate:mongo": "bun run scripts/migrate-mongo.ts"
