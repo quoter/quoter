@@ -6,14 +6,13 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { getQuote, updateQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
-const EditQuoteCommand: QuoterCommand = {
+const EditQuoteCommand = defineSlashCommand({
   cooldown: 10,
   data: new SlashCommandBuilder()
     .setName("edit-quote")
@@ -35,7 +34,7 @@ const EditQuoteCommand: QuoterCommand = {
     )
     .setContexts(InteractionContextType.Guild)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const id = interaction.options.getInteger("id");
     if (id === null) {
       throw new Error("ID is null");
@@ -90,6 +89,6 @@ const EditQuoteCommand: QuoterCommand = {
       ],
     });
   },
-};
+});
 
 export default EditQuoteCommand;

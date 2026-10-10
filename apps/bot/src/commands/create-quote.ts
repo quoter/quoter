@@ -5,15 +5,14 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import type { Quote } from "@/db";
 import { createQuote, GuildQuoteLimitError } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
-const CreateQuoteCommand: QuoterCommand = {
+const CreateQuoteCommand = defineSlashCommand({
   cooldown: 10,
   data: new SlashCommandBuilder()
     .setName("create-quote")
@@ -28,7 +27,7 @@ const CreateQuoteCommand: QuoterCommand = {
       o.setName("author").setDescription("The author of the quote")
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const guildId = getGuildId(interaction);
     const limits = getGuildLimits(guildId);
 
@@ -82,6 +81,6 @@ const CreateQuoteCommand: QuoterCommand = {
 
     await interaction.reply({ embeds: [embed] });
   },
-};
+});
 
 export default CreateQuoteCommand;

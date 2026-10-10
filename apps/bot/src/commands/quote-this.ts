@@ -6,21 +6,20 @@ import {
   InteractionContextType,
   MessageFlags,
 } from "discord.js";
-import type { MessageContextMenuCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import type { Quote } from "@/db";
 import { createQuote, GuildQuoteLimitError } from "@/db";
+import { defineMessageContextMenuCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
-const QuoteThisCommand: QuoterCommand = {
+const QuoteThisCommand = defineMessageContextMenuCommand({
   cooldown: 10,
   data: new ContextMenuCommandBuilder()
     .setName("Quote This")
     .setType(ApplicationCommandType.Message)
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: MessageContextMenuCommandInteraction) {
+  async execute(interaction) {
     const guildId = getGuildId(interaction);
     const limits = getGuildLimits(guildId);
 
@@ -85,6 +84,6 @@ const QuoteThisCommand: QuoterCommand = {
       ],
     });
   },
-};
+});
 
 export default QuoteThisCommand;

@@ -1,8 +1,8 @@
 import { MessageFlags, SlashCommandBuilder } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
+import { defineSlashCommand } from "@/lib/command";
 
-const BugsCommand: QuoterCommand = {
+const BugsCommand = defineSlashCommand({
   data: new SlashCommandBuilder()
     .setName("bugs")
     .setDescription(
@@ -15,6 +15,6 @@ const BugsCommand: QuoterCommand = {
       flags: MessageFlags.Ephemeral,
     });
   },
-};
+});
 
 export default BugsCommand;

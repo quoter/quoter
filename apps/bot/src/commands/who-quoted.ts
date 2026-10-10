@@ -5,13 +5,12 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { getQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const WhoQuotedCommand: QuoterCommand = {
+const WhoQuotedCommand = defineSlashCommand({
   cooldown: 2,
   data: new SlashCommandBuilder()
     .setName("who-quoted")
@@ -23,7 +22,7 @@ const WhoQuotedCommand: QuoterCommand = {
         .setRequired(true)
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const id = interaction.options.getInteger("id");
     if (id === null) {
       throw new Error("ID is null");
@@ -49,6 +48,6 @@ const WhoQuotedCommand: QuoterCommand = {
       ],
     });
   },
-};
+});
 
 export default WhoQuotedCommand;

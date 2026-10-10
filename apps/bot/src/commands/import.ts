@@ -4,11 +4,10 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 import { z } from "zod";
 
-import type { QuoterCommand } from "@/commands";
 import { GuildQuoteLimitError, importQuotes } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 
 function createImportSchema(maxQuoteLength: number) {
@@ -23,7 +22,7 @@ function createImportSchema(maxQuoteLength: number) {
     .nonempty();
 }
 
-const ImportCommand: QuoterCommand = {
+const ImportCommand = defineSlashCommand({
   cooldown: 60,
   data: new SlashCommandBuilder()
     .setName("import")
@@ -36,7 +35,7 @@ const ImportCommand: QuoterCommand = {
     )
     .setContexts(InteractionContextType.Guild)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const attachment = interaction.options.getAttachment("file");
     if (attachment === null) {
       throw new Error("File is null");
@@ -106,6 +105,6 @@ const ImportCommand: QuoterCommand = {
       flags: MessageFlags.Ephemeral,
     });
   },
-};
+});
 
 export default ImportCommand;

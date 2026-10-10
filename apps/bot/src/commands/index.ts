@@ -1,9 +1,4 @@
-import type {
-  CommandInteraction,
-  ContextMenuCommandBuilder,
-  SlashCommandBuilder,
-  SlashCommandOptionsOnlyBuilder,
-} from "discord.js";
+import type { QuoterCommand } from "@/lib/command";
 
 import EightBallCommand from "./8-ball";
 import AboutCommand from "./about";
@@ -22,17 +17,7 @@ import QuoteThisCommand from "./quote-this";
 import SearchCommand from "./search";
 import WhoQuotedCommand from "./who-quoted";
 
-export interface QuoterCommand {
-  data:
-    | SlashCommandBuilder
-    | ContextMenuCommandBuilder
-    | SlashCommandOptionsOnlyBuilder;
-  cooldown?: number;
-  // oxlint-disable-next-line typescript/method-signature-style -- Command handlers intentionally accept specialized interaction subtypes.
-  execute(interaction: CommandInteraction): Promise<void>;
-}
-
-export const commands = {
+export const commands: Record<string, QuoterCommand> = {
   [EightBallCommand.data.name]: EightBallCommand,
   [AboutCommand.data.name]: AboutCommand,
   [BugsCommand.data.name]: BugsCommand,

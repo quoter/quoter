@@ -10,14 +10,15 @@ import {
 } from "discord.js";
 import type {
   ButtonInteraction,
-  ChatInputCommandInteraction,
   InteractionReplyOptions,
   InteractionUpdateOptions,
 } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { countGuildQuotes, listQuotes } from "@/db";
+import { buildCustomId, defineSlashCommand } from "@/lib/command";
 import { cleanString } from "@/lib/utils";
+
+const commandName = "list-quotes";
 
 export function renderQuoteList({
   page,
@@ -59,15 +60,15 @@ export function renderQuoteList({
     components: [
       new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
-          .setCustomId(`listquotes_u${userId}p${resolvedPage - 1}`)
+          .setCustomId(buildCustomId(commandName, userId, resolvedPage - 1))
           .setLabel("⬅️ Prev")
           .setStyle(ButtonStyle.Primary)
           .setDisabled(resolvedPage === 1),
         new ButtonBuilder()
-          .setCustomId(`listquotes_u${userId}p${resolvedPage + 1}`)
+          .setCustomId(buildCustomId(commandName, userId, resolvedPage + 1))
           .setLabel("Next ➡️")
           .setStyle(ButtonStyle.Primary)
-          .setDisabled(page === maxPage)
+          .setDisabled(resolvedPage === maxPage)
       ),
     ],
     embeds: [
@@ -81,20 +82,14 @@ ${quoteList}`),
   };
 }
 
-export async function handleListQuoteButtonPress(
-  interaction: ButtonInteraction
+async function handleButtonPress(
+  interaction: ButtonInteraction,
+  [userId, pageValue]: string[]
 ) {
-  const match = interaction.customId.match(
-    /listquotes_u(?<userId>\d+)p(?<page>\d+)/u
-  );
-  if (!match) {
-    return;
-  }
-  const { page: pageValue, userId } = match.groups ?? {};
-  if (!userId || !pageValue) {
-    return;
-  }
   const page = Math.trunc(Number(pageValue));
+  if (!userId || !Number.isFinite(page)) {
+    return;
+  }
 
   if (interaction.user.id !== userId) {
     await interaction.reply({
@@ -112,24 +107,21 @@ export async function handleListQuoteButtonPress(
     return;
   }
 
-  const quoteList = await renderQuoteList({
-    guildId: interaction.guild.id,
-    page,
-    userId,
-  });
-  await interaction.update(quoteList);
+  await interaction.update(
+    renderQuoteList({ guildId: interaction.guild.id, page, userId })
+  );
 }
 
-const ListQuotesCommand: QuoterCommand = {
+const ListQuotesCommand = defineSlashCommand({
   cooldown: 3,
   data: new SlashCommandBuilder()
-    .setName("list-quotes")
+    .setName(commandName)
     .setDescription("See all quotes in this server's quote book")
     .addIntegerOption((o) =>
       o.setName("page").setDescription("The page of the quote book to view")
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     if (!interaction.guild) {
       await interaction.reply({
         content: "❌ **|** This command can only be used in a server.",
@@ -158,7 +150,7 @@ const ListQuotesCommand: QuoterCommand = {
       return;
     }
 
-    const quoteList = await renderQuoteList({
+    const quoteList = renderQuoteList({
       guildId: interaction.guild.id,
       page,
       userId: interaction.user.id,
@@ -166,6 +158,7 @@ const ListQuotesCommand: QuoterCommand = {
 
     await interaction.reply(quoteList);
   },
-};
+  onButton: handleButtonPress,
+});
 
 export default ListQuotesCommand;
