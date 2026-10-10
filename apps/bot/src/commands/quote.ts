@@ -5,14 +5,13 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { getQuote, getRandomQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
-const QuoteCommand: QuoterCommand = {
+export const QuoteCommand = defineSlashCommand({
   cooldown: 2,
   data: new SlashCommandBuilder()
     .setName("quote")
@@ -28,7 +27,7 @@ const QuoteCommand: QuoterCommand = {
         )
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const choice = interaction.options.getInteger("id");
     const author = interaction.options.getString("author");
 
@@ -77,6 +76,4 @@ const QuoteCommand: QuoterCommand = {
 
     await interaction.reply({ embeds: [embed] });
   },
-};
-
-export default QuoteCommand;
+});

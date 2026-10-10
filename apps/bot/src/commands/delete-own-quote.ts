@@ -3,13 +3,12 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { deleteQuote, getQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const DeleteOwnQuoteCommand: QuoterCommand = {
+export const DeleteOwnQuoteCommand = defineSlashCommand({
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("delete-own-quote")
@@ -21,7 +20,7 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
         .setRequired(true)
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const id = interaction.options.getInteger("id");
     if (id === null) {
       throw new Error("ID is null");
@@ -52,6 +51,4 @@ const DeleteOwnQuoteCommand: QuoterCommand = {
       content: `✅ **|** Deleted quote #${id}.`,
     });
   },
-};
-
-export default DeleteOwnQuoteCommand;
+});

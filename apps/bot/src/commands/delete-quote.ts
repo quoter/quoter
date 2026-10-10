@@ -4,13 +4,12 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { deleteQuote, getQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const DeleteQuoteCommand: QuoterCommand = {
+export const DeleteQuoteCommand = defineSlashCommand({
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("delete-quote")
@@ -23,7 +22,7 @@ const DeleteQuoteCommand: QuoterCommand = {
     )
     .setContexts(InteractionContextType.Guild)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const id = interaction.options.getInteger("id");
     if (id === null) {
       throw new Error("ID is null");
@@ -45,6 +44,4 @@ const DeleteQuoteCommand: QuoterCommand = {
       content: `✅ **|** Deleted quote #${id}.`,
     });
   },
-};
-
-export default DeleteQuoteCommand;
+});

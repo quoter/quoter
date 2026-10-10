@@ -3,12 +3,11 @@ import path from "node:path";
 import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
 import drawMultilineText from "canvas-multiline-text";
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
 import { inspireImages } from "@/assets/inspire-images";
-import type { QuoterCommand } from "@/commands";
 import type { Quote } from "@/db";
 import { getQuote, getRandomQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
 const assetsDirectory = Bun.isStandaloneExecutable
@@ -20,7 +19,7 @@ GlobalFonts.registerFromPath(
   "Regular"
 );
 
-const InspireCommand: QuoterCommand = {
+export const InspireCommand = defineSlashCommand({
   cooldown: 4,
   data: new SlashCommandBuilder()
     .setName("inspire")
@@ -36,7 +35,7 @@ const InspireCommand: QuoterCommand = {
         )
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     await interaction.deferReply();
 
     const choice = interaction.options.getInteger("id");
@@ -110,6 +109,4 @@ const InspireCommand: QuoterCommand = {
       files: [jpeg],
     });
   },
-};
-
-export default InspireCommand;
+});

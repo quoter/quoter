@@ -5,14 +5,13 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { getRandomQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
-const EightBallCommand: QuoterCommand = {
+export const EightBallCommand = defineSlashCommand({
   cooldown: 2,
   data: new SlashCommandBuilder()
     .setName("8-ball")
@@ -26,7 +25,7 @@ const EightBallCommand: QuoterCommand = {
         .setRequired(true)
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const question = interaction.options.getString("question");
     if (question === null) {
       throw new Error("Question is null");
@@ -71,6 +70,4 @@ const EightBallCommand: QuoterCommand = {
 
     await interaction.reply({ embeds: [questionEmbed, quoteEmbed] });
   },
-};
-
-export default EightBallCommand;
+});

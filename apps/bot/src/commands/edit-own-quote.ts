@@ -5,14 +5,13 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { getQuote, updateQuote } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
-const EditOwnQuoteCommand: QuoterCommand = {
+export const EditOwnQuoteCommand = defineSlashCommand({
   cooldown: 10,
   data: new SlashCommandBuilder()
     .setName("edit-own-quote")
@@ -33,7 +32,7 @@ const EditOwnQuoteCommand: QuoterCommand = {
       o.setName("author").setDescription("The updated author of the quote")
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const id = interaction.options.getInteger("id");
     if (id === null) {
       throw new Error("ID is null");
@@ -97,6 +96,4 @@ const EditOwnQuoteCommand: QuoterCommand = {
       ],
     });
   },
-};
-
-export default EditOwnQuoteCommand;
+});

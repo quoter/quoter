@@ -6,11 +6,11 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { exportQuotes } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const ExportCommand: QuoterCommand = {
+export const ExportCommand = defineSlashCommand({
   cooldown: 60,
   data: new SlashCommandBuilder()
     .setName("export")
@@ -42,6 +42,4 @@ const ExportCommand: QuoterCommand = {
       flags: MessageFlags.Ephemeral,
     });
   },
-};
-
-export default ExportCommand;
+});

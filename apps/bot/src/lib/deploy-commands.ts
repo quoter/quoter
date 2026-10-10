@@ -20,7 +20,7 @@ const commandsToDeploy: (RESTPostAPIApplicationCommandsJSONBody | undefined)[] =
   [];
 
 if (!isUndeploy) {
-  for (const command of Object.values(commands)) {
+  for (const command of commands.values()) {
     commandsToDeploy.push(command.data.toJSON());
   }
 }

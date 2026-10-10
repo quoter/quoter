@@ -5,15 +5,14 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
 
-import type { QuoterCommand } from "@/commands";
 import { getSearchCandidates } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { searchQuotes } from "@/lib/search-quotes";
 import { cleanString } from "@/lib/utils";
 
-const SearchCommand: QuoterCommand = {
+export const SearchCommand = defineSlashCommand({
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("search")
@@ -25,7 +24,7 @@ const SearchCommand: QuoterCommand = {
         .setRequired(true)
     )
     .setContexts(InteractionContextType.Guild),
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction) {
     const quotes = getSearchCandidates(getGuildId(interaction));
 
     if (!quotes.length) {
@@ -83,6 +82,4 @@ ${list.join("\n")}`),
       ],
     });
   },
-};
-
-export default SearchCommand;
+});

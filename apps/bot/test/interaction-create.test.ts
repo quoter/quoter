@@ -12,13 +12,13 @@ test("reports errors thrown while handling a button", async () => {
   const replies: unknown[] = [];
   const errorLog = spyOn(console, "error").mockImplementation(() => {});
   const interaction = {
-    customId: "listquotes_u1p1",
+    customId: "list-quotes:1:1",
     deferred: false,
     guild: { id: "guild" },
     guildId: "guild",
     isButton: () => true,
-    isCommand: () => false,
-    isContextMenuCommand: () => false,
+    isChatInputCommand: () => false,
+    isMessageContextMenuCommand: () => false,
     replied: false,
     reply: (options: unknown) => replies.push(options),
     update: () => {

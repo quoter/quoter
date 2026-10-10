@@ -9,14 +9,14 @@ import {
 } from "discord.js";
 import ms from "ms";
 
-import type { QuoterCommand } from "@/commands";
 import { getConfig } from "@/config";
 import { countAllQuotes } from "@/db";
+import { defineSlashCommand } from "@/lib/command";
 
 let totalQuotes = "0";
 let totalQuotesLastUpdated = 0;
 
-const AboutCommand: QuoterCommand = {
+export const AboutCommand = defineSlashCommand({
   cooldown: 1,
   data: new SlashCommandBuilder()
     .setName("about")
@@ -122,6 +122,4 @@ const AboutCommand: QuoterCommand = {
       flags: MessageFlags.Ephemeral,
     });
   },
-};
-
-export default AboutCommand;
+});
