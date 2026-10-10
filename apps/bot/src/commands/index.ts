@@ -17,21 +17,23 @@ import QuoteThisCommand from "./quote-this";
 import SearchCommand from "./search";
 import WhoQuotedCommand from "./who-quoted";
 
-export const commands: Record<string, QuoterCommand> = {
-  [EightBallCommand.data.name]: EightBallCommand,
-  [AboutCommand.data.name]: AboutCommand,
-  [BugsCommand.data.name]: BugsCommand,
-  [CreateQuoteCommand.data.name]: CreateQuoteCommand,
-  [DeleteOwnQuoteCommand.data.name]: DeleteOwnQuoteCommand,
-  [DeleteQuoteCommand.data.name]: DeleteQuoteCommand,
-  [EditOwnQuoteCommand.data.name]: EditOwnQuoteCommand,
-  [EditQuoteCommand.data.name]: EditQuoteCommand,
-  [ExportCommand.data.name]: ExportCommand,
-  [ImportCommand.data.name]: ImportCommand,
-  [InspireCommand.data.name]: InspireCommand,
-  [ListQuotesCommand.data.name]: ListQuotesCommand,
-  [QuoteThisCommand.data.name]: QuoteThisCommand,
-  [QuoteCommand.data.name]: QuoteCommand,
-  [SearchCommand.data.name]: SearchCommand,
-  [WhoQuotedCommand.data.name]: WhoQuotedCommand,
-};
+const allCommands: QuoterCommand[] = [
+  EightBallCommand,
+  AboutCommand,
+  BugsCommand,
+  CreateQuoteCommand,
+  DeleteOwnQuoteCommand,
+  DeleteQuoteCommand,
+  EditOwnQuoteCommand,
+  EditQuoteCommand,
+  ExportCommand,
+  ImportCommand,
+  InspireCommand,
+  ListQuotesCommand,
+  QuoteThisCommand,
+  QuoteCommand,
+  SearchCommand,
+  WhoQuotedCommand,
+];
+
+export const commands = new Map(allCommands.map((c) => [c.data.name, c]));

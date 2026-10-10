@@ -45,12 +45,12 @@ function takeCooldown(
 
 async function handleButton(interaction: ButtonInteraction): Promise<void> {
   const { commandName, args } = parseCustomId(interaction.customId);
-  await commands[commandName]?.onButton?.(interaction, args);
+  await commands.get(commandName)?.onButton?.(interaction, args);
 }
 
 async function handleCommand(interaction: CommandInteraction): Promise<void> {
   const { commandName, user } = interaction;
-  const command = commands[commandName];
+  const command = commands.get(commandName);
   if (!command) {
     return;
   }
