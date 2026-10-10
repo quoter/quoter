@@ -112,7 +112,7 @@ async function handleButtonPress(
   );
 }
 
-const ListQuotesCommand = defineSlashCommand({
+export const ListQuotesCommand = defineSlashCommand({
   cooldown: 3,
   data: new SlashCommandBuilder()
     .setName(commandName)
@@ -160,5 +160,3 @@ const ListQuotesCommand = defineSlashCommand({
   },
   onButton: handleButtonPress,
 });
-
-export default ListQuotesCommand;

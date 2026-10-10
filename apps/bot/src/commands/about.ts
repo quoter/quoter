@@ -16,7 +16,7 @@ import { defineSlashCommand } from "@/lib/command";
 let totalQuotes = "0";
 let totalQuotesLastUpdated = 0;
 
-const AboutCommand = defineSlashCommand({
+export const AboutCommand = defineSlashCommand({
   cooldown: 1,
   data: new SlashCommandBuilder()
     .setName("about")
@@ -123,5 +123,3 @@ const AboutCommand = defineSlashCommand({
     });
   },
 });
-
-export default AboutCommand;

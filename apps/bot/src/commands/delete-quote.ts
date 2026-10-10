@@ -9,7 +9,7 @@ import { deleteQuote, getQuote } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const DeleteQuoteCommand = defineSlashCommand({
+export const DeleteQuoteCommand = defineSlashCommand({
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("delete-quote")
@@ -45,5 +45,3 @@ const DeleteQuoteCommand = defineSlashCommand({
     });
   },
 });
-
-export default DeleteQuoteCommand;

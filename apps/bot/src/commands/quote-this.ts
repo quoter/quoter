@@ -13,7 +13,7 @@ import { defineMessageContextMenuCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
-const QuoteThisCommand = defineMessageContextMenuCommand({
+export const QuoteThisCommand = defineMessageContextMenuCommand({
   cooldown: 10,
   data: new ContextMenuCommandBuilder()
     .setName("Quote This")
@@ -85,5 +85,3 @@ const QuoteThisCommand = defineMessageContextMenuCommand({
     });
   },
 });
-
-export default QuoteThisCommand;

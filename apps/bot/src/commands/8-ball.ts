@@ -11,7 +11,7 @@ import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
-const EightBallCommand = defineSlashCommand({
+export const EightBallCommand = defineSlashCommand({
   cooldown: 2,
   data: new SlashCommandBuilder()
     .setName("8-ball")
@@ -71,5 +71,3 @@ const EightBallCommand = defineSlashCommand({
     await interaction.reply({ embeds: [questionEmbed, quoteEmbed] });
   },
 });
-
-export default EightBallCommand;

@@ -11,7 +11,7 @@ import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { cleanString } from "@/lib/utils";
 
-const QuoteCommand = defineSlashCommand({
+export const QuoteCommand = defineSlashCommand({
   cooldown: 2,
   data: new SlashCommandBuilder()
     .setName("quote")
@@ -77,5 +77,3 @@ const QuoteCommand = defineSlashCommand({
     await interaction.reply({ embeds: [embed] });
   },
 });
-
-export default QuoteCommand;

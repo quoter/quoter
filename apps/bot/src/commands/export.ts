@@ -10,7 +10,7 @@ import { exportQuotes } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const ExportCommand = defineSlashCommand({
+export const ExportCommand = defineSlashCommand({
   cooldown: 60,
   data: new SlashCommandBuilder()
     .setName("export")
@@ -43,5 +43,3 @@ const ExportCommand = defineSlashCommand({
     });
   },
 });
-
-export default ExportCommand;

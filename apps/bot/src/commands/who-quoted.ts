@@ -10,7 +10,7 @@ import { getQuote } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 
-const WhoQuotedCommand = defineSlashCommand({
+export const WhoQuotedCommand = defineSlashCommand({
   cooldown: 2,
   data: new SlashCommandBuilder()
     .setName("who-quoted")
@@ -49,5 +49,3 @@ const WhoQuotedCommand = defineSlashCommand({
     });
   },
 });
-
-export default WhoQuotedCommand;

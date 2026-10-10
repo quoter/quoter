@@ -12,7 +12,7 @@ import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
-const CreateQuoteCommand = defineSlashCommand({
+export const CreateQuoteCommand = defineSlashCommand({
   cooldown: 10,
   data: new SlashCommandBuilder()
     .setName("create-quote")
@@ -82,5 +82,3 @@ const CreateQuoteCommand = defineSlashCommand({
     await interaction.reply({ embeds: [embed] });
   },
 });
-
-export default CreateQuoteCommand;

@@ -12,7 +12,7 @@ import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 import { cleanString, mentionParse, trimQuotes } from "@/lib/utils";
 
-const EditQuoteCommand = defineSlashCommand({
+export const EditQuoteCommand = defineSlashCommand({
   cooldown: 10,
   data: new SlashCommandBuilder()
     .setName("edit-quote")
@@ -90,5 +90,3 @@ const EditQuoteCommand = defineSlashCommand({
     });
   },
 });
-
-export default EditQuoteCommand;

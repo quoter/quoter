@@ -2,7 +2,7 @@ import { MessageFlags, SlashCommandBuilder } from "discord.js";
 
 import { defineSlashCommand } from "@/lib/command";
 
-const BugsCommand = defineSlashCommand({
+export const BugsCommand = defineSlashCommand({
   data: new SlashCommandBuilder()
     .setName("bugs")
     .setDescription(
@@ -16,5 +16,3 @@ const BugsCommand = defineSlashCommand({
     });
   },
 });
-
-export default BugsCommand;

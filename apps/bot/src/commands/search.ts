@@ -12,7 +12,7 @@ import { getGuildId } from "@/lib/guild";
 import { searchQuotes } from "@/lib/search-quotes";
 import { cleanString } from "@/lib/utils";
 
-const SearchCommand = defineSlashCommand({
+export const SearchCommand = defineSlashCommand({
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("search")
@@ -83,5 +83,3 @@ ${list.join("\n")}`),
     });
   },
 });
-
-export default SearchCommand;

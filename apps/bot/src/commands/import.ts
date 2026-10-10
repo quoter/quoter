@@ -22,7 +22,7 @@ function createImportSchema(maxQuoteLength: number) {
     .nonempty();
 }
 
-const ImportCommand = defineSlashCommand({
+export const ImportCommand = defineSlashCommand({
   cooldown: 60,
   data: new SlashCommandBuilder()
     .setName("import")
@@ -106,5 +106,3 @@ const ImportCommand = defineSlashCommand({
     });
   },
 });
-
-export default ImportCommand;

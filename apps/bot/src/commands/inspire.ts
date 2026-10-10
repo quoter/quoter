@@ -19,7 +19,7 @@ GlobalFonts.registerFromPath(
   "Regular"
 );
 
-const InspireCommand = defineSlashCommand({
+export const InspireCommand = defineSlashCommand({
   cooldown: 4,
   data: new SlashCommandBuilder()
     .setName("inspire")
@@ -110,5 +110,3 @@ const InspireCommand = defineSlashCommand({
     });
   },
 });
-
-export default InspireCommand;
