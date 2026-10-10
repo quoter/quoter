@@ -5,7 +5,7 @@
     "": {
       "name": "quoter",
       "devDependencies": {
-        "@types/bun": "1.4.2",
+        "bun-types": "catalog:",
         "lefthook": "^2.2.1",
         "oxfmt": "^0.72.0",
         "oxlint": "^1.87.0",
@@ -28,16 +28,16 @@
         "zod": "^4.6.5",
       },
       "devDependencies": {
-        "@types/bun": "catalog:",
         "@types/canvas-multiline-text": "^1.0.2",
         "@types/ms": "^2.1.0",
+        "bun-types": "catalog:",
         "drizzle-kit": "^0.31.10",
         "typescript": "catalog:",
       },
     },
   },
   "catalog": {
-    "@types/bun": "1.4.2",
+    "bun-types": "1.4.3",
     "typescript": "^7.0.2",
   },
   "packages": {
@@ -241,8 +241,6 @@
 
     "@sindresorhus/merge-streams": ["@sindresorhus/merge-streams@4.0.0", "", {}, "sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ=="],
 
-    "@types/bun": ["@types/bun@1.4.2", "", { "dependencies": { "bun-types": "1.4.2" } }, "sha512-GimotNn7+ZV0uVArItBbriZsR1oNf0+WTzPkdcFrzShI7k2norL0uzEaJT8T33dWr7O/c9ZDuAFQrctKCi72oQ=="],
-
     "@types/canvas-multiline-text": ["@types/canvas-multiline-text@1.0.2", "", {}, "sha512-QuLGkhPgXKb1wkAwISLS9A0LqCR6pzkhkVSdW9hhW+dF5GyZwQ1f2Xw4f+qBqXPOFJbxk7dQuPfu/ZrpDmeVWQ=="],
 
     "@types/ms": ["@types/ms@2.1.0", "", {}, "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="],
@@ -307,7 +305,7 @@
 
     "bufferutil": ["bufferutil@4.1.0", "", { "dependencies": { "node-gyp-build": "^4.3.0" } }, "sha512-ZMANVnAixE6AWWnPzlW2KpUrxhm9woycYvPOo67jWHyFowASTEd9s+QN1EIMsSDtwhIxN4sWE1jotpuDUIgyIw=="],
 
-    "bun-types": ["bun-types@1.4.2", "", { "dependencies": { "@types/node": "*" } }, "sha512-bxV1FgK7yBIzjRe5zBozIM4Bem11ZJcCXSrjWRG3YWLt8yFDePu4cLjpebO8OvPeIE9trbyPF4fuj3Cia4Fj3w=="],
+    "bun-types": ["bun-types@1.4.3", "", { "dependencies": { "@types/node": "*", "undici-types": "*" } }, "sha512-tinRJNGOmUN+tEAsn2y2e942n9JHRHR42iUYzDH75NmhJqVBokGSQkkfSFdNWwsANIdrK6ACH9t01M452YyTwg=="],
 
     "canvas-multiline-text": ["canvas-multiline-text@1.0.3", "", { "dependencies": { "words-array": "^1.0.1" } }, "sha512-AVgcWhCBVRP7M9Kw1RBrD9S5gCn1R2jgLjaJPrYywl94x+SMAUAHjB8EtWYopCe4Lj/0ugNsZFKgE3SBR1uY4A=="],
 

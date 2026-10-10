@@ -23,9 +23,9 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@types/bun": "catalog:",
     "@types/canvas-multiline-text": "^1.0.2",
     "@types/ms": "^2.1.0",
+    "bun-types": "catalog:",
     "drizzle-kit": "^0.31.10",
     "typescript": "catalog:"
   }

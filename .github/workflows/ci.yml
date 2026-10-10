@@ -23,7 +23,7 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.0
+          bun-version-file: package.json
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -31,9 +31,20 @@ jobs:
       - name: Check repository
         run: bun run check
 
+      # `bun run check` already built an executable; run it once to record
+      # which functions execute at startup so the release build can lay out
+      # its bytecode in that order
+      - name: Record bytecode order profile
+        env:
+          DISCORD_TOKEN: smoke-test
+          DATABASE_PATH: ${{ runner.temp }}/quoter-profile.sqlite
+          BUN_BYTECODE_ORDER_OUT: ${{ runner.temp }}/bytecode-order.profile
+        run: apps/bot/dist/quoter-linux-x64 --check
+
       - name: Build Linux executable
         env:
           BUILD_SHA: ${{ github.sha }}
+          BYTECODE_ORDER: ${{ runner.temp }}/bytecode-order.profile
         run: bun run build
 
       - name: Check Linux executable
