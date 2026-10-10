@@ -28,7 +28,7 @@
     "typecheck": "bun run --cwd apps/bot typecheck",
     "test": "bun test apps/bot/test",
     "build": "bun run --cwd apps/bot build",
-    "check": "bun run lint && bun run typecheck && bun run test && bun run build",
+    "check": "bun run --parallel lint typecheck test build",
     "lint": "ultracite check",
     "lint:fix": "ultracite fix",
     "prepare": "lefthook install"
