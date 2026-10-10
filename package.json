@@ -17,7 +17,7 @@
       "apps/*"
     ],
     "catalog": {
-      "@types/bun": "1.4.0",
+      "@types/bun": "1.4.2",
       "typescript": "^7.0.2"
     }
   },
@@ -34,12 +34,12 @@
     "prepare": "lefthook install"
   },
   "devDependencies": {
-    "@types/bun": "1.4.0",
-    "lefthook": "^2.1.14",
-    "oxfmt": "^0.70.0",
-    "oxlint": "^1.85.0",
+    "@types/bun": "1.4.2",
+    "lefthook": "^2.2.1",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
     "typescript": "catalog:",
-    "ultracite": "7.12.0"
+    "ultracite": "7.12.4"
   },
-  "packageManager": "bun@1.4.0"
+  "packageManager": "bun@1.4.3"
 }
