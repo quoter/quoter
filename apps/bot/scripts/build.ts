@@ -1,13 +1,17 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
-const target = (process.env["BUILD_TARGET"] ??
-  "bun-linux-x64") as Bun.Build.CompileTarget;
+const hostPlatform =
+  process.platform === "win32" ? "windows" : process.platform;
+const target = `bun-${hostPlatform}-${process.arch}` as Bun.Build.CompileTarget;
 const buildSha = process.env["BUILD_SHA"] ?? "development";
 // https://bun.com/docs/bundler/executables#profile-guided-bytecode-layout
 const bytecodeOrder = process.env["BYTECODE_ORDER"]?.split(",");
 const outputDirectory = path.resolve("dist");
-const outfile = path.resolve(outputDirectory, "quoter-linux-x64");
+const outfile = path.resolve(
+  outputDirectory,
+  `quoter-${hostPlatform}-${process.arch}`
+);
 const assetsDirectory = path.resolve("src/assets");
 const migrationsDirectory = path.resolve("drizzle");
 
