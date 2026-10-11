@@ -10,7 +10,7 @@ describe("configuration", () => {
     });
 
     expect(config.databasePath).toBe("./db/quoter.sqlite");
-    expect(config.maxGuildQuotes).toBe(500);
+    expect(config.maxGuildQuotes).toBe(2500);
     expect(config.maxQuoteLength).toBe(250);
     expect(config.guildRetentionDays).toBe(30);
     expect(config.discordAdminIds).toEqual(new Set(["one", "two"]));
