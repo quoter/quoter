@@ -8,6 +8,7 @@ import { existsSync } from "node:fs";
 
 import { z } from "zod";
 
+import { DEFAULT_MAX_GUILD_QUOTES } from "@/config";
 import { closeDatabase, getDatabase, initializeDatabase } from "@/db";
 import { guilds, quotes } from "@/db/schema";
 
@@ -49,7 +50,12 @@ db.transaction(() => {
         createdAt: now,
         guildId: guild._id,
         lastSeenAt: now,
-        maxQuotes: guild.maxGuildQuotes ?? null,
+        // the default has been raised over time, so legacy overrides at or below
+        // it are stale and should fall back to the global default
+        maxQuotes:
+          (guild.maxGuildQuotes ?? 0) > DEFAULT_MAX_GUILD_QUOTES
+            ? guild.maxGuildQuotes
+            : null,
         nextQuoteNumber: guild.quotes.length + 1,
       })
       .run();

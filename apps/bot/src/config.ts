@@ -4,6 +4,8 @@ import quoterPackage from "../package.json";
 
 type Environment = Record<string, string | undefined>;
 
+export const DEFAULT_MAX_GUILD_QUOTES = 2500;
+
 const configSchema = z.preprocess(
   (environment: Environment) => ({
     buildSha: environment["BUILD_SHA"],
@@ -26,7 +28,11 @@ const configSchema = z.preprocess(
     discordGuildId: z.string().optional(),
     discordToken: z.string().min(1, "DISCORD_TOKEN is required"),
     guildRetentionDays: z.coerce.number().int().positive().default(30),
-    maxGuildQuotes: z.coerce.number().int().positive().default(2500),
+    maxGuildQuotes: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(DEFAULT_MAX_GUILD_QUOTES),
     maxQuoteLength: z.coerce.number().int().positive().default(250),
     version: z.string().default(quoterPackage.version),
   })
