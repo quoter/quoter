@@ -2,12 +2,10 @@ import { z } from "zod";
 
 import quoterPackage from "../package.json";
 
-type Environment = Record<string, string | undefined>;
-
 export const DEFAULT_MAX_GUILD_QUOTES = 2500;
 
 const configSchema = z.preprocess(
-  (environment: Environment) => ({
+  (environment: NodeJS.ProcessEnv) => ({
     buildSha: environment["BUILD_SHA"],
     databasePath: environment["DATABASE_PATH"],
     discordAdminIds: environment["DISCORD_ADMIN_ID"],
@@ -42,7 +40,9 @@ export type AppConfig = z.output<typeof configSchema>;
 
 let config: AppConfig | undefined;
 
-export function loadConfig(environment: Environment = process.env): AppConfig {
+export function loadConfig(
+  environment: NodeJS.ProcessEnv = process.env
+): AppConfig {
   if (config) {
     throw new Error("Configuration is already loaded");
   }
