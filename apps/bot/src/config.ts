@@ -26,7 +26,7 @@ const configSchema = z.preprocess(
     discordGuildId: z.string().optional(),
     discordToken: z.string().min(1, "DISCORD_TOKEN is required"),
     guildRetentionDays: z.coerce.number().int().positive().default(30),
-    maxGuildQuotes: z.coerce.number().int().positive().default(500),
+    maxGuildQuotes: z.coerce.number().int().positive().default(2500),
     maxQuoteLength: z.coerce.number().int().positive().default(250),
     version: z.string().default(quoterPackage.version),
   })
