@@ -11,7 +11,11 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+
+  # only cancel in-progress PR runs so that
+  # pushes to `main` don't cancel release
+  # runs halfway through
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
@@ -30,6 +34,9 @@ jobs:
 
       - name: Check repository
         run: bun run check
+
+      - name: Check changelog version
+        run: bun run --cwd apps/bot scripts/release-notes.ts > /dev/null
 
       # `bun run check` already built an executable; run it once to record
       # which functions execute at startup so the release build can lay out
@@ -66,3 +73,63 @@ jobs:
             apps/bot/dist/quoter-linux-x64
             apps/bot/dist/quoter-linux-x64.sha256
           retention-days: 7
+
+  # publishes a draft release when apps/bot/package.json has a version without a release yet
+  release:
+    needs: check
+
+    # a malicious PR could change this check
+    # but it's safe because PR aren't given
+    # write permissions to the repo by github
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      # check releases instead of tags so unpublished drafts count
+      - name: Read version
+        id: version
+        run: |
+          version=$(jq -r .version apps/bot/package.json)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh release view "v$version" >/dev/null 2>&1; then
+            echo "Release v$version already exists"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download executable
+        if: steps.version.outputs.publish == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: quoter-${{ github.sha }}
+          path: dist
+
+      - name: Set up Bun
+        if: steps.version.outputs.publish == 'true'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Write release notes
+        if: steps.version.outputs.publish == 'true'
+        run: bun run --cwd apps/bot scripts/release-notes.ts > release-notes.md
+
+      - name: Publish draft release
+        if: steps.version.outputs.publish == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v$VERSION" \
+            --draft \
+            --target "$GITHUB_SHA" \
+            --title "Quoter v$VERSION" \
+            --notes-file release-notes.md \
+            dist/quoter-linux-x64 \
+            dist/quoter-linux-x64.sha256

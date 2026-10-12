@@ -1,32 +1,28 @@
 import { readFile } from "node:fs/promises";
 
-const [version] = process.argv.slice(2);
-if (!version) {
-  throw new Error("Provide a version");
-}
+import quoterPackage from "../package.json";
 
 const changelog = await readFile("../../CHANGELOG.md", "utf-8");
-const escapedVersion = version.replaceAll(".", "\\.");
-const heading = new RegExp(
-  `^## \\[?${escapedVersion}\\]?(?: - [^\\n]+)?$`,
-  "mu"
-);
-const headingMatch = heading.exec(changelog);
-const sectionStart = headingMatch
-  ? headingMatch.index + headingMatch[0].length
-  : -1;
-const nextHeading =
-  sectionStart >= 0 ? changelog.slice(sectionStart).search(/^## /mu) : -1;
-const section =
-  sectionStart >= 0
-    ? changelog.slice(
-        sectionStart,
-        nextHeading >= 0 ? sectionStart + nextHeading : undefined
-      )
-    : undefined;
 
-if (!section?.trim()) {
-  throw new Error(`CHANGELOG.md has no section for ${version}`);
+const heading = /^## (?!Unreleased\b)\[?(?<version>[^\]\s]+)\]?.*$/mu.exec(
+  changelog
+);
+const version = heading?.groups?.["version"];
+if (!heading || version !== quoterPackage.version) {
+  throw new Error(
+    `CHANGELOG.md's newest version is ${version ?? "missing"}, but package.json is ${quoterPackage.version}`
+  );
+}
+
+const sectionStart = heading.index + heading[0].length;
+const nextHeading = changelog.slice(sectionStart).search(/^## /mu);
+const section = changelog.slice(
+  sectionStart,
+  nextHeading >= 0 ? sectionStart + nextHeading : undefined
+);
+
+if (!section.trim()) {
+  throw new Error(`CHANGELOG.md has no notes for ${version}`);
 }
 
 process.stdout.write(section.trim());
