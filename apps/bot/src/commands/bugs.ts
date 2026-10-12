@@ -11,7 +11,7 @@ export const BugsCommand = defineSlashCommand({
   async execute(interaction) {
     await interaction.reply({
       content:
-        "🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](<https://github.com/n1ckoates/quoter/issues>) page.",
+        "🐛 **|** You can report bugs, suggest features, or post other issues on Quoter's [GitHub Issues](<https://github.com/quoter/quoter/issues>) page.",
       flags: MessageFlags.Ephemeral,
     });
   },
