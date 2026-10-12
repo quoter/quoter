@@ -24,7 +24,6 @@
   "type": "module",
   "scripts": {
     "start": "bun run --cwd apps/bot start",
-    "deploy-commands": "bun run --cwd apps/bot deploy-commands",
     "typecheck": "bun run --cwd apps/bot typecheck",
     "test": "bun test apps/bot/test",
     "build": "bun run --cwd apps/bot build",

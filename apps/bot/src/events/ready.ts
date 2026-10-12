@@ -1,6 +1,7 @@
 import { ActivityType } from "discord.js";
 import type { Client } from "discord.js";
 
+import { commands } from "@/commands";
 import { getConfig } from "@/config";
 import { deleteGuildsNotSeenSince, touchGuilds } from "@/db";
 import { setManagedInterval } from "@/lib/timers";
@@ -14,10 +15,7 @@ function cleanup() {
   }
 }
 
-export function ready(client: Client) {
-  if (!client.user) {
-    throw new Error("Client user is not available");
-  }
+export async function ready(client: Client<true>) {
   console.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 
   const currentGuilds = client.guilds.cache.map((g) => g.id);
@@ -46,4 +44,17 @@ export function ready(client: Client) {
 
   update();
   setManagedInterval(update, 600_000);
+
+  // overwriting existing commands doesn't count toward Discord's daily limit on
+  // creating them, so this is fine to do on every startup
+  const guildId = getConfig().discordGuildId;
+  const definitions = [...commands.values()].map((c) => c.data.toJSON());
+
+  const registered = guildId
+    ? await client.application.commands.set(definitions, guildId)
+    : await client.application.commands.set(definitions);
+
+  console.log(
+    `Registered ${registered.size} commands ${guildId ? `to guild ${guildId}` : "globally"}`
+  );
 }

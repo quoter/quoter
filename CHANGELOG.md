@@ -12,6 +12,7 @@
 
 - Quote operations now query only the data they need.
 - Guild data is retained for 30 days after Quoter last sees the guild.
+- Slash Commands are registered automatically on startup, replacing the `deploy-commands` script.
 - Production deployments use stable, versioned GitHub Releases.
 
 ## 5.2.1

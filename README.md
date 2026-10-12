@@ -56,10 +56,9 @@ bun install
 
 Copy `apps/bot/.env.EXAMPLE` to `apps/bot/.env` and set `DISCORD_TOKEN` to your bot's token. The other values are optional. Quotes are stored in a SQLite database at `DATABASE_PATH`, which is created on first start.
 
-Deploy Slash Commands to Discord, then start the bot:
+Then start the bot. It registers its Slash Commands with Discord on startup:
 
 ```bash
-bun run deploy-commands
 bun run start
 ```
 
@@ -71,7 +70,7 @@ Thank you for your interest in contributing to Quoter! Before you get started, p
 
 Quoter is written in [TypeScript](https://www.typescriptlang.org) and uses [Bun](https://bun.sh) as a runtime and package manager, with [SQLite](https://sqlite.org) for data storage. We use [Ultracite](https://ultracite.ai) to enforce code style.
 
-To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. Set `DISCORD_GUILD_ID` to your test server and use `bun run deploy-commands --guild` to deploy commands only to that server.
+To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. Set `DISCORD_GUILD_ID` to your test server so commands are registered only to that server.
 
 Before submitting a pull request, please run `bun run check` to lint, typecheck, test, and build.
 
