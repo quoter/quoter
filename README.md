@@ -40,18 +40,13 @@ If you want to host your own version, you can follow the instructions below.
 
 While we support self-hosting, we do not provide any support for it. If you are not familiar with the technologies used, we recommend using the hosted version above.
 
-To run Quoter, you will need the following:
-
--   [Bun](https://bun.sh) (we target the latest 1.x release)
--   [MongoDB](https://www.mongodb.com) (we target the latest 7.x release)
-
-You'll also need to create a Discord bot and invite it to your server. Head to [Discord's developer portal](https://discord.com/developers/applications) and create a new application. Create a bot user, and get the token. You'll need to invite the bot to your server using the following link, replacing `REPLACE_ME` with your bot's client ID:
+You'll need [Bun](https://bun.sh) (we target the latest 1.x release) and a Discord bot. Create an application in [Discord's developer portal](https://discord.com/developers/applications), get its bot token, and invite it to your server, replacing `REPLACE_ME` with your bot's client ID:
 
 ```
 https://discord.com/oauth2/authorize?scope=bot&client_id=REPLACE_ME
 ```
 
-Start off by cloning the repository and installing the dependencies:
+Clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/quoter/quoter.git
@@ -59,44 +54,29 @@ cd quoter
 bun install
 ```
 
-Then, copy `.env.EXAMPLE` to `.env` and fill in the values:
+Copy `apps/bot/.env.EXAMPLE` to `apps/bot/.env` and set `DISCORD_TOKEN` to your bot's token. The other values are optional. Quotes are stored in a SQLite database at `DATABASE_PATH`, which is created on first start.
 
--   `DISCORD_TOKEN` is the token of your Discord bot.
--   `MONGO_URI` is the URI to your MongoDB database.
-
-You can also adjust the default `MAX_GUILD_QUOTES` and `MAX_QUOTE_LENGTH`.
-
-Run the below command to deploy Slash Commands to Discord.
-
-```bash
-bun run deploy
-```
-
-Finally, run the bot:
+Then start the bot. It registers its Slash Commands with Discord on startup:
 
 ```bash
 bun run start
 ```
 
-### Running with PM2
-
-If you want to run Quoter in the background, we recommend using [PM2](https://pm2.keymetrics.io). Quoter includes an `ecosystem.config.js` file, which allows using PM2 without any additional configuration.
-
-Install PM2 with `bun install -g pm2`, then `cd` into the Quoter directory and run `pm2 start`. You can then manage Quoter with `pm2` commands, such as `pm2 restart quoter` to restart the bot.
+**Upgrading from Quoter 5?** Quoter 6 replaces MongoDB with SQLite. See `apps/bot/scripts/migrate-mongo.ts` to convert your existing data.
 
 ## 🤝 Contributing
 
 Thank you for your interest in contributing to Quoter! Before you get started, please read our [Code of Conduct](CODE_OF_CONDUCT.md). If you're developing a new feature, or making significant changes, please open an issue first to discuss it with us.
 
-Quoter is written in [TypeScript](https://www.typescriptlang.org) and uses [Bun](https://bun.sh) as a runtime and package manager. MongoDB is used for data storage. We use [ESLint](https://eslint.org) and [Prettier](https://prettier.io) to enforce code style.
+Quoter is written in [TypeScript](https://www.typescriptlang.org) and uses [Bun](https://bun.sh) as a runtime and package manager, with [SQLite](https://sqlite.org) for data storage. We use [Ultracite](https://ultracite.ai) to enforce code style.
 
-To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. You'll also want to configure the `DISCORD_GUILD_ID` environment variable to point to your test server, which is where Slash Commands will be deployed in development. Use `bun run deploy --guild` to deploy with guild-specific commands, instead of global commands.
+To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. Set `DISCORD_GUILD_ID` to your test server so commands are registered only to that server.
 
-Before submitting a pull request, please run `bun run lint` to ensure your code is formatted correctly.
+Before submitting a pull request, please run `bun run check` to lint, typecheck, test, and build.
 
 ## 📜 License
 
-    Copyright (C) 2020-2025 Nick Oates
+    Copyright (C) 2020-2026 Nick Oates
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
