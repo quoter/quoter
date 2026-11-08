@@ -1,4 +1,4 @@
-import { and, asc, count, eq, lt, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, isNull, lt, sql } from "drizzle-orm";
 
 import { getDatabase, getSqlite } from "@/db/database";
 import { guilds, quotes } from "@/db/schema";
@@ -42,44 +42,51 @@ export function getSchemaVersion(): number {
 export function ensureGuild(guildId: string, now: number = Date.now()): void {
   getDatabase()
     .insert(guilds)
-    .values({ createdAt: now, guildId, lastSeenAt: now })
+    .values({ createdAt: now, guildId })
     .onConflictDoUpdate({
-      set: { lastSeenAt: now, leftAt: null },
+      set: { leftAt: null },
+      setWhere: isNotNull(guilds.leftAt),
       target: guilds.guildId,
     })
     .run();
-}
-
-export function touchGuilds(
-  guildIds: string[],
-  now: number = Date.now()
-): void {
-  getDatabase().transaction(() => {
-    for (const guildId of guildIds) {
-      ensureGuild(guildId, now);
-    }
-  });
 }
 
 export function markGuildLeft(guildId: string, now: number = Date.now()): void {
   getDatabase()
     .update(guilds)
     .set({ leftAt: now })
-    .where(eq(guilds.guildId, guildId))
+    .where(and(eq(guilds.guildId, guildId), isNull(guilds.leftAt)))
     .run();
 }
 
-export function deleteGuildsNotSeenSince(cutoff: number): number {
-  return getDatabase().transaction(() => {
-    const db = getDatabase();
-    const result = db
-      .select({ count: count() })
+export function reconcileGuilds(
+  currentGuildIds: Iterable<string>,
+  now: number = Date.now()
+): void {
+  const current = new Set(currentGuildIds);
+  getDatabase().transaction(() => {
+    for (const guildId of current) {
+      ensureGuild(guildId, now);
+    }
+    const stored = getDatabase()
+      .select({ guildId: guilds.guildId })
       .from(guilds)
-      .where(lt(guilds.lastSeenAt, cutoff))
-      .get();
-    db.delete(guilds).where(lt(guilds.lastSeenAt, cutoff)).run();
-    return result?.count ?? 0;
+      .where(isNull(guilds.leftAt))
+      .all();
+    for (const { guildId } of stored) {
+      if (!current.has(guildId)) {
+        markGuildLeft(guildId, now);
+      }
+    }
   });
+}
+
+export function deleteGuildsLeftBefore(cutoff: number): number {
+  return getDatabase()
+    .delete(guilds)
+    .where(lt(guilds.leftAt, cutoff))
+    .returning({ guildId: guilds.guildId })
+    .all().length;
 }
 
 export function getGuildSettings(guildId: string): GuildSettings | null {

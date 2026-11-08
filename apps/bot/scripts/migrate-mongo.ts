@@ -49,7 +49,6 @@ db.transaction(() => {
       .values({
         createdAt: now,
         guildId: guild._id,
-        lastSeenAt: now,
         // the default has been raised over time, so legacy overrides at or below
         // it are stale and should fall back to the global default
         maxQuotes:

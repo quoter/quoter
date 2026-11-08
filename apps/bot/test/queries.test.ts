@@ -5,7 +5,7 @@ import {
   countAllQuotes,
   countGuildQuotes,
   createQuote,
-  deleteGuildsNotSeenSince,
+  deleteGuildsLeftBefore,
   deleteQuote,
   ensureGuild,
   GuildQuoteLimitError,
@@ -17,6 +17,8 @@ import {
   importQuotes,
   initializeDatabase,
   listQuotes,
+  markGuildLeft,
+  reconcileGuilds,
   setGuildLimits,
 } from "@/db";
 
@@ -114,14 +116,62 @@ describe("queries", () => {
 });
 
 describe("guild retention", () => {
-  test("deletes only guilds older than the cutoff", () => {
-    createQuote("old", { text: "old" }, 100);
-    ensureGuild("old", 1000);
-    ensureGuild("current", 2000);
+  test("deletes guilds left before the cutoff, with their quotes", () => {
+    createQuote("left", { text: "gone" }, 100);
+    markGuildLeft("left", 1000);
+    ensureGuild("present", 1000);
 
-    expect(deleteGuildsNotSeenSince(1500)).toBe(1);
-    expect(getGuildSettings("old")).toBeNull();
+    expect(deleteGuildsLeftBefore(1500)).toBe(1);
+    expect(getGuildSettings("left")).toBeNull();
     expect(countAllQuotes()).toBe(0);
-    expect(getGuildSettings("current")).not.toBeNull();
+    expect(getGuildSettings("present")).not.toBeNull();
+  });
+
+  test("keeps guilds left after the cutoff", () => {
+    ensureGuild("recent", 1000);
+    markGuildLeft("recent", 2000);
+
+    expect(deleteGuildsLeftBefore(1500)).toBe(0);
+    expect(getGuildSettings("recent")?.leftAt).toBe(2000);
+  });
+
+  test("keeps the original time a guild was left", () => {
+    ensureGuild("guild", 1000);
+    markGuildLeft("guild", 2000);
+    markGuildLeft("guild", 3000);
+
+    expect(getGuildSettings("guild")?.leftAt).toBe(2000);
+  });
+
+  test("clears the mark when Quoter is added back", () => {
+    ensureGuild("guild", 1000);
+    markGuildLeft("guild", 2000);
+    ensureGuild("guild", 3000);
+
+    expect(getGuildSettings("guild")?.leftAt).toBeNull();
+    expect(deleteGuildsLeftBefore(Number.MAX_SAFE_INTEGER)).toBe(0);
+  });
+
+  test("reconciles guilds joined and left while offline", () => {
+    ensureGuild("stayed", 1000);
+    ensureGuild("removed", 1000);
+    ensureGuild("readded", 1000);
+    markGuildLeft("readded", 1500);
+
+    reconcileGuilds(["stayed", "readded", "joined"], 2000);
+
+    expect(getGuildSettings("stayed")?.leftAt).toBeNull();
+    expect(getGuildSettings("removed")?.leftAt).toBe(2000);
+    expect(getGuildSettings("readded")?.leftAt).toBeNull();
+    expect(getGuildSettings("joined")?.createdAt).toBe(2000);
+  });
+
+  test("keeps the original time when reconciling an already left guild", () => {
+    ensureGuild("guild", 1000);
+    markGuildLeft("guild", 1500);
+
+    reconcileGuilds([], 2000);
+
+    expect(getGuildSettings("guild")?.leftAt).toBe(1500);
   });
 });

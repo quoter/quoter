@@ -9,7 +9,7 @@ export {
   countAllQuotes,
   countGuildQuotes,
   createQuote,
-  deleteGuildsNotSeenSince,
+  deleteGuildsLeftBefore,
   deleteQuote,
   ensureGuild,
   exportQuotes,
@@ -21,8 +21,8 @@ export {
   importQuotes,
   listQuotes,
   markGuildLeft,
+  reconcileGuilds,
   setGuildLimits,
-  touchGuilds,
   updateQuote,
 } from "@/db/queries";
 export type { QuotePage, QuoteUpdate } from "@/db/queries";
