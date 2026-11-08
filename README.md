@@ -74,6 +74,8 @@ To get started, follow the self-hosting guide above, but clone your fork instead
 
 Before submitting a pull request, please run `bun run check` to lint, typecheck, test, and build.
 
+If your change is noticeable to users, add a change file with [`knope document-change`](https://knope.tech) (or write one in `.changeset/` by hand). It's used to version the next release and write its changelog.
+
 ## 📜 License
 
     Copyright (C) 2020-2026 Nick Oates

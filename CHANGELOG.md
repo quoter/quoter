@@ -1,19 +1,28 @@
 # Changelog
 
-## Unreleased
+## 6.0.0
 
-### Added
+### Breaking Changes
 
-- Added stable per-server quote numbers that remain valid after deletions.
-- Added typed SQLite storage and a MongoDB migration command.
-- Added automated checks, release builds, and repeatable server operations.
+- Slash Commands are registered automatically when Quoter starts, replacing the `deploy-commands` script
+- Quote length can no longer be changed per guild. Instead, the `MAX_QUOTE_LENGTH` environment variable applies to every guild
+- Removed the PM2 `ecosystem.config.js` file
 
-### Changed
+#### Data is stored in SQLite instead of MongoDB
 
-- Quote operations now query only the data they need.
-- Guild data is retained for 30 days after Quoter last sees the guild.
-- Slash Commands are registered automatically on startup, replacing the `deploy-commands` script.
-- Production deployments use stable, versioned GitHub Releases.
+The `MONGO_URI` environment variable has been replaced with `DATABASE_PATH`, which defaults to `./db/quoter.sqlite`. The database is created on first start. To keep existing quotes, export them with `mongoexport` and convert them with `apps/bot/scripts/migrate-mongo.ts`, following the instructions at the top of that script.
+
+### Features
+
+- Quote numbers no longer change when another quote is deleted
+- Quotes are kept for 30 days after Quoter is removed from a server, so that adding the bot back restores them
+- Raised the default quote limit from 100 to 2,500 per server
+- `/export` includes each quote's number
+- Releases include a prebuilt Linux executable
+
+### Fixes
+
+- `/bugs` links to the current GitHub repository
 
 ## 5.2.1
 
