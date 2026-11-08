@@ -15,4 +15,4 @@ This document explains what you can and cannot do with Quoter. **If you have any
 
 At the sole discretion of Quoter's developer, your access to Quoter may be restricted or blocked if you violate these terms or for any other reason.
 
-Quoter is licensed under the GNU Affero General Public License, version 3. Quoter's source code is available at https://github.com/n1ckoates/quoter.
+Quoter is licensed under the GNU Affero General Public License, version 3. Quoter's source code is available at https://github.com/quoter/quoter.
