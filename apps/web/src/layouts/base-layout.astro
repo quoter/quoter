@@ -1,0 +1,55 @@
+---
+import { Font } from "astro:assets";
+
+import "../styles/global.css";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="/favicon-16x16.png"
+		/>
+		<title>
+			{Astro.props.title ?? "Quoter — The Quote Book for Discord"}
+		</title>
+		<meta
+			name="description"
+			content="Quoter is a Discord bot that allows you to save messages into a quote book, and share them with your friends."
+		/>
+
+		<meta
+			property="og:title"
+			content="Quoter — The Quote Book for Discord"
+		/>
+		<meta
+			name="og:description"
+			content="Quoter is a Discord bot that allows you to save messages into a quote book, and share them with your friends."
+		/>
+		<meta name="theme-color" content="#93c5fd" />
+		<meta property="og:image" content={new URL("/card.png", Astro.site)} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta
+			property="og:image:alt"
+			content="Text reading 'The Quote Book for Discord.' on a light blue background."
+		/>
+
+		<Font cssVariable="--font-inter" preload />
+	</head>
+
+	<body class={Astro.props.class}>
+		<slot />
+	</body>
+</html>

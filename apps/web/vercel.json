@@ -1,0 +1,36 @@
+{
+  "redirects": [
+    {
+      "source": "/invite",
+      "destination": "https://discord.com/api/oauth2/authorize?client_id=784853298271748136&scope=bot"
+    },
+    {
+      "source": "/twitter",
+      "destination": "https://twitter.com/QuoterDiscord"
+    },
+    {
+      "source": "/x",
+      "destination": "https://twitter.com/QuoterDiscord"
+    },
+    {
+      "source": "/github",
+      "destination": "https://github.com/quoter/quoter"
+    },
+    {
+      "source": "/gh",
+      "destination": "https://github.com/quoter/quoter"
+    },
+    {
+      "source": "/git",
+      "destination": "https://github.com/quoter/quoter"
+    },
+    {
+      "source": "/support",
+      "destination": "https://discord.gg/QzXTgS2CNk"
+    },
+    {
+      "source": "/discord",
+      "destination": "https://discord.gg/QzXTgS2CNk"
+    }
+  ]
+}
