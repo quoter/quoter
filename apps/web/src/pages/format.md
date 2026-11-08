@@ -13,6 +13,7 @@ The file format should be an array of objects, each object representing a quote.
 - `author` (string): The author of the quote.
 - `createdTimestamp` (number): The timestamp of when the quote was created, in unix milliseconds.
 - `editedTimestamp` (number): The timestamp of when the quote was last edited, in unix milliseconds.
+- `quoteNumber` (number): The quote's number in the server it was exported from. This is included in exports, but ignored when importing, so imported quotes get new numbers in the server they're imported into.
 
 `text` is the only required property, the rest are optional. The array must have at least one quote.
 
