@@ -7,7 +7,10 @@ import { deleteGuildsLeftBefore, reconcileGuilds } from "@/db";
 import { setManagedInterval } from "@/lib/timers";
 
 function cleanup(client: Client<true>) {
-  reconcileGuilds(client.guilds.cache.keys());
+  const marked = reconcileGuilds(client.guilds.cache.keys());
+  if (marked > 0) {
+    console.log(`Marked ${marked} guilds as left`);
+  }
 
   const retentionMs = getConfig().guildRetentionDays * 24 * 60 * 60 * 1000;
   const cutoff = Date.now() - retentionMs;

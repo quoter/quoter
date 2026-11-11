@@ -62,9 +62,9 @@ export function markGuildLeft(guildId: string, now: number = Date.now()): void {
 export function reconcileGuilds(
   currentGuildIds: Iterable<string>,
   now: number = Date.now()
-): void {
+): number {
   const current = new Set(currentGuildIds);
-  getDatabase().transaction(() => {
+  return getDatabase().transaction(() => {
     for (const guildId of current) {
       ensureGuild(guildId, now);
     }
@@ -73,11 +73,14 @@ export function reconcileGuilds(
       .from(guilds)
       .where(isNull(guilds.leftAt))
       .all();
+    let marked = 0;
     for (const { guildId } of stored) {
       if (!current.has(guildId)) {
         markGuildLeft(guildId, now);
+        marked += 1;
       }
     }
+    return marked;
   });
 }
 

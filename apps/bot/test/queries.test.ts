@@ -158,7 +158,7 @@ describe("guild retention", () => {
     ensureGuild("readded", 1000);
     markGuildLeft("readded", 1500);
 
-    reconcileGuilds(["stayed", "readded", "joined"], 2000);
+    expect(reconcileGuilds(["stayed", "readded", "joined"], 2000)).toBe(1);
 
     expect(getGuildSettings("stayed")?.leftAt).toBeNull();
     expect(getGuildSettings("removed")?.leftAt).toBe(2000);
@@ -170,7 +170,7 @@ describe("guild retention", () => {
     ensureGuild("guild", 1000);
     markGuildLeft("guild", 1500);
 
-    reconcileGuilds([], 2000);
+    expect(reconcileGuilds([], 2000)).toBe(0);
 
     expect(getGuildSettings("guild")?.leftAt).toBe(1500);
   });
