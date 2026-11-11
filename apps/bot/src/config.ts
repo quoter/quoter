@@ -9,7 +9,6 @@ const configSchema = z.preprocess(
     buildSha: environment["BUILD_SHA"],
     databasePath: environment["DATABASE_PATH"],
     discordAdminIds: environment["DISCORD_ADMIN_ID"],
-    discordGuildId: environment["DISCORD_GUILD_ID"],
     discordToken: environment["DISCORD_TOKEN"],
     guildRetentionDays: environment["GUILD_RETENTION_DAYS"],
     maxGuildQuotes: environment["MAX_GUILD_QUOTES"],
@@ -23,7 +22,6 @@ const configSchema = z.preprocess(
       .optional()
       .default("")
       .transform((value) => new Set(value.split(/\s+/u).filter(Boolean))),
-    discordGuildId: z.string().optional(),
     discordToken: z.string().min(1, "DISCORD_TOKEN is required"),
     guildRetentionDays: z.coerce.number().int().positive().default(30),
     maxGuildQuotes: z.coerce

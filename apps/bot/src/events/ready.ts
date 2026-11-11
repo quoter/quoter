@@ -46,14 +46,8 @@ export async function ready(client: Client<true>) {
 
   // overwriting existing commands doesn't count toward Discord's daily limit on
   // creating them, so this is fine to do on every startup
-  const guildId = getConfig().discordGuildId;
-  const definitions = [...commands.values()].map((c) => c.data.toJSON());
-
-  const registered = guildId
-    ? await client.application.commands.set(definitions, guildId)
-    : await client.application.commands.set(definitions);
-
-  console.log(
-    `Registered ${registered.size} commands ${guildId ? `to guild ${guildId}` : "globally"}`
+  const registered = await client.application.commands.set(
+    [...commands.values()].map((c) => c.data.toJSON())
   );
+  console.log(`Registered ${registered.size} commands`);
 }

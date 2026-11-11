@@ -70,7 +70,7 @@ Thank you for your interest in contributing to Quoter! Before you get started, p
 
 Quoter is written in [TypeScript](https://www.typescriptlang.org) and uses [Bun](https://bun.sh) as a runtime and package manager, with [SQLite](https://sqlite.org) for data storage. We use [Ultracite](https://ultracite.ai) to enforce code style.
 
-To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. Set `DISCORD_GUILD_ID` to your test server so commands are registered only to that server.
+To get started, follow the self-hosting guide above, but clone your fork instead of the main repository. Use a separate Discord bot for development, not the one your server uses, since Quoter replaces its bot's commands with your local version on startup.
 
 Before submitting a pull request, please run `bun run check` to lint, typecheck, test, and build.
 
