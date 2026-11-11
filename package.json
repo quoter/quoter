@@ -25,7 +25,7 @@
   "scripts": {
     "start": "bun run --cwd apps/bot start",
     "typecheck": "bun run --cwd apps/bot typecheck",
-    "test": "bun test apps/bot/test",
+    "test": "bun run --cwd apps/bot test",
     "build": "bun run --cwd apps/bot build",
     "check": "bun run --parallel lint typecheck test build",
     "lint": "ultracite check",
