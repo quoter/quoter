@@ -10,7 +10,7 @@ import { GuildQuoteLimitError, importQuotes } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId, getGuildLimits } from "@/lib/guild";
 
-function createImportSchema(maxQuoteLength: number) {
+export function createImportSchema(maxQuoteLength: number) {
   return z
     .object({
       author: z.string().trim().nullish(),

@@ -7,8 +7,24 @@ import {
 } from "discord.js";
 
 import { exportQuotes } from "@/db";
+import type { Quote } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
+
+// convert quotes to the import/export format
+export function serializeQuotes(quotes: Quote[]): string {
+  return JSON.stringify(
+    quotes.map((quote) => ({
+      author: quote.author ?? undefined,
+      createdTimestamp: quote.createdAt,
+      editedTimestamp: quote.editedAt ?? undefined,
+      quoteNumber: quote.quoteNumber,
+      text: quote.text,
+    })),
+    null,
+    2
+  );
+}
 
 export const ExportCommand = defineSlashCommand({
   cooldown: 60,
@@ -19,18 +35,7 @@ export const ExportCommand = defineSlashCommand({
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   async execute(interaction) {
     const quotes = exportQuotes(getGuildId(interaction));
-
-    const json = JSON.stringify(
-      quotes.map((quote) => ({
-        author: quote.author,
-        createdTimestamp: quote.createdAt,
-        editedTimestamp: quote.editedAt,
-        quoteNumber: quote.quoteNumber,
-        text: quote.text,
-      })),
-      null,
-      2
-    );
+    const json = serializeQuotes(quotes);
     const buffer = Buffer.from(json);
     const attachment = new AttachmentBuilder(buffer, {
       name: "quotes.json",
