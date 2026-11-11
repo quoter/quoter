@@ -24,6 +24,13 @@ type = "Command"
 shell = true
 command = "sed -i -E 's/^(## [0-9]+\\.[0-9]+\\.[0-9]+) \\([0-9-]+\\)$/\\1/' CHANGELOG.md && git add CHANGELOG.md"
 
+# knope doesn't write files the way the repo's formatter does (e.g. it drops
+# package.json's trailing newline), so format what it changed
+[[workflows.steps]]
+type = "Command"
+shell = true
+command = "bun run lint:fix && git add --update"
+
 [[workflows.steps]]
 type = "Command"
 command = "git commit -m \"chore: prepare release $version\""
