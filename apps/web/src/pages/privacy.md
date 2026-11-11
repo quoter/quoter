@@ -7,7 +7,7 @@ layout: ../layouts/doc-layout.astro
 
 **Last updated on November 7th, 2026.**
 
-This document explains what data is collected, how it's used, and how you can delete your data. **If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email [quoter@nickoates.com](mailto:nick@nickoates.com)**.
+This document explains what data is collected, how it's used, and how you can delete your data. **If you have any questions/concerns about this Privacy Policy, join our [support server](https://discord.gg/QzXTgS2CNk) OR email [quoter@nickoates.com](mailto:quoter@nickoates.com)**.
 
 ## Data collected
 
