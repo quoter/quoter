@@ -7,7 +7,7 @@ layout: ../layouts/doc-layout.astro
 
 **Last updated on June 4th, 2023.**
 
-This document explains what you can and cannot do with Quoter. **If you have any questions/concerns about these Terms of Service, or believe someone is violating them, join our [support server](https://discord.gg/QzXTgS2CNk) OR email [nick@nickoates.com](mailto:nick@nickoates.com)**.
+This document explains what you can and cannot do with Quoter. **If you have any questions/concerns about these Terms of Service, or believe someone is violating them, join our [support server](https://discord.gg/QzXTgS2CNk) OR email [quoter@nickoates.com](mailto:quoter@nickoates.com)**.
 
 - You may not use Quoter to violate the laws of the United States.
 - You may not use Quoter to violate Discord's [Terms of Service](https://discord.com/terms) or [Community Guidelines](https://discord.com/guidelines).
