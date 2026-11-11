@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.1
+
+### Fixes
+
+- `/about` shows the commit Quoter was built from, instead of "develop"
+
 ## 6.0.0
 
 ### Breaking Changes
