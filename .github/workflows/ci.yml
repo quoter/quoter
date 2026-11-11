@@ -148,6 +148,18 @@ jobs:
         with:
           version: 0.23.2
 
+      # knope need to run formatting on the release PR's changes
+      - name: Set up Bun
+        if: hashFiles('.changeset/*.md') != ''
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Install dependencies
+        if: hashFiles('.changeset/*.md') != ''
+        # skip prepare script so lefthook doesn't run when knope commits
+        run: bun install --frozen-lockfile --ignore-scripts
+
       - name: Update release PR
         if: hashFiles('.changeset/*.md') != ''
         run: knope prepare-release --verbose
