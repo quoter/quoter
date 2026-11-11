@@ -17,7 +17,7 @@ const assetsDirectory = Bun.isStandaloneExecutable
 
 GlobalFonts.registerFromPath(
   path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf"),
-  "Regular"
+  "Scheherazade New"
 );
 
 export const InspireCommand = defineSlashCommand({

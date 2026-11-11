@@ -26,13 +26,13 @@ export const inspireImages: InspireImage[] = [
   {
     author: {
       color: "#ffffff",
-      font: '200px "regular"',
+      font: '200px "Scheherazade New"',
       heightPadding: 80,
       textAlign: "right",
       widthPadding: 60,
     },
     multiline: {
-      font: "regular",
+      font: "Scheherazade New",
       maxFontSize: 250,
       minFontSize: 170,
       rect: {
@@ -47,13 +47,13 @@ export const inspireImages: InspireImage[] = [
   {
     author: {
       color: "#ffffff",
-      font: '200px "regular"',
+      font: '200px "Scheherazade New"',
       heightPadding: 100,
       textAlign: "right",
       widthPadding: 100,
     },
     multiline: {
-      font: "regular",
+      font: "Scheherazade New",
       maxFontSize: 240,
       minFontSize: 150,
       rect: {
@@ -68,13 +68,13 @@ export const inspireImages: InspireImage[] = [
   {
     author: {
       color: "#ffffff",
-      font: '150px "regular"',
+      font: '150px "Scheherazade New"',
       heightPadding: 80,
       textAlign: "right",
       widthPadding: 60,
     },
     multiline: {
-      font: "regular",
+      font: "Scheherazade New",
       maxFontSize: 190,
       minFontSize: 150,
       rect: {
@@ -89,13 +89,13 @@ export const inspireImages: InspireImage[] = [
   {
     author: {
       color: "#ffffff",
-      font: '150px "regular"',
+      font: '150px "Scheherazade New"',
       heightPadding: 80,
       textAlign: "right",
       widthPadding: 60,
     },
     multiline: {
-      font: "regular",
+      font: "Scheherazade New",
       maxFontSize: 190,
       minFontSize: 150,
       rect: {
@@ -110,13 +110,13 @@ export const inspireImages: InspireImage[] = [
   {
     author: {
       color: "#ffffff",
-      font: '250px "regular"',
+      font: '250px "Scheherazade New"',
       heightPadding: 80,
       textAlign: "right",
       widthPadding: 60,
     },
     multiline: {
-      font: "regular",
+      font: "Scheherazade New",
       maxFontSize: 260,
       minFontSize: 190,
       rect: {
