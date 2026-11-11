@@ -9,6 +9,7 @@ import type { Quote } from "@/db";
 import { getQuote, getRandomQuote } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
+import { quoteNotFoundMessage } from "@/lib/utils";
 
 const assetsDirectory = Bun.isStandaloneExecutable
   ? path.resolve(import.meta.dir, "src/assets")
@@ -41,7 +42,7 @@ export const InspireCommand = defineSlashCommand({
     const choice = interaction.options.getInteger("id");
     const author = interaction.options.getString("author");
 
-    if (choice && author) {
+    if (choice !== null && author !== null) {
       await interaction.editReply({
         content: "❌ **|** You can't specify both an ID and an author.",
       });
@@ -49,14 +50,14 @@ export const InspireCommand = defineSlashCommand({
     }
 
     const guildId = getGuildId(interaction);
-    const quote: Quote | null = choice
-      ? getQuote(guildId, choice)
-      : getRandomQuote(guildId, author);
+    const quote: Quote | null =
+      choice === null
+        ? getRandomQuote(guildId, author)
+        : getQuote(guildId, choice);
 
     if (!quote) {
       await interaction.editReply({
-        content:
-          "❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
+        content: quoteNotFoundMessage(choice, author),
       });
       return;
     }

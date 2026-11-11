@@ -58,3 +58,17 @@ export function trimQuotes(string: string) {
 
   return string;
 }
+
+/** The error shown when a quote lookup by ID, by author, or at random finds nothing. */
+export function quoteNotFoundMessage(
+  id: number | null = null,
+  author: string | null = null
+): string {
+  if (id !== null) {
+    return "❌ **|** I couldn't find a quote with that ID.";
+  }
+  if (author !== null) {
+    return "❌ **|** I couldn't find any quotes by that author.";
+  }
+  return "❌ **|** This server doesn't have any quotes stored. Use `/create-quote` to create one!";
+}

@@ -9,7 +9,7 @@ import {
 import { getQuote, getRandomQuote } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
-import { cleanString } from "@/lib/utils";
+import { cleanString, quoteNotFoundMessage } from "@/lib/utils";
 
 export const QuoteCommand = defineSlashCommand({
   cooldown: 2,
@@ -31,7 +31,7 @@ export const QuoteCommand = defineSlashCommand({
     const choice = interaction.options.getInteger("id");
     const author = interaction.options.getString("author");
 
-    if (choice && author) {
+    if (choice !== null && author !== null) {
       await interaction.reply({
         content: "❌ **|** You can't specify both an ID and an author.",
         flags: MessageFlags.Ephemeral,
@@ -40,14 +40,14 @@ export const QuoteCommand = defineSlashCommand({
     }
 
     const guildId = getGuildId(interaction);
-    const quote = choice
-      ? getQuote(guildId, choice)
-      : getRandomQuote(guildId, author);
+    const quote =
+      choice === null
+        ? getRandomQuote(guildId, author)
+        : getQuote(guildId, choice);
 
     if (!quote) {
       await interaction.reply({
-        content:
-          "❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
+        content: quoteNotFoundMessage(choice, author),
         flags: MessageFlags.Ephemeral,
       });
       return;
@@ -57,7 +57,7 @@ export const QuoteCommand = defineSlashCommand({
       .setColor(Colors.Blue)
       .setDescription(`"${cleanString(quote.text, false)}"`)
       .setFooter({
-        text: `Quote #${quote.quoteNumber}${choice ? "" : " (random)"}`,
+        text: `Quote #${quote.quoteNumber}${choice === null ? " (random)" : ""}`,
       });
 
     if (quote.originalMessageId && quote.originalChannelId) {

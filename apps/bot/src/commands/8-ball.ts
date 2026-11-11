@@ -9,7 +9,7 @@ import {
 import { getRandomQuote } from "@/db";
 import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
-import { cleanString } from "@/lib/utils";
+import { cleanString, quoteNotFoundMessage } from "@/lib/utils";
 
 export const EightBallCommand = defineSlashCommand({
   cooldown: 2,
@@ -42,8 +42,7 @@ export const EightBallCommand = defineSlashCommand({
     const quote = getRandomQuote(guildId);
     if (!quote) {
       await interaction.reply({
-        content:
-          "❌ **|** This server doesn't have any quotes stored, or none by that author. Use `/create-quote` to create one!",
+        content: quoteNotFoundMessage(),
         flags: MessageFlags.Ephemeral,
       });
       return;
