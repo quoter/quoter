@@ -1,0 +1,11 @@
+---
+import BaseLayout from "./base-layout.astro";
+---
+
+<BaseLayout
+	title={Astro.props.frontmatter.title + " | Quoter"}
+	class="px-4 2xl:px-0 py-4 bg-slate-900 prose md:prose-lg prose-invert mx-auto"
+>
+	<a href="/">&larr; Go home</a>
+	<slot />
+</BaseLayout>

@@ -1,0 +1,155 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+
+  # only cancel in-progress PR runs so that
+  # pushes to `main` don't cancel release
+  # runs halfway through
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check repository
+        run: bun run check
+
+      # `bun run check` already built an executable; run it once to record
+      # which functions execute at startup so the release build can lay out
+      # its bytecode in that order
+      - name: Record bytecode order profile
+        env:
+          DISCORD_TOKEN: smoke-test
+          DATABASE_PATH: ${{ runner.temp }}/quoter-profile.sqlite
+          BUN_BYTECODE_ORDER_OUT: ${{ runner.temp }}/bytecode-order.profile
+        run: apps/bot/dist/quoter-linux-x64 --check
+
+      - name: Build Linux executable
+        env:
+          BUILD_SHA: ${{ github.sha }}
+          BYTECODE_ORDER: ${{ runner.temp }}/bytecode-order.profile
+        run: bun run build
+
+      - name: Check Linux executable
+        env:
+          DISCORD_TOKEN: smoke-test
+          DATABASE_PATH: ${{ runner.temp }}/quoter-smoke.sqlite
+        run: apps/bot/dist/quoter-linux-x64 --check
+
+      - name: Create checksum
+        working-directory: apps/bot/dist
+        run: sha256sum quoter-linux-x64 > quoter-linux-x64.sha256
+
+      - name: Upload main snapshot
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: quoter-${{ github.sha }}
+          path: |
+            apps/bot/dist/quoter-linux-x64
+            apps/bot/dist/quoter-linux-x64.sha256
+          retention-days: 7
+
+  # a malicious PR could change the `if` checks on these release jobs, but it's
+  # safe because GitHub doesn't give PRs from forks write permissions to the repo
+  version:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      released: ${{ steps.version.outputs.released }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Read version
+        id: version
+        run: |
+          version=$(jq -r .version apps/bot/package.json)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$version" >/dev/null; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    needs: [version, check]
+    if: needs.version.outputs.released == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Download executable
+        uses: actions/download-artifact@v4
+        with:
+          name: quoter-${{ github.sha }}
+          path: artifacts
+
+      - name: Set up knope
+        uses: knope-dev/action@v2.1.2
+        with:
+          version: 0.23.2
+
+      - name: Publish release
+        run: knope release --verbose
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  update-release-pr:
+    needs: version
+    if: needs.version.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up knope
+        if: hashFiles('.changeset/*.md') != ''
+        uses: knope-dev/action@v2.1.2
+        with:
+          version: 0.23.2
+
+      - name: Update release PR
+        if: hashFiles('.changeset/*.md') != ''
+        run: knope prepare-release --verbose
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

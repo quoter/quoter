@@ -1,0 +1,20 @@
+# hide summary box because it doesn't show well in editors
+output:
+  - failure
+  - execution
+
+pre-commit:
+  jobs:
+    - run: bun x --bun ultracite fix
+      env:
+        # editors don't parse ANSI escape codes
+        NO_COLOR: "1"
+      glob:
+        - "**/*.js"
+        - "**/*.jsx"
+        - "**/*.ts"
+        - "**/*.tsx"
+        - "**/*.json"
+        - "**/*.jsonc"
+        - "**/*.css"
+      stage_fixed: true

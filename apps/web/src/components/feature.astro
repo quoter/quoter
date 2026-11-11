@@ -1,0 +1,15 @@
+---
+import { Image } from "astro:assets";
+
+const { title, image, alt } = Astro.props;
+---
+
+<div class="p-6 bg-slate-900 rounded-lg max-w-2xl mx-auto h-full">
+	<h1 class="lg:text-center text-3xl font-semibold">
+		{title}
+	</h1>
+	<p class="my-2 text-lg">
+		<slot />
+	</p>
+	<Image src={image} alt={alt} class="rounded-sm" />
+</div>
