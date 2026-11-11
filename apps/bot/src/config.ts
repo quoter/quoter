@@ -4,9 +4,12 @@ import quoterPackage from "../package.json";
 
 export const DEFAULT_MAX_GUILD_QUOTES = 2500;
 
+// bun replaces this with the actual commit hash when building
+declare const BUILD_SHA: string | undefined;
+const buildSha = typeof BUILD_SHA === "string" ? BUILD_SHA : "development";
+
 const configSchema = z.preprocess(
   (environment: NodeJS.ProcessEnv) => ({
-    buildSha: environment["BUILD_SHA"],
     databasePath: environment["DATABASE_PATH"],
     discordAdminIds: environment["DISCORD_ADMIN_ID"],
     discordToken: environment["DISCORD_TOKEN"],
@@ -15,7 +18,7 @@ const configSchema = z.preprocess(
     maxQuoteLength: environment["MAX_QUOTE_LENGTH"],
   }),
   z.object({
-    buildSha: z.string().min(1).default("development"),
+    buildSha: z.string().default(buildSha),
     databasePath: z.string().min(1).default("./db/quoter.sqlite"),
     discordAdminIds: z
       .string()

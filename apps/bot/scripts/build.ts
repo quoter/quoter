@@ -26,7 +26,7 @@ const result = await Bun.build({
     target,
   },
   define: {
-    "process.env.BUILD_SHA": JSON.stringify(buildSha),
+    BUILD_SHA: JSON.stringify(buildSha),
   },
   entrypoints: [path.resolve("src/main.ts")],
   format: "esm",
