@@ -40,5 +40,8 @@
     "typescript": "catalog:",
     "ultracite": "7.12.4"
   },
-  "packageManager": "bun@1.4.3"
+  "packageManager": "bun@1.4.3",
+  "patchedDependencies": {
+    "words-array@1.0.1": "patches/words-array@1.0.1.patch"
+  }
 }

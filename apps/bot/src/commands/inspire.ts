@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
@@ -11,12 +13,16 @@ import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { quoteNotFoundMessage } from "@/lib/utils";
 
+// compiled executables embed src/assets at the root of their virtual
+// filesystem, as `assets` (see scripts/build.ts)
 const assetsDirectory = Bun.isStandaloneExecutable
-  ? path.resolve(import.meta.dir, "src/assets")
+  ? path.resolve(import.meta.dir, "assets")
   : path.resolve(import.meta.dir, "../assets");
 
-GlobalFonts.registerFromPath(
-  path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf"),
+// canvas reads paths natively, which can't see a compiled executable's virtual
+// filesystem, so assets are read with Bun and passed to canvas as buffers
+GlobalFonts.register(
+  readFileSync(path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf")),
   "Scheherazade New"
 );
 
@@ -65,7 +71,7 @@ export const InspireCommand = defineSlashCommand({
     const index = Math.floor(Math.random() * inspireImages.length);
 
     const background = await loadImage(
-      path.resolve(assetsDirectory, `${index}.jpg`)
+      await readFile(path.resolve(assetsDirectory, `${index}.jpg`))
     );
     const imageData = inspireImages[index];
     if (!imageData) {
