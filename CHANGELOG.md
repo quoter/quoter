@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.2
+
+### Fixes
+
+- Fix `/inspire` not resolving its images, leading to errors.
+
 ## 6.0.1
 
 ### Fixes
