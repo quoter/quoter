@@ -1,7 +1,9 @@
+import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
-import drawMultilineText from "canvas-multiline-text";
+import type { SKRSContext2D } from "@napi-rs/canvas";
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
 
 import { inspireImages } from "@/assets/inspire-images";
@@ -11,14 +13,100 @@ import { defineSlashCommand } from "@/lib/command";
 import { getGuildId } from "@/lib/guild";
 import { quoteNotFoundMessage } from "@/lib/utils";
 
+// compiled executables embed src/assets at the root of their virtual
+// filesystem, as `assets` (see scripts/build.ts)
 const assetsDirectory = Bun.isStandaloneExecutable
-  ? path.resolve(import.meta.dir, "src/assets")
+  ? path.resolve(import.meta.dir, "assets")
   : path.resolve(import.meta.dir, "../assets");
 
-GlobalFonts.registerFromPath(
-  path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf"),
+// canvas reads paths natively, which can't see a compiled executable's virtual
+// filesystem, so assets are read with Bun and passed to canvas as buffers
+GlobalFonts.register(
+  readFileSync(path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf")),
   "Scheherazade New"
 );
+
+const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
+
+/**
+ * Splits text into lines no wider than `maxWidth`. Lines break before words,
+ * including within languages written without spaces, and punctuation stays
+ * with the word before it. A word wider than `maxWidth` gets its own line.
+ */
+export function wrapText(
+  text: string,
+  maxWidth: number,
+  measure: (text: string) => number
+): string[] {
+  const lines: string[] = [];
+  let line = "";
+
+  for (const { segment, isWordLike } of segmenter.segment(
+    text.replaceAll(/\s+/gu, " ").trim()
+  )) {
+    const extended = line + segment;
+    if (isWordLike && line.trim() && measure(extended) > maxWidth) {
+      lines.push(line.trimEnd());
+      line = segment;
+    } else {
+      line = extended;
+    }
+  }
+
+  if (line.trim()) {
+    lines.push(line.trimEnd());
+  }
+  return lines;
+}
+
+interface WrappedTextOptions {
+  font: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  minFontSize: number;
+  maxFontSize: number;
+  /** Space between lines, as a multiple of the font size. */
+  lineHeight?: number;
+}
+
+/**
+ * Draws text wrapped to fit within a box, at the largest font size that fits
+ * (or `minFontSize` if none do). Uses the context's `textAlign` and
+ * `fillStyle`, and treats `y` as the top of the box.
+ */
+function drawWrappedText(
+  ctx: SKRSContext2D,
+  text: string,
+  options: WrappedTextOptions
+): void {
+  const lineHeight = options.lineHeight ?? 1.1;
+
+  function layout(fontSize: number): string[] {
+    ctx.font = `${fontSize}px "${options.font}"`;
+    return wrapText(text, options.width, (t) => ctx.measureText(t).width);
+  }
+
+  // the position of a line, relative to the top of the box
+  function linePosition(fontSize: number, index: number): number {
+    return fontSize * (1 + index * lineHeight);
+  }
+
+  let fontSize = options.maxFontSize;
+  let lines = layout(fontSize);
+  while (
+    fontSize > options.minFontSize &&
+    linePosition(fontSize, lines.length - 1) > options.height
+  ) {
+    fontSize -= 1;
+    lines = layout(fontSize);
+  }
+
+  for (const [index, line] of lines.entries()) {
+    ctx.fillText(line, options.x, options.y + linePosition(fontSize, index));
+  }
+}
 
 export const InspireCommand = defineSlashCommand({
   cooldown: 4,
@@ -65,7 +153,7 @@ export const InspireCommand = defineSlashCommand({
     const index = Math.floor(Math.random() * inspireImages.length);
 
     const background = await loadImage(
-      path.resolve(assetsDirectory, `${index}.jpg`)
+      await readFile(path.resolve(assetsDirectory, `${index}.jpg`))
     );
     const imageData = inspireImages[index];
     if (!imageData) {
@@ -79,17 +167,15 @@ export const InspireCommand = defineSlashCommand({
     ctx.textBaseline = "middle";
     ctx.textAlign = imageData.multiline.textAlign;
 
-    // Drawing the quote using the dat
-    drawMultilineText(canvas.getContext("2d"), `"${quote.text}"`, {
+    // draw the quote, as large as fits in the image's text box
+    drawWrappedText(ctx, `"${quote.text}"`, {
       font: imageData.multiline.font,
+      height: imageData.multiline.rect.height,
       maxFontSize: imageData.multiline.maxFontSize,
       minFontSize: imageData.multiline.minFontSize,
-      rect: {
-        height: imageData.multiline.rect.height,
-        width: canvas.width - imageData.multiline.rect.widthPadding * 2,
-        x: canvas.width * imageData.multiline.rect.xFactor,
-        y: imageData.multiline.rect.y,
-      },
+      width: canvas.width - imageData.multiline.rect.widthPadding * 2,
+      x: canvas.width * imageData.multiline.rect.xFactor,
+      y: imageData.multiline.rect.y,
     });
 
     if (quote.author) {
