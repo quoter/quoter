@@ -14,7 +14,6 @@
   "dependencies": {
     "@napi-rs/canvas": "0.1.95",
     "bufferutil": "^4.1.0",
-    "canvas-multiline-text": "1.0.3",
     "discord.js": "^14.27.0",
     "drizzle-orm": "^0.45.2",
     "fuse.js": "^7.5.0",
@@ -23,7 +22,6 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@types/canvas-multiline-text": "^1.0.2",
     "@types/ms": "^2.1.0",
     "bun-types": "catalog:",
     "drizzle-kit": "^0.31.10",
