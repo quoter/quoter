@@ -50,7 +50,7 @@ export const EightBallCommand = defineSlashCommand({
 
     const quoteEmbed = new EmbedBuilder()
       .setColor(Colors.Blue)
-      .setDescription(`"${cleanString(quote.text, false)}"`)
+      .setDescription(`“${cleanString(quote.text, false)}”`)
       .setFooter({ text: `Quote #${quote.quoteNumber}` });
 
     if (quote.originalMessageId && quote.originalChannelId) {

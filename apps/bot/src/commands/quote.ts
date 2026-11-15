@@ -55,7 +55,7 @@ export const QuoteCommand = defineSlashCommand({
 
     const embed = new EmbedBuilder()
       .setColor(Colors.Blue)
-      .setDescription(`"${cleanString(quote.text, false)}"`)
+      .setDescription(`“${cleanString(quote.text, false)}”`)
       .setFooter({
         text: `Quote #${quote.quoteNumber}${choice === null ? " (random)" : ""}`,
       });

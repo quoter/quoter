@@ -78,7 +78,7 @@ export const QuoteThisCommand = defineMessageContextMenuCommand({
           .setTitle("✅ Created a new quote")
           .setColor(Colors.Green)
           .setDescription(
-            `"${cleanString(text, false)}" - ${cleanString(author)}`
+            `“${cleanString(text, false)}” - ${cleanString(author)}`
           )
           .setFooter({ text: `Quote #${quote.quoteNumber}` }),
       ],

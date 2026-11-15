@@ -144,7 +144,7 @@ export async function renderInspireImage(
   ctx.textAlign = imageData.multiline.textAlign;
 
   // draw the quote, as large as fits in the image's text box
-  drawWrappedText(ctx, `"${quote.text}"`, {
+  drawWrappedText(ctx, `“${quote.text}”`, {
     font: imageData.multiline.font,
     height: imageData.multiline.rect.height,
     maxFontSize: imageData.multiline.maxFontSize,
