@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.0.3
+
+### Fixes
+
+- Use curly quotation marks (“like this”) instead of straight quotes when displaying quotes.
+- Make `/inspire` faster and use less memory, by using smaller background images and caching them.
+
 ## 6.0.2
 
 ### Fixes
