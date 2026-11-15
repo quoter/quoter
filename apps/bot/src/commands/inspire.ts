@@ -26,29 +26,18 @@ GlobalFonts.register(
   "Scheherazade New"
 );
 
-// lower than canvas's default of 92, which makes images much larger to upload
-// for little visible difference
 const jpegQuality = 85;
 
-const backgrounds = new Map<number, Promise<Image>>();
+const backgrounds = new Map<number, Image>();
 
 async function loadBackground(index: number): Promise<Image> {
   let background = backgrounds.get(index);
-  if (background) {
-    return background;
-  }
-
-  try {
+  if (!background) {
     const imagePath = path.resolve(assetsDirectory, `${index}.jpg`);
     const imageBuffer = await readFile(imagePath);
-    background = loadImage(imageBuffer);
-  } catch (error) {
-    // don't cache the failure
-    backgrounds.delete(index);
-    throw error;
+    background = await loadImage(imageBuffer);
+    backgrounds.set(index, background);
   }
-
-  backgrounds.set(index, background);
   return background;
 }
 
