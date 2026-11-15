@@ -70,7 +70,7 @@ export const CreateQuoteCommand = defineSlashCommand({
     const embed = new EmbedBuilder()
       .setTitle("✅ Created a new quote")
       .setColor(Colors.Green)
-      .setDescription(`"${cleanString(text, false)}"`)
+      .setDescription(`“${cleanString(text, false)}”`)
       .setFooter({ text: `Quote #${quote.quoteNumber}` });
 
     if (author) {
