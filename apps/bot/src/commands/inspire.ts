@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
-import type { SKRSContext2D } from "@napi-rs/canvas";
+import type { Image, SKRSContext2D } from "@napi-rs/canvas";
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
 
 import { inspireImages } from "@/assets/inspire-images";
@@ -25,6 +25,21 @@ GlobalFonts.register(
   readFileSync(path.resolve(assetsDirectory, "ScheherazadeNew-Regular.ttf")),
   "Scheherazade New"
 );
+
+const jpegQuality = 85;
+
+const backgrounds = new Map<number, Image>();
+
+async function loadBackground(index: number): Promise<Image> {
+  let background = backgrounds.get(index);
+  if (!background) {
+    const imagePath = path.resolve(assetsDirectory, `${index}.jpg`);
+    const imageBuffer = await readFile(imagePath);
+    background = await loadImage(imageBuffer);
+    backgrounds.set(index, background);
+  }
+  return background;
+}
 
 const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
 
@@ -108,6 +123,53 @@ function drawWrappedText(
   }
 }
 
+/**
+ * Renders a quote onto the inspire image at `index`, as a JPEG.
+ */
+export async function renderInspireImage(
+  quote: Pick<Quote, "author" | "text">,
+  index: number
+): Promise<Buffer> {
+  const imageData = inspireImages[index];
+  if (!imageData) {
+    throw new Error(`Missing inspire image data at index ${index}`);
+  }
+  const background = await loadBackground(index);
+
+  const canvas = createCanvas(background.width, background.height);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(background, 0, 0);
+
+  ctx.textBaseline = "middle";
+  ctx.textAlign = imageData.multiline.textAlign;
+
+  // draw the quote, as large as fits in the image's text box
+  drawWrappedText(ctx, `"${quote.text}"`, {
+    font: imageData.multiline.font,
+    height: imageData.multiline.rect.height,
+    maxFontSize: imageData.multiline.maxFontSize,
+    minFontSize: imageData.multiline.minFontSize,
+    width: canvas.width - imageData.multiline.rect.widthPadding * 2,
+    x: canvas.width * imageData.multiline.rect.xFactor,
+    y: imageData.multiline.rect.y,
+  });
+
+  if (quote.author) {
+    ctx.textAlign = imageData.author.textAlign;
+    ctx.font = imageData.author.font;
+    ctx.fillStyle = imageData.author.color;
+    ctx.fillText(
+      `- ${quote.author}`,
+      canvas.width - imageData.author.widthPadding * 2,
+      canvas.height - imageData.author.heightPadding * 2,
+      // squeeze long names so they keep the same margin on the left as the right
+      canvas.width - imageData.author.widthPadding * 4
+    );
+  }
+
+  return canvas.encode("jpeg", jpegQuality);
+}
+
 export const InspireCommand = defineSlashCommand({
   cooldown: 4,
   data: new SlashCommandBuilder()
@@ -151,46 +213,7 @@ export const InspireCommand = defineSlashCommand({
     }
 
     const index = Math.floor(Math.random() * inspireImages.length);
-
-    const background = await loadImage(
-      await readFile(path.resolve(assetsDirectory, `${index}.jpg`))
-    );
-    const imageData = inspireImages[index];
-    if (!imageData) {
-      throw new Error(`Missing inspire image data at index ${index}`);
-    }
-
-    const canvas = createCanvas(background.width, background.height);
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(background, 0, 0);
-
-    ctx.textBaseline = "middle";
-    ctx.textAlign = imageData.multiline.textAlign;
-
-    // draw the quote, as large as fits in the image's text box
-    drawWrappedText(ctx, `"${quote.text}"`, {
-      font: imageData.multiline.font,
-      height: imageData.multiline.rect.height,
-      maxFontSize: imageData.multiline.maxFontSize,
-      minFontSize: imageData.multiline.minFontSize,
-      width: canvas.width - imageData.multiline.rect.widthPadding * 2,
-      x: canvas.width * imageData.multiline.rect.xFactor,
-      y: imageData.multiline.rect.y,
-    });
-
-    if (quote.author) {
-      ctx.textAlign = imageData.author.textAlign;
-      ctx.font = imageData.author.font;
-      ctx.fillStyle = imageData.author.color;
-      ctx.fillText(
-        `- ${quote.author}`,
-        canvas.width - imageData.author.widthPadding * 2,
-        canvas.height - imageData.author.heightPadding * 2,
-        canvas.width - 200
-      );
-    }
-
-    const jpeg = await canvas.encode("jpeg");
+    const jpeg = await renderInspireImage(quote, index);
 
     await interaction.editReply({
       files: [jpeg],

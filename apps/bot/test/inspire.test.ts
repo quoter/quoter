@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test";
 
-import { wrapText } from "@/commands/inspire";
+import { loadImage } from "@napi-rs/canvas";
+
+import { inspireImages } from "@/assets/inspire-images";
+import { renderInspireImage, wrapText } from "@/commands/inspire";
 
 // every character is 1 unit wide
 function measure(text: string): number {
@@ -46,4 +49,20 @@ describe("wrapText", () => {
       expect(line).not.toContain(" ");
     }
   });
+});
+
+describe("renderInspireImage", () => {
+  test.each([...inspireImages.keys()])(
+    "renders a JPEG the size of background %i",
+    async (index) => {
+      const jpeg = await renderInspireImage(
+        { author: "Someone", text: "A quote to render." },
+        index
+      );
+      const image = await loadImage(jpeg);
+
+      expect(jpeg.subarray(0, 2)).toEqual(Buffer.from([0xff, 0xd8]));
+      expect(Math.max(image.width, image.height)).toBe(1920);
+    }
+  );
 });
